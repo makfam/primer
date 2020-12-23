@@ -1,5 +1,7 @@
 # Priorities
 
+* Make out.width = "100%" the default. DK - Done. See book_start.R.
+
 * Chapter 8 should include two other model discussions. First, leave in intercept. Second, a model with a continuous predictor. In both cases, we would still be doing three parameter models. And that it would allow chapter 9 to focus on more complex models. For continuous use att_end ~ att_start.
 
 
@@ -55,10 +57,20 @@ Warning messages:
 html_document:
     code_folding: "hide"
     
-* https://rstudio4edu.github.io/rstudio4edu-book/   
-https://dataviz-2021.netlify.app/
-https://athanasiamo.github.io/tidyquintro/
+* Books
+
+https://rstudio4edu.github.io/rstudio4edu-book/   
 https://ubc-dsci.github.io/introduction-to-datascience/
+
+
+* Courses
+
+https://dataviz-2021.netlify.app/
+https://jmbuhr.de/dataIntro20/
+https://athanasiamo.github.io/tidyquintro/
+
+* Other
+
 https://evamaerey.github.io/flipbooks/about (use flipbooks for classroom exercises?)
 
 * Lots of interesting items: https://holtzy.github.io/Pimp-my-rmd/. I like the hack of making your Rmd an index.Rmd and then the html will appear as a Github pages for free.
