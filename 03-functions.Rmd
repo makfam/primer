@@ -883,7 +883,22 @@ quantile_diff(z, na.rm = FALSE)
 
 ## Part Two: Distributions?
 
+Last chapter, we learned about distributions. The most important of these distributions is, of course, the normal distribution. 
+
+This bell-shaped distribution is defined by two parameters: (1) the *mean* $\mu$ (spoken as "mu") which locates the center of the distribution and (2) the *standard deviation* $\sigma$ (spoken as "sigma") which determines the variation of values around that center. 
+
+As we learned in Chapter 2, using `rbinom()`, a smaller sample does not tend to resemble the normal distribution. Larger samples, on the other hand, do tend to mirror the distinctive bell-shaped curve of normal distributions. 
+
+<!-- Insert my_sampler examples using 10 samples, then 100, then 1000 -->
+
+
 ## Part Three: Guessing Game?
+
+<!-- MF: Does the median versus mean discussion belong here? -->
+
+Another interesting consideration in our models is the fact that the mean (or average) of our data might not be the most useful metric. Consider if we were looking at 1000 observations of income for citizens in the United States. Now, imagine that Bill Gates is one of those 1000 observations. The mean of our samples would be *much* higher than the actual figure of average income because of the significant outlier. 
+
+What is the better metric, then? The median. The median, unlike the mean, is not skewed so greatly by outliers. Therefore, for the purposes of our data science observations, we want to look at the median value.
 
 ## Summary
 
