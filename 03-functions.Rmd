@@ -754,29 +754,32 @@ We took this detour so you could see there is no *structural* relationship betwe
 What happens if we call our function but neglect to specify the probabilities?
 
 ```{r error=TRUE}
-add_dice()
+my_sampler()
 ```
 
 Oops! At the moment, this causes a fatal error. It can be nice to provide some reasonable default values for certain arguments. Setting `n = 1` is a reasonable default value.
 
 ```{r}
-add_dice <- function(n = 1) {
-  stopifnot(is.numeric(n))
-  stopifnot(n >= 0)
-  sum(sample(1:6, n, replace = TRUE))
+multiple_sampler <- function(n = 1) {
+  nhanes %>% 
+    select(height) %>% 
+    sample_n(n) %>% 
+    slice()
 }
 ```
 
 Again we check how the function works by specifying `n` and not specifying `n`.
 
 ```{r}
-add_dice()
-add_dice(10)
+multiple_sampler()
+multiple_sampler(10)
 ```
 
 Note that you do not necessarily need to supply the argument name. R tries its best to understand you based on the order you provide your argument values in. However, it is usually best practice to specify the argument name.
 
 ### Wrap-up and what's next?
+
+<!-- MF: Should I modify this section to work with the my_sampler function instead of add_dice? -->
 
 Here's the function we've written so far:
 
@@ -869,6 +872,8 @@ Note that to achieve the above, we took out `sum()` and swapped it with `list()`
 
 ### Handling `NA`s
 
+<!-- MF: We solved the problem of NAs differently in the my_sampler section (calling drop_na). Should I remove that solution from that function and defer to this solution? Keep both? -->
+
 The upside to creating our own dice-rolling function is that there have been no missing values. In real life, missing data will make your life a living hell. If you are lucky, it will be properly indicated by the special value `NA`, but don't hold your breath. Many built-in R functions have an `na.rm =` argument through which you can specify how you want to handle `NA`s. Typically the default value is `na.rm = FALSE` and typical default behavior is to either let `NA`s propagate or to raise an error. Let's see how `quantile()` handles `NA`s:
 
 ```{r error=TRUE}
@@ -906,173 +911,6 @@ quantile_diff <- function(x, probs = c(0, 1), na.rm = TRUE) {
 quantile_diff(kenya$poverty)
 quantile_diff(z)
 quantile_diff(z, na.rm = FALSE)
-```
-
-## The Crooked Casino
-
-### Restoring `add_dice()`
-
-In this section, we will be bringing together `map_*` functions, list-columns, and function writing. We'll also be introducing some important conditional functions (`ifelse()`, `any()`, `all()`, and `case_when()`). 
-
-Let’s return to our dice-throwing function, `add_dice()`. 
-
-```{r}
-add_dice <- function(n = 1) {
-  stopifnot(is.numeric(n))
-  stopifnot(n >= 0)
-  sum(sample(1:6, n, replace = TRUE))
-}
-```
-
-Next, we will create `roll_dice()`, which calls `add_dice(n = 2)` as many times as the user specifies. To do so, we will be combining the `rep()` function with `map_int()`.
-
-```{r}
-roll_dice <- function(n = 1) {
-  stopifnot(is.numeric(n))
-  map_int(rep(2, n), add_dice)
-}
-roll_dice(1)
-roll_dice(5)
-```
-
-`rep()` is a useful input to `map_*` when you want to call a function with the same input multiple times. `rep(2, n)` creates a vector of length n where every element is 2. We use that as the input to `map_int()` because we want the input to `add_dice()` to be 2 every time (we are always throwing a pair of dice) and we want to perform the operation n times, chosen by the user.
-
-Create a tibble named `x` with one variable: `throws`. `throws` is a list column, each element of which is three throws of the dice pair, i.e., the result of calling `roll_dice(n = 3)`.  Thus, our tibble will have ten rows and two columns.
-
-```{r}
-x <- tibble(throws = map(rep(3, 10), roll_dice))
-x
-```
-
-Add a variable to `x` called `first_seven` which is TRUE if the first roll in `throws` is a 7.
-
-```{r message=FALSE}
-library(magrittr)
-
-# The magrittr package allows us to use %<>%, the compound assignment pipe
-# operator, which (as its name suggests) both assigns and pipes
-
-x %<>% 
-  mutate(first_seven = map_lgl(throws, ~ ifelse(.[[1]] == 7, TRUE, FALSE)))
-```
-
-We see here that `[[1]]` is how we extract the first element of a list, just like `[1]` extracts the first element of an atomic vector.  `ifelse()` takes as its first argument a condition; if it is TRUE it returns the second argument (here TRUE) and if not the third (here FALSE).
-
-Add a variable to `x` called `a_winner` which is TRUE if at least one of the three throws is a 7 or an 11 and is FALSE otherwise.
-
-```{r}
-x %<>% 
-  mutate(a_winner = map_lgl(throws, ~ ifelse(any(c(7, 11) %in% .), TRUE, FALSE)))
-```
-
-Here we use `any()`: `any()` checks if any element in its input is TRUE. So, let's say a particular throw was 4, 6, and 7: `c(7, 11) %in% c(4, 6, 7)` returns the vector `TRUE FALSE` (since 7 is in the vector but 11 isn't); then, `any(c(7, 11) %in% c(4, 6, 7))` returns TRUE because one of the conditions is TRUE.
-
-Run `str()` on `x` and show the results.
-
-```{r}
-str(x)
-```
-
-### Running Simulations
-
-Calculate how “surprised” you should be if someone rolls three winners in a row. First, create a tibble with 10,000 rows. Include a `throws` list column with three throws of our dice, just as in part a). Second, create a column called `perfection` which is TRUE if all three of the throws are either 7 or 11.
-
-```{r}
-surprised <- tibble(throws = map(rep(3, 10000), roll_dice)) %>% 
-  mutate(perfection = map_lgl(throws, ~ ifelse(all(. %in% c(7, 11)), TRUE, FALSE)))
-
-surprised %>%
-  pull(perfection) %>%
-  mean()
-```
-
-Here, we use `all()`, which has the same structure as `any()`, but checks whether *all* the elements in the input are TRUE.
-
-Approximately 1.1% of three rolls of a pair of fair dice are all equal to either 7 or 11.
-
-Your friend proposes the following bet. You will roll a pair of fair dice 10 times. Side A gets the second highest of the first 4 rolls. Side B gets 1 plus the the median of the remaining 6 rolls. Which side is more likely to win?  What's the chance of a tie?
-
-```{r}
-bet <- tibble(throws = map(rep(10, 10000), roll_dice)) %>% 
-  mutate(A = map_dbl(throws, ~ sort(.[1:4])[3]),
-         B = map_dbl(throws, ~ 1 + median(.[5:10])),
-         winner = case_when(A > B ~ "A",
-                            B > A ~ "B",
-                            TRUE ~ "tie"))
-
-case_when(sum(bet$winner == "A") > sum(bet$winner == "B") ~ "A",
-          sum(bet$winner == "B") > sum(bet$winner == "A") ~ "B",
-          TRUE ~ "Same # Victories")
-
-sum(bet$winner == "tie")/length(bet$winner)
-```
-
-You can think of `case_when()` as a generalized `ifelse()`.  The syntax is a little more complicated.  Each expression is followed by `~` and what should be returned if that expression is TRUE.  The final expression, TRUE, is always true, and thus is the residual category if none of the above expression are TRUE.  Thus, the second `case_when()` in our above code will print "A" if A is the winner in more replications than B, "B" if B is the winner more than A, and "Same # Victories" otherwise.
-
-Side B is more likely to win.
-
-The chance of a tie is approximately 11%.
-
-### Making a Crooked Function
-
-Say we are at an establishment known as the Crooked Casino. In a game of craps, you win if you roll 7 or 11 as the sum of a pair of dice. The Crooked Casino is infamous for rigging its games so that it is more difficult to obtain 7 or 11 as a sum. Our job is to write a function that mimics this behavior.
-
-First, let's use what we have. We will add a line of code in `add_dice()` that assigns `sum(sample(1:6, n, replace = TRUE))` to a variable, `roll`, and returns `roll`.
-
-```{r}
-crooked_dice <- function(n = 1) {
-  stopifnot(is.numeric(n))
-  stopifnot(n >= 0)
-  roll <- sum(sample(1:6, n, replace = TRUE))
-  return(roll)
-}
-
-crooked_dice(2)
-```
-
-How is this any different from `add_dice()`, you may ask? It is not. We are merely assigning the outcome of the roll of a pair of dice to a variable `roll`, which will be useful in a moment. Recall that functions only "remember" what takes place within themselves. This means that each call of `crooked_dice()` creates a new variable `roll` that takes place inside the function.
-
-Now, let's use `ifelse()` to check whether a 7 or 11 was rolled, and if so, to assign a roll of `2` instead.
-
-```{r}
-crooked_dice <- function(n = 1) {
-  stopifnot(is.numeric(n))
-  stopifnot(n >= 0)
-  roll <- sum(sample(1:6, n, replace = TRUE))
-  ifelse(roll == 7 | roll == 11, 2, roll)
-}
-```
-
-The Crooked Casino is a bit more sly, however. They know if they have an overtly crooked game of craps that never returned 7 or 11, that no one would play. They want to be a little more subtle about their crookedness, so they determine that only half of the time a 7 or 11 is rolled will the outcome be altered.
-
-We can simulate this decision by generating a random variable using `runif()` and checking whether the result is greater than or equal to 0.5.
-
-```{r}
-crooked_dice <- function(n = 1) {
-  stopifnot(is.numeric(n))
-  stopifnot(n >= 0)
-  roll <- sum(sample(1:6, n, replace = TRUE))
-  ifelse((roll == 7 | roll == 11) && runif(1) >= 0.5, 2, roll)
-}
-```
-
-Now we can create a function named `crooked_craps()` that calls `crooked_dice()` as many times as specified.
-
-```{r}
-crooked_craps <- function(n = 1) {
-  stopifnot(is.numeric(n))
-  map_dbl(rep(2, n), crooked_dice)
-}
-crooked_craps(1)
-crooked_craps(5)
-```
-
-It's hard to tell whether `crooked_craps()` is working properly by rolling just once, or even ten times. Let's follow the steps we took above to create a tibble of 10 observations each of 10 rolls named `crooked_x`.
-
-```{r}
-crooked_x <- tibble(throws = map(rep(10, 10), crooked_craps))
-crooked_x %>%
-  str()
 ```
 
 ## Summary
