@@ -1,7 +1,7 @@
 
 # Functions {#functions}
 
-<!-- Start by reading the distribution section of Chapter 2: -->
+<!-- add .groups, so no bad messages. -->
 
 <!-- https://ppbds.github.io/primer/wrangling.html#distributions -->
 
@@ -281,7 +281,7 @@ For this example, we will use the `nhanes` dataset from the **primer.data** pack
 
 First, let's wrangle the data so each observation is grouped by age and gender.  We'll create a list column `all_weights` that consists of every subject's weight, grouped by age and gender.
 
-```{r eval=FALSE, message=FALSE}
+```{r}
 nhanes %>%
   group_by(age, gender) %>%
   summarize(all_weights = list(weight))
@@ -289,7 +289,7 @@ nhanes %>%
 
 Now that we have a list column, we can use it as the input to `map()`, outputting another list column.  Let's say we wanted a new list column, `log_weights`, which takes the logarithmic value of each weight observation.
 
-```{r eval=FALSE, message=FALSE}
+```{r}
 nhanes %>%
   group_by(age, gender) %>%
   summarize(all_weights = list(weight)) %>%
@@ -300,7 +300,7 @@ Note that we took the list column `all_weights` and, by applying an anonymous fu
 
 If we try to replace the `map()` function in the last line with a simple `mutate()`, we will get an error.
 
-```{r echo=FALSE, error=TRUE, message=FALSE}
+```{r, error = TRUE}
 nhanes %>%
   group_by(age, gender) %>%
   summarize(all_weights = list(weight)) %>%
@@ -311,7 +311,7 @@ Again, this is because the `mutate()` function is ill-equipped to handle lists. 
 
 You can also use `map_*` functions to take a list column as an input and return an atomic vector -- a column with a single value per observation -- as an output.  For instance, let's say we now wanted the mean of the log weights:
 
-```{r eval=FALSE, message=FALSE}
+```{r}
 nhanes %>%
   group_by(age, gender) %>%
   summarize(all_weights = list(weight)) %>%
@@ -322,7 +322,7 @@ nhanes %>%
 Here, we also see that the `map_*` functions have the `...` argument, which allows `na.rm = TRUE` to be passed along to `mean()`.
 What if we wanted to extract the top five log weights per row?
 
-```{r eval=FALSE}
+```{r}
 nhanes %>%
   group_by(age, gender) %>%
   summarize(all_weights = list(weight)) %>%
@@ -751,7 +751,7 @@ Note that you do not necessarily need to supply the argument name. R tries its b
 Here's the function we've written so far:
 
 ```{r}
-add_dice
+# add_dice
 ```
 
 What we've accomplished:
@@ -881,6 +881,7 @@ quantile_diff(z, na.rm = FALSE)
 ```
 
 ## Part Two: Distributions?
+<<<<<<< HEAD
 
 Last chapter, we learned about distributions. The most important of these distributions is, of course, the normal distribution. 
 
@@ -928,3 +929,45 @@ In particular, when building a function, you want to remember these key lessons:
 ### Distributions
 
 
+Last chapter, we learned about distributions. The most important of these distributions is, of course, the normal distribution. 
+
+This bell-shaped distribution is defined by two parameters: (1) the *mean* $\mu$ (spoken as "mu") which locates the center of the distribution and (2) the *standard deviation* $\sigma$ (spoken as "sigma") which determines the variation of values around that center. 
+
+As we learned in Chapter 2, using `rbinom()`, a smaller sample does not tend to resemble the normal distribution. Larger samples, on the other hand, do tend to mirror the distinctive bell-shaped curve of normal distributions. 
+
+<!-- Insert my_sampler examples using 10 samples, then 100, then 1000 -->
+
+
+## Part Three: Guessing Game?
+
+<!-- MF: Does the median versus mean discussion belong here? -->
+
+Another interesting consideration in our models is the fact that the mean (or average) of our data might not be the most useful metric. Consider if we were looking at 1000 observations of income for citizens in the United States. Now, imagine that Bill Gates is one of those 1000 observations. The mean of our samples would be *much* higher than the actual figure of average income because of the significant outlier. 
+
+What is the better metric, then? The median. The median, unlike the mean, is not skewed so greatly by outliers. Therefore, for the purposes of our data science observations, we want to look at the median value.
+
+## Summary
+
+<!-- Add summaries for all major sections of the chapter. This is just for the function section and needs more clarification. -->
+
+<!-- MF: Should the summary include enough information that a student could get away with not reading the chapter? Or should it only be a tool of review for students who have read the chapter? -->
+
+### Lists and list-columns
+
+The introduction of the chapter was centered on a discussion of lists and list-columns. Key points from this section include:
+
+- A list is different from an atomic vector. Atomic vectors are familiar to us: each element of the vector has one value, and thus if an atomic vector is a column in your dataset, each observation gets a single value.  Lists, however, can contain vectors as elements.
+- There are various ways to create lists. We can directly input values inside `list()`, or wrap the values in `c()` first to create a vector element.
+- Any function that returns multiple values can be used to create a list output. To turn the output into a list, simply wrap the line of code with `list()`.
+- We can take a list column and, by applying an anonymous function to it with `map()`, create another list column. This is similar to taking a tibble and piping it into a `dplyr` function (such as `mutate()`) which gives you a new tibble that you can work with.
+- You can also use `map_*` functions to take a list column as an input and return an atomic vector -- a column with a single value per observation -- as an output. 
+
+### Functions
+
+This chapter, we focused on functions. 
+
+In particular, when building a function, you want to remember these key lessons:
+- Optimize usefulness by adding more formal arguments when needed. A function that only gives an option for `n` may not be as helpful as a function that allows us to enter options for a dataset, variable, and n value. 
+- As there is no *structural* relationship between our argument names (`n`) and that of `sample()` (which also includes `n`), ensure that argument names are sensible. This helps not only your readers, but also you. In short: using "bob_ross" to denote the number of samples you want... is a bad idea. 
+- Make sure we account for possible values of NA in our functions. This can be accomplished by placing something like `drop_na()` as another line of code within the function's body, or by adding an `na.rm =` argument to our function. We might even enforce our preferred default -- but at least we're giving the user a way to control the behavior around `NA`s.
+- By default, a function returns the result of the last line of the body.
