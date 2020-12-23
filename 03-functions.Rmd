@@ -13,24 +13,7 @@
 
 <!-- This is what we are preparing readers for. We want that to be easy for them, once they get there. We should also do a better job of connecting this code to the code in Chapter 5 but, right now, we don't show that to readers. -->
 
-<!-- * Need to focus more on functions which actually do something useful, something that teaches concepts which will be valuable later. One idea: A function which takes a tibble and a variable to sample from. It returns one value from that variable. Complexity is added because it removed all missing data first. Could use nhanes as the data set to play with. Further complexity could be added by adding a condition which filters the tibble in some way. my_sampler() -->
-
-
-<!-- ```{r} -->
-<!-- my_sampler <- function(x, var, n = 1){ -->
-<!--  x %>% -->
-<!--    select(var) %>% -->
-<!--    drop_na() %>% -->
-<!--    sample_n(n) %>% -->
-<!--    slice() -->
-<!-- } -->
-
-<!-- my_sampler(x = kenya, var = "poverty") -->
-<!-- my_sampler(nhanes, var = "height") -->
-<!-- ``` -->
-
-<!-- tibble(ID = 1:10) %>%  -->
-
+<!-- * Need to focus more on functions which actually do something useful, something that teaches concepts which will be valuable later. One idea: A function which takes a tibble and a variable to sample from. It returns one value from that variable. Complexity is added because it removed all missing data first. Could use nhanes as the data set to play with. Further complexity could be added by adding a condition which filters the tibble in some way. my_sampler() DONE. -->
 
 <!-- tibble(ID = 1:10) %>%  -->
 <!--   mutate(height = map_dbl(ID, ~ my_sampler(nhanes, "height"))) %>%  -->
@@ -43,7 +26,7 @@
 
 <!-- Perhaps there are three main parts to the chapter. The first is lists, list-columns, map functions and custom functions. We can cover all that with fairly simple examples. (Don't use N argument yet. Just solve the no NA problem.) Second, as discussed below, is explorations of measures of center and variability for distributions. (Means we need to extend my_sampler with n argument.) We can explore those things with our new tools. The third section plays the Guessing Game. -->
 
-<!-- Read, and then delete, the Crooked Casino section. -->
+<!-- Read, and then delete, the Crooked Casino section. DONE.-->
 
 <!-- Key concept to focus on is the idea of a distribution and draws therefrom. This connects to chapter 2, where we introduced distributions and to chapter 5, where we explain probability distributions. In particular, we should show various ways to measure center and variability. These are cool and important concepts. Is "center" the mean or the median or the trimmed mean or . . . Is "variability" the standard deviation, the mean absolute deviation, the standard deviation of the median absolute deviation or . . . There is nothing explicitly "statistical" here. We are just trying to connect English words to specific formulas. We might show the distributions for which these measures give the same answers and then some (mainly skewed) for which they don't. How to explore these concepts in the context of function writing? Perhaps by writing functions like my_mean() and my_median()? Or maybe focus on a function which calculates MAD SD? Then use list-columns to compare this function to other choices? -->
 
@@ -520,9 +503,7 @@ function(x) x <- 2
 x
 ```
 
-### Test your function
-
-#### Test on new inputs
+### Test on new inputs
 
 Pick some new artificial inputs where you know (at least approximately) what your function should return.
 
@@ -639,19 +620,6 @@ In this section, we create a new function, generalize it, and learn more technic
 Our goal is to write a function that draws samples from datasets found in `PPBDS/data`. 
 
 We will begin by creating a minimally viable function, `starter_sampler()`, which isolates a sample of variable `height` from the dataset `nhanes`. We start by selecting the variable we want, `height`, and then performing sample_n with a value of 1 to get one sample. Finally, we slice to isolate the result. 
-
-<!-- ```{r} -->
-<!-- my_sampler <- function(x, var, n = 1){ -->
-<!--  x %>% -->
-<!--    select(var) %>% -->
-<!--    drop_na() %>% -->
-<!--    sample_n(n) %>% -->
-<!--    slice() -->
-<!-- } -->
-
-<!-- my_sampler(x = kenya, var = "poverty") -->
-<!-- my_sampler(nhanes, var = "height") -->
-<!-- ``` -->
 
 ```{r}
 start_sampler <- function() {
@@ -913,4 +881,20 @@ quantile_diff(z)
 quantile_diff(z, na.rm = FALSE)
 ```
 
+## Part Two: Distributions?
+
+## Part Three: Guessing Game?
+
 ## Summary
+
+<!-- MF: Should the summary include enough information that a student could get away with not reading the chapter? Or should it only be a tool of review for students who have read the chapter? -->
+
+This chapter, we focused on functions. 
+
+<!-- Add summaries for all major sections of the chapter. This is just for the function section and needs more clarification. -->
+
+In particular, when building a function, you want to remember these key lessons:
+- Optimize usefulness by adding more formal arguments when needed. A function that only gives an option for `n` may not be as helpful as a function that allows us to enter options for a dataset, variable, and n value. 
+- As there is no *structural* relationship between our argument names (`n`) and that of `sample()` (which also includes `n`), ensure that argument names are sensible. This helps not only your readers, but also you. In short: using "bob_ross" to denote the number of samples you want... is a bad idea. 
+- Make sure we account for possible values of NA in our functions. This can be accomplished by placing something like `drop_na()` as another line of code within the function's body, or by adding an `na.rm =` argument to our function. We might even enforce our preferred default -- but at least we're giving the user a way to control the behavior around `NA`s.
+- By default, a function returns the result of the last line of the body.
