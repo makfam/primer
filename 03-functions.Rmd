@@ -1,7 +1,7 @@
 
 # Functions {#functions}
 
-<!-- add .groups, so no bad messages. -->
+<!-- add .groups, so no bad messages. DONE.-->
 
 <!-- https://ppbds.github.io/primer/wrangling.html#distributions -->
 
