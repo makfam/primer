@@ -227,7 +227,6 @@ tibble(col_1 = list(range(x)))
 
 Notice this is a 1x1 tibble with one observation, which is a list of one element. The element is a vector of the integers 2 and 7. Voila! You have just created a *list-column**.
 
-
 Lesson: If a function returns multiple values as a vector, like `range()` does, you can't use it directly to obtain a list-column, but you can wrap `list()` around it in order to get the same behavior.
 
 A list column is a column of your data which is a [list](https://adv-r.hadley.nz/vectors-chap.html#lists) rather than an atomic vector.  Like with lists, you can pipe in `str()` to read the column more easily.
@@ -902,11 +901,23 @@ What is the better metric, then? The median. The median, unlike the mean, is not
 
 ## Summary
 
+<!-- Add summaries for all major sections of the chapter. This is just for the function section and needs more clarification. -->
+
 <!-- MF: Should the summary include enough information that a student could get away with not reading the chapter? Or should it only be a tool of review for students who have read the chapter? -->
 
-This chapter, we focused on functions. 
+### Lists and list-columns
 
-<!-- Add summaries for all major sections of the chapter. This is just for the function section and needs more clarification. -->
+The introduction of the chapter was centered on a discussion of lists and list-columns. Key points from this section include:
+
+- A list is different from an atomic vector. Atomic vectors are familiar to us: each element of the vector has one value, and thus if an atomic vector is a column in your dataset, each observation gets a single value.  Lists, however, can contain vectors as elements.
+- There are various ways to create lists. We can directly input values inside `list()`, or wrap the values in `c()` first to create a vector element.
+- Any function that returns multiple values can be used to create a list output. To turn the output into a list, simply wrap the line of code with `list()`.
+- We can take a list column and, by applying an anonymous function to it with `map()`, create another list column. This is similar to taking a tibble and piping it into a `dplyr` function (such as `mutate()`) which gives you a new tibble that you can work with.
+- You can also use `map_*` functions to take a list column as an input and return an atomic vector -- a column with a single value per observation -- as an output. 
+
+### Functions
+
+This chapter, we focused on functions. 
 
 In particular, when building a function, you want to remember these key lessons:
 - Optimize usefulness by adding more formal arguments when needed. A function that only gives an option for `n` may not be as helpful as a function that allows us to enter options for a dataset, variable, and n value. 
