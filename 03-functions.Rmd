@@ -1,10 +1,6 @@
 
 # Functions {#functions}
 
-<!-- MF: THIS IS A TEST. Let me know if this works! -->
-
-<!-- ? -->
-
 <!-- Start by reading the distribution section of Chapter 2: -->
 
 <!-- https://ppbds.github.io/primer/wrangling.html#distributions -->
@@ -84,7 +80,6 @@
 
 <!-- https://aosmith.rbind.io/2018/08/29/getting-started-simulating-data/ -->
 <!-- https://aosmith.rbind.io/2018/06/05/a-closer-look-at-replicate-and-purrr/ -->
-
 
 
 The goal of this chapter is to reveal the __process__ a long-time useR employs for writing functions. We also want to illustrate why the process is the way it is. Merely looking at the finished product, e.g. source code for R packages, can be extremely deceiving. Reality is generally much uglier ... but more interesting! Powerful packages like **dplyr** and **purrr** are ready and waiting to apply your purpose-built functions to various bits of your data. If you can express your analytic wishes in a function, these tools will give you great power.
@@ -641,56 +636,98 @@ The tidyverse style guide has a very useful [chapter on how to construct error m
 
 In this section, we create a new function, generalize it, and learn more technical details about R functions.
 
-Our goal is to write a function that simulates throwing dice.
+Our goal is to write a function that draws samples from datasets found in `PPBDS/data`. 
 
-We will begin by creating a minimally viable function, `starter_die()`, which throws one die one time. 
+We will begin by creating a minimally viable function, `starter_sampler()`, which isolates a sample of variable `height` from the dataset `nhanes`. We start by selecting the variable we want, `height`, and then performing sample_n with a value of 1 to get one sample. Finally, we slice to isolate the result. 
+
+<!-- ```{r} -->
+<!-- my_sampler <- function(x, var, n = 1){ -->
+<!--  x %>% -->
+<!--    select(var) %>% -->
+<!--    drop_na() %>% -->
+<!--    sample_n(n) %>% -->
+<!--    slice() -->
+<!-- } -->
+
+<!-- my_sampler(x = kenya, var = "poverty") -->
+<!-- my_sampler(nhanes, var = "height") -->
+<!-- ``` -->
 
 ```{r}
-starter_die <- function() {
-  sample(1:6, 1)
+start_sampler <- function() {
+  nhanes %>% 
+    select(height) %>% 
+    sample_n(1) %>% 
+    slice()
 }
 ```
 
-From here, we can add a formal argument `n`, which requires the number of dice to be specified. However, if more than one dice is thrown, we want to make sure that any number from `1-6` has the chance of being returned. To do so, make sure the `replace` argument in `sample()` is set to `TRUE`. Now we have generalized the function `starter_dice()`!
+```{r}
+start_sampler()
+```
+
+That's interesting! However, it isn't very adaptable, is it? Let's add a formal argument `n`, which allows us to sample any number of `height`s from `nhanes`. 
 
 ```{r}
-starter_die <- function(n) {
-  sample(1:6, n, replace = TRUE)
+multiple_sampler <- function(n) {
+  nhanes %>% 
+    select(height) %>% 
+    sample_n(n) %>% 
+    slice()
 }
 ```
 
-What if we wanted to add a formal argument, `n`, that would be passed into `sample()`'s n specification? Now let's create an intermediate function `add_dice()` which throws n dice and adds the results.
+Now, when we call our new function, `multiple_sampler`, we want to enter an argument for `n`. Let's try calling `n` = 10 to get 10 resulting heights.
 
 ```{r}
-add_dice <- function(n) {
-  sum(sample(1:6, n, replace = TRUE))
+multiple_sampler(n = 10)
+```
+Great! Though we have inserted some flexibility in our function, it still isn't as useful as possible. What if we want to sample a variable other than `height`? Like last time, we will write a new function which adds the formal argument `var` for variable. This way, we can look at other variables within our dataset. 
+
+```{r}
+flexible_sampler <- function(var, n){
+  nhanes %>% 
+    select(var) %>% 
+    sample_n(n) %>% 
+    slice()
 }
 ```
 
-Congratulations! We have just generalized our function to take in any number of dice. But wait... is it really *any* value? Let's add in a few checks that make sure no weird inputs break our function.
+Let's test the variable `weight` instead of height. Recall that when we want a character variable, we place the variable inside quotes:
 
 ```{r}
-add_dice <- function(n) {
-  stopifnot(is.numeric(n))
-  sum(sample(1:6, n, replace = TRUE))
+flexible_sampler(var = "weight", n = 10)
+```
+Let's take it one step further. We will now completely optimize our function by inserting one more formal argument, `x`, which will allow us to sample from any dataset, not just `nhanes`.
+
+```{r}
+my_sampler <- function(x, var, n){
+  x %>% 
+    select(var) %>% 
+    sample_n(n) %>% 
+    slice()
 }
 ```
 
-```{r error=TRUE}
-add_dice(-1)
-```
-
-Oops! As you can see, we tried to use a negative number of dice, which will not fly. Let's alter the informal checks to stop the function if `n` is negative.
+Test our new function using the `kenya` dataset as `x`, `mean_age` as `var`, and 10 as our `n`. Feel free to test any number of datasets, variables, and n values using this sampler!
 
 ```{r}
-add_dice <- function(n) {
-  stopifnot(is.numeric(n))
-  stopifnot(n >= 0)
-  sum(sample(1:6, n, replace = TRUE))
+my_sampler(x = kenya, var = "mean_age", n = 10)
+```
+ 
+Our function is nearly perfect! One issue we may run into, however, is an NA value in our results. How can we avoid this? Recall our very valuable friend `drop_na`, which removes any values of `NA` from our results. After selecting the variable we want to inspect, we should call `drop_NA`:
+
+```{r}
+my_sampler <- function(x, var, n){
+  x %>% 
+    select(var) %>% 
+    drop_na() %>% 
+    sample_n(n) %>% 
+    slice()
 }
 ```
 
-As you can see, we have a function that works and takes in sensible arguments. Next, let's talk about about argument specifications and conventions.
+We have now created our very first flexible, useful, customizable function! 
 
 ### Argument names: freedom and conventions
 
