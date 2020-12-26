@@ -509,7 +509,9 @@ tibble(ID = 1:1000) %>%
     geom_bar()
 ```
 
-It is hardly surprising that 500 wins more often than 600 since the mean of `rv13` is `r mean(kenya$rv13)`. The mean seems like a pretty good guess. But it is not the best guess.
+It is hardly surprising that 500 wins more often than 600 since the mean of `rv13` is `r mean(kenya$rv13)`. The mean seems like a pretty good guess! But it is not the best guess. 
+
+To test whether the mean or the median is a better guess, we will use our created `prediction_game` function with the guesses of 442 (the median) and 539 (the mean) and plot the results. 
 
 ```{r}
 tibble(ID = 1:1000) %>% 
@@ -532,7 +534,7 @@ tibble(ID = 1:3, guess_1 = 800, guess_2 = 900) %>%
   mutate(result = map(ID, ~ no_NA_sampler(kenya, rv13, 10)))
 ```
 
-We can now manipulate the `result` column and then see which prediction did better.
+We can now manipulate the `result` column and then see which prediction did better. Using the same structure as before, we subtract our guesses from the variable we were guessing; in this case, the biggest value in 10 random samples.  
 
 ```{r}
 tibble(ID = 1:3, guess_1 = 800, guess_2 = 900) %>% 
@@ -599,7 +601,9 @@ tibble(ID = 1:1000) %>%
 
 <!-- DK: Useful points to include, maybe.
 
-### Argument names: freedom and conventions -->
+<!-- MF: Honestly, I think the argument names section is pretty much intuition. If you think it's important, we can add a sentence or two with the same sentiment. -->
+
+<!-- ### Argument names: freedom and conventions -->
 
 
 <!-- Understand the importance of argument names. We can name my arguments almost anything we like. Proof: -->
@@ -654,19 +658,25 @@ tibble(ID = 1:1000) %>%
 
 The introduction of the chapter was centered on a discussion of lists and list-columns. Key points from this section include:
 
-- A list is different from an atomic vector. Atomic vectors are familiar to us: each element of the vector has one value, and thus if an atomic vector is a column in your dataset, each observation gets a single value.  Lists, however, can contain vectors as elements.
+- A list is different from an atomic vector. Atomic vectors are familiar to us: each element of the vector has one value, and thus if an atomic vector is a column in your data set, each observation gets a single value.  Lists, however, can contain vectors as elements.
 - There are various ways to create lists. We can directly input values inside `list()`, or wrap the values in `c()` first to create a vector element.
 - Any function that returns multiple values can be used to create a list output. To turn the output into a list, simply wrap the line of code with `list()`.
 - We can take a list column and, by applying an anonymous function to it with `map()`, create another list column. This is similar to taking a tibble and piping it into a `dplyr` function (such as `mutate()`) which gives you a new tibble that you can work with.
 - You can also use `map_*` functions to take a list column as an input and return an atomic vector -- a column with a single value per observation -- as an output. 
 
-### Functions
+### Custom functions
 
 This chapter, we focused on functions. 
 
 In particular, when building a function, you want to remember these key lessons:
-- Optimize usefulness by adding more formal arguments when needed. A function that only gives an option for `n` may not be as helpful as a function that allows us to enter options for a dataset, variable, and n value. 
+- Optimize usefulness by adding more formal arguments when needed. A function that only gives an option for `n` may not be as helpful as a function that allows us to enter options for a data set, variable, and n value. 
 - As there is no *structural* relationship between our argument names (`n`) and that of `sample()` (which also includes `n`), ensure that argument names are sensible. This helps not only your readers, but also you. In short: using "bob_ross" to denote the number of samples you want... is a bad idea. 
 - Make sure we account for possible values of NA in our functions. This can be accomplished by placing something like `drop_na()` as another line of code within the function's body, or by adding an `na.rm =` argument to our function. We might even enforce our preferred default -- but at least we're giving the user a way to control the behavior around `NA`s.
 - By default, a function returns the result of the last line of the body.
+
+### Other important information
+- The median is often a more stable measure than the mean. 
+- When starting a function, remember that smaller steps are easier than trying to build everything in one motion. In general: start by writing the body, test the body in a basic function, and then add formal arguments. 
+- Use double curly braces around `var`s, since R does not know how to interpret variables when passed in an argument. The double curly braces tell R that `var` is a variable in the tibble created by our function.
+- Sensible names for formal arguments will not only help you, but also anyone who is reading your code. 
 
