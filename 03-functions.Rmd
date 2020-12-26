@@ -78,7 +78,7 @@ tibble(x = c(3, 7, 2)) %>%
   mutate(sq_root = sqrt((x)))
 ```
 
-map_* functions provide another approach.
+`map_*` functions provide another approach. A `map_*` function takes two required arguments. First is the object over which you want to iterate. This will generally be a column in the tibble you are working in. Second is the function which you want to run for each row in the tibble.
 
 ```{r}
 tibble(x = c(3, 7, 2)) %>% 
@@ -86,8 +86,6 @@ tibble(x = c(3, 7, 2)) %>%
 ```
 
 `map_dbl()` (pronounced "map-double") took the function `sqrt()` and applied it to each element of `x`. There are two tricky parts to the use of map_* functions. First, you need to put the tilde symbol --- the "~" --- before the call to the function. Second, you need to include a period --- the "." --- in the spot where the variable goes.
-
-A `map_*` function takes two required arguments. First is the object over which you want to iterate. This will generally be a column in the tibble you are working in. Second is the function which you want to run for each row in the tibble.
 
 We called these `map_*` functions (plural) before.  If you know the expected output of your function, you can specify that kind of vector:
 
@@ -101,7 +99,6 @@ We called these `map_*` functions (plural) before.  If you know the expected out
 Since our example produces numeric output, we use `map_dbl()` instead of `map()`.
 
 What's the difference between using `mutate()` and `map_*` functions? `map_*` functions are useful because of their ability to apply functions to every single element of a list, which `mutate()` cannot handle.
-
 
 ## List-columns and map functions
 
@@ -222,7 +219,6 @@ tibble(old = c(3, 7, 2)) %>%
   mutate(new = map_dbl(old, ~ . + 1))
 ```
 
-
 ### Creating your own functions
 
 There are plenty of built-in functions in R, such as the ones mentioned above. You can also create your own custom functions, which may look something like this:
@@ -327,7 +323,7 @@ no_NA_sampler(n = 2)
 no_NA_sampler(n = 25)
 ```
 
-What if we want to sample from a different variable than `height` or from a different tibble than `nhanes`? Again, the trick is to turn hard coded values into arguments.
+What if we want to sample from a different variable than `height` or from a different tibble than `nhanes`? Again, the trick is to turn hard coded values into arguments. The argument `tbl` is a placeholder for a data set, `n` for the number of samples you want extracted from your data set, and `var` for the variable in the samples that we are studying.
 
 ```{r}
 no_NA_sampler <- function(tbl, var, n){
@@ -341,7 +337,7 @@ no_NA_sampler(nhanes, height, n = 2)
 no_NA_sampler(trains, age, n = 5)
 ```
 
-The tricky part of using variable names as arguments is that R does not know how to interpret something like `age` when it is passed in as an argument. The double curly braces tell R, in essence, that `var` is a variable which is in the tibble which will be passed, in the pipe, to `pull()`. 
+R does not know how to interpret something like `age` when it is passed in an argument. The double curly braces around `var` tell R, in essence, that `var` is a variable in the tibble created from sampling from our imputed data set (`tbl`). 
 
 <!-- DK: I realize that the above is a lousy explanation. Feel free to change it completely. -->
 
@@ -426,27 +422,54 @@ The problem with this version is that we want `prediction_game()` to *return* a 
 
 <!-- DK: Add some code comments, especially {{var}} -->
 
-<!-- MF: Style guide says not to add comments in code chunks, but I think it would be valuable to explain this piece by piece. Or explain what we want to accomplish first & then put the work. -->
+<!-- MF: Style guide says not to add comments in code chunks, but is that okay here? -->
 
 ```{r}
 prediction_game <- function(guesses, tbl, var){
+  
+  # This is telling our function to stop if we do not select two guesses 
+  # in the format of c(guess 1, guess 2).
+  
   stopifnot(all(is_double(guesses)))
   stopifnot(length(guesses) == 2)
+  
+  # This tells the function that the "guess" inputted first in the 
+  # guesses is "your" guess, whereas the second input is "my" guess.
   
   your_guess <- guesses[1]
   my_guess <- guesses[2]
   
+  # Use the function no_NA_sampler to draw a sample from a data set
+  # of our choosing, with a {{var}} and n.
+  
   sampled_value <- no_NA_sampler(tbl, {{var}}, n = 1) 
+  
+  # Subtract the sampled value obtained from no_NA_sampler from 
+  # both of our guesses. 
   
   your_error <- abs(your_guess - sampled_value)
   my_error <- abs(my_guess - sampled_value)
   
+  # If the difference between your guess and the sampled value is 
+  # less than the difference between my guess and the sampled value
+  # (meaning that your guess was closer to the truth), the function
+  # returns the message "Guess, your_guess, wins!".
+  
   if(your_error < my_error){ 
     return(paste("Guess", your_guess, "wins!"))
   }
+  
+  # If your error exceeds my error (meaning that your guess was
+  # further than the truth than mine), the function prints the 
+  # message "Guess, my_guess, wins!" 
+  
   if(your_error > my_error){ 
     return(paste("Guess", my_guess, "wins!"))
   }
+  
+  # If we guess the same number, and our error rates are therefore
+  # identical, we return the message "A tie!". 
+  
   if(your_error == my_error){ 
     return("A tie!")
   }
