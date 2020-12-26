@@ -6,24 +6,30 @@
 
 <!-- Show posterior_interval() -->
 
-In Chapter \@ref(one-parameter), we learned how to do inference. Given certain assumptions about the problem, we created a joint distribution of the models under consideration and the data which might be observed. Once we observe the data, we go from the joint distribution to the conditional distribution of possible models given the data which we did, in fact, observe. That conditional distribution, suitably normalized, is our posterior probability distribution over the space of possible models. With that distribution, we can answer any question we might (reasonably) ask.
+In Chapter \@ref(one-parameter), we learned how to do inference. We created a joint distribution of the models under consideration and the data which might be observed. Once we observed the data, we went from the joint distribution to the conditional distribution of possible models given the data which we did, in fact, observe. That conditional distribution, suitably normalized, was our posterior probability distribution over the space of possible models. With that distribution, we can answer any question we might (reasonably) ask.
 
-But what a pain in the ass that whole process was! Do professionals actually go through all those steps every time they work on a data science problem? No! Don't be absurd. Instead, professionals use standard tools which, in an automated fashion, take care of those steps, taking us directly from assumptions and data to the posterior:
+<!-- DK: Need a gif here. -->
 
-$$p(models | data = data\ we\ observed)$$.
+*But what a pain in the ass that whole process was!* Do professionals actually go through all those steps every time they work on a data science problem? No! Don't be absurd. Instead, professionals use standard tools which, in an automated fashion, take care of those steps, taking us directly from assumptions and data to the posterior:
 
-Even then, however, the relative likelihood of different models is not that important. Models are invisible, mental entities with no more fiscal presence than unicorns or leprechauns. In the world itself, we make and test predictions. How many red beads will come from the urn next time we use our shovel? People with better models make better predictions. That is what matters.
+$$p(models | data = data\ we\ observed)$$
+
+Even then, however, the relative likelihood of different models is not that important. Models are invisible, mental entities with no more physical presence than unicorns or leprechauns. In the world itself, we make and test predictions. How many red beads will come from the urn next time we use our shovel? People with better models make better predictions. That is what matters.
 
 
 In addition to a change in tools, there are two more key differences in this chapter. First, Chapter \@ref(one-parameter) dealt with a limited set of specific models: 2401 possible models. The procedure used is just what we saw in Chapter \@ref(probability).  In this chapter, on the other hand, have a continuous parameter.  Second, Chapter \@ref(one-parameter) used models with just one parameter: the number of red beads, which we can also transform into a parameter $p$, the number of red beads divided by 2,400.  The  model in Chapter \@ref(one-parameter) was binomial, and there is only one unknown parameter $p$ in such models. Here, we have two unknown parameters: the mean $\mu$ of height in the US and the standard deviation, $\sigma$, of the normally distributed error term. 
 
 The purpose of this chapter is to demonstrate, slowly and thoroughly, how professionals do data science.
 
+```{r, echo = FALSE}
+knitr::include_graphics("07-two-parameters/images/learn_the ways.gif")
+```
+
 Data science is ultimately a moral act, so we will use the four [Cardinal Virtues](https://en.wikipedia.org/wiki/Cardinal_virtues) --- Wisdom, Justice, Courage and Temperance --- to organize our approach.  
 
 ## Wisdom
 
-```{r echo=FALSE, out.width="100%"}
+```{r echo = FALSE}
 knitr::include_graphics("other/images/Wisdom.jpg")
 ```
 
@@ -88,7 +94,7 @@ Be on the lookout for anything suspicious. Are there any NA's in your data set? 
 
 In addition to `glimpse()`, we can run `skim()`, from the **skimr** package, to calculate some summary statistics. 
 
-```{r, out.width="100%"}
+```{r}
 nhanes %>% 
   select(age, gender, height, survey) %>% 
   skim()
@@ -151,7 +157,7 @@ The other aspect of Wisdom is ethics. Just because we *can* make a model does no
 
 ## Justice
 
-```{r, echo=FALSE, out.width="100%"}
+```{r, echo = FALSE}
 knitr::include_graphics("other/images/Justice.jpg")
 ```
 
@@ -219,7 +225,7 @@ Since this is not a causal model, there is only one potential outcome --- which 
 
 ## Courage
 
-```{r echo=FALSE, out.width="100%"}
+```{r echo = FALSE}
 knitr::include_graphics("other/images/Courage.jpg")
 ```
 
@@ -367,7 +373,7 @@ ch7 %>%
 The fitted value represents the model's best guess at to what the true value of the outcome should be for that individual, given information about any covariates. This is a tricky concept since, after all, *we already know what the actual value is.* We commonly use "hat" notation for fitted values. $y_i$ is the actual height for man $i$. $\hat{y_i}$ is the fitted (or predicted or modeled) height for man $i$. It is the height we would guess if we did not know his true height. The residual, $r_i$, is the difference between the outcome ($y_i$) and the fitted value $\hat{y_i}$. These definitions lead to a natural decomposition of the outcome data:
 
 
-```{r, echo = FALSE, out.width="100%"}
+```{r, echo = FALSE}
 # Seems like it would be nice to have similar axes across the first two plots at
 # least. Want to make this easier to do in later chapters and standardize the
 # approach/code.
@@ -407,7 +413,7 @@ outcome + fitted + res +
 
 ## Temperance
 
-```{r echo=FALSE, out.width="100%"}
+```{r echo = FALSE}
 knitr::include_graphics("other/images/Temperance.jpg")
 ```
 
@@ -423,20 +429,20 @@ We have a model. What can we do with it? Let's answer the four questions with wh
 If we had the ideal Preceptor Table, one with a row for every man alive, and with their actual height, we could calculate this number easily. Just take the average of those 3 billion or so rows! Alas, in our actual Preceptor Table, the vast majority of heights are missing. Question marks make simple algebra impossible. So, as with any unknown number, we need estimate a posterior probability distribution. Objects created by `stan_glm()` make this easy to do.
 
 ```{r}
-newobs <- tibble(here = "hack")
+newobs <- tibble(constant = 1)
 
 pe <- posterior_epred(object = fit_obj,
                 newdata = newobs) %>% 
         as_tibble()
 ```
 
-The key function is `posterior_epred()`. The two arguments we provide are `object`, the fitted model object returned by `stan_glm()` and, newdata, which are the covariates associated with the unit for each we want to make a forecast. (In this case, `newdata` can be any tibble because an intercept-only model does not make use of covariates.) The `epred` in `posterior_epred()` stands for "**e**expected **pred**iction. In other words, if we pick a random adult male what do we "expect" his height to be. We also call this the "expected value."
+The key function is `posterior_epred()`. The two arguments we provide are `object`, the fitted model object returned by `stan_glm()` and, `newdata`, which are the covariates associated with the unit for each we want to make a forecast. (In this case, `newdata` can be any tibble because an intercept-only model does not make use of covariates. We don't really need a variable named `constant`, but including it does not harm.) The `epred` in `posterior_epred()` stands for "**e**expected **pred**iction. In other words, if we pick a random adult male what do we "expect" his height to be. We also call this the "expected value."
 
 <!-- DK: Tell the story about "mathematical hope." Maybe give more details on what the tibble is doing. Once new version comes out, replace with tibble(.rows = 1). -->
 
 We use `as_tibble()` to convert the matrix which is returned by `posterior_epred()`. Converting these 4,000 draws into a posterior probability distribution is straightforward.
 
-```{r, out.width="100%"}
+```{r}
 pe %>% 
   ggplot(aes(x = `1`)) +
     geom_histogram(aes(y = after_stat(count/sum(count))),
@@ -468,7 +474,7 @@ $$ y_i =  \mu + \epsilon_i $$
 With expected values or averages, we can ignore the $\epsilon_i$ term in this model. The expected value of $$\epsilon_i$$ is zero since, by assumption, $\epsilon_i \sim N(0, \sigma^2)$. However, we can't ignore $\epsilon_i$ when predicting the height for a single individual.
 
 ```{r}
-newobs <- tibble(here = "hack")
+newobs <- tibble(constant = 1)
 
 pp <- posterior_predict(object = fit_obj,
                   newdata = newobs) %>% 
@@ -480,7 +486,7 @@ pp
 
 As before, it is straightforward to turn draws from the posterior probability distribution into a graphic:
 
-```{r, out.width="100%"}
+```{r}
 pp %>% 
   ggplot(aes(x = `1`)) +
     geom_histogram(aes(y = after_stat(count/sum(count))),
@@ -516,7 +522,7 @@ Again, the key conceptual difficulty is the population. The problem we actually 
 Bayesian models are beautiful because, via the magic of simulation, we can answer (almost!) any question. With simulation, we just need to answer this step by step. Because the question is about four random individuals, we need `posterior_predict()` to give us four sets of draws from four identical posterior probability distributions, each one like the one from the previous question.
 
 ```{r}
-newobs <- tibble(here = rep("hack", 4))
+newobs <- tibble(constant = rep(1, 4))
 
 pp <- posterior_predict(object = fit_obj,
                   newdata = newobs) %>% 
@@ -527,7 +533,7 @@ pp <- posterior_predict(object = fit_obj,
 Note we need to add `mutate_all(as.numeric)` to the end of the pipe. This is caused by a bug --- or at least an awkwardness --- whereby the variable type provided by posterior_predict(), at least in the case of more than one observation, is `ppd` rather than `dbl`. The new code changes each column to numeric. Doing so makes each column of type double.
 
 
-```{r, out.width="100%"}
+```{r}
 pp %>% 
   rowwise() %>% 
   mutate(tallest = max(c_across(everything()))) %>% 
@@ -556,7 +562,7 @@ There is about a 75% chance that, when meeting 4 random men, the tallest will be
 The same approach will work for almost any question.
 
 ```{r}
-newobs <- tibble(here = rep("hack", 100))
+newobs <- tibble(constant = rep(1, 100))
 
 pp <- posterior_predict(object = fit_obj,
                   newdata = newobs) %>% 
@@ -564,7 +570,7 @@ pp <- posterior_predict(object = fit_obj,
         mutate_all(as.numeric)
 ```
 
-```{r, out.width="100%"}
+```{r}
 pp %>% 
   rowwise() %>% 
   mutate(third_tallest = sort(c_across(everything()), 
@@ -670,32 +676,169 @@ Given randomness, coverage will only be precisely correct by luck. The key point
 
 ## 0/1 Outcomes
 
-Variables with well-behaved, continuous ranges are the easiest to handle. We started with `height` because it was simple. Sadly, however, many variables are not like `height`. Consider `diabetes`, a variable in `nhanes` which takes on two possible values: 0 (if you do not have diabetes) and 1 (if you do). In the same way that we would like to construct a model which explains or predicts `height`, we would like to build a model which explains or predicts `diabetes`. 
+Variables with well-behaved, continuous ranges are the easiest to handle. We started with `height` because it was simple. Sadly, however, many variables are not like `height`. Consider `gender`, a variable in `nhanes` which takes on two possible values: "Male" and "Female". In the same way that we would like to construct a model which explains or predicts `height`, we would like to build a model which explains or predicts `gender`. We want to answer questions like:
 
-<!-- DK: Discuss cardinal virtues? -->
+*What is the probability that a random person who is 180 cm tall is female?*
 
-
-
-Before we do that, however, let's revisit the urn example from Chapter \@ref(one-parameter). 
+*Wisdom* suggests we start by looking at the data. Because models use numbers, we need to create a new variable, `female`, which is 1 for Females and 0 for males.
 
 
+```{r}
+ch7_b <- nhanes %>% 
+  select(age, gender, height) %>%
+  mutate(female = ifelse(gender == "Female", 1, 0)) %>% 
+  filter(age >= 18) %>% 
+  select(female, height) %>% 
+  drop_na()
 
-### gender ~ height
+ch7_b
+```
 
-<!-- ```{r} -->
-<!-- z <- nhanes %>%  -->
-<!--   select(gender, height) %>%  -->
-<!--   drop_na() -->
+```{r}
+ch7_b %>% 
+  ggplot(aes(x = height, y = female)) +
+  geom_jitter(height = 0.1, alpha = 0.05) +
+  labs(title = "Gender and Height",
+       subtitle = "Men are taller than women",
+       x = "Height (cm)",
+       y = NULL,
+       caption = "Data from NHANES") +
+  scale_y_continuous(breaks = c(0, 1),
+                     labels = c("Male", "Female"))
+```
 
 
-<!-- fit_3 <- stan_glm(diabetes ~ age, -->
-<!--                   data = ch7_diabetes, -->
-<!--                   family = binomial, -->
-<!--                   refresh = 0) -->
-<!-- ``` -->
+*Justice* guides us in noting that this is a predictive model. The math is complex:
+
+$$  \operatorname{Pr}(\text{Female} = 1) = \frac{\text{exp}(\beta_0 + \beta_1 \text{height})}{1 + \text{exp}(\beta_0 + \beta_1 \text{height})} $$
+
+<!-- DK: Insert discussion about why we use logistic models. -->
+
+*Courage* suggests that we use the same tools for fitting this logistic regression as we did above in fitting linear models.
 
 
 
+```{r}
+fit_2 <- stan_glm(data = ch7_b,
+                  formula = female ~ height,
+                  family = binomial,
+                  refresh = 0,
+                  seed = 27)
+```
+
+```{r}
+print(fit_2, digits = 3)
+```
+
+One major difference between linear and logistic models is that parameters in the latter are much harder to interpret. What does it mean, substantively, that $\beta_1$ is `r round(coef(fit_2)["height"], 2)`?
+
+We could, of course, estimate a linear model by using `family = guassian`.
+
+```{r}
+fit_2_lm <- stan_glm(data = ch7_b,
+                     formula = female ~ height,
+                     family = gaussian,
+                     refresh = 0,
+                     seed = 27)
+
+print(fit_2_lm, digits = 3)
+```
+
+
+Although the parameters are easier to interpret, that ease is a Siren's call. Follow it, and you will crash on the rocks on nonsense. 
+
+If you use a linear model with a Gaussian error term, you will have a model which can produce predicted values outside of the 0 to 1 range allowed for probabilities, as in this case.
+
+```{r}
+ch7_b %>% 
+  ggplot(aes(x = height, y = female)) +
+    geom_jitter(height = 0.1, alpha = 0.05) +
+    geom_line(aes(x = height, 
+                  y = fitted(fit_2)), 
+              color = "red") +
+    geom_line(aes(x = height, 
+                  y = fitted(fit_2_lm)), 
+              color = "blue") +
+    labs(title = "Gender and Height",
+         subtitle = "A linear model cam produce probabilities outside 0 to 1",
+         x = "Height (cm)",
+         y = NULL,
+         caption = "Data from NHANES") +
+    scale_y_continuous(breaks = c(0, 1),
+                       labels = c("Male", "Female"))
+  
+```
+
+Imagine we have a person who is 190 cm tall. What is the probability that this person is female? If we just use that input in the linear model, we get: $6.2 -0.034 * 190$ = -0.26$. Since it is impossible for a probability to be less than zero, this result is nonsense. Indeed, the primary impetus behind the creation of logistic regression models was to avoid such results.
+
+
+Fortunately, parameters are not what we care about. They are epiphenomenon, unicorns of our imagination. Instead, we want answers to our questions, for which *Temperance* --- and the functions in **rstanarm** --- is our guide. Recall our question:
+
+*What is the probability that a random person who is 180 cm tall is female?*
+
+```{r}
+newobs <- tibble(height = 180)
+
+pe <- posterior_epred(fit_2, newdata = newobs) %>% 
+  as_tibble()
+
+pe %>% 
+  ggplot(aes(x = `1`)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   bins = 100) +
+    labs(title = "Posterior Probability Distribution",
+         subtitle = "For probability 180 cm tall person is female",
+         x = "Probability",
+         y = "Probability",
+         caption = "Data source: NHANES") + 
+    scale_x_continuous(labels = scales::percent_format()) +
+    scale_y_continuous(labels = scales::percent_format()) 
+
+```
+
+There is only about a 1 in 20 chance that a 180 centimeter tall person is female.
+
+<!-- DK: Discuss the meaning of ppd of a probability. -->
+
+Another major difference with logistic models is that `posterior_epred()` and `posterior_predict()` return different types of objects. `posterior_epred()` returns probabilities, as above. `posterior_predict()`, on the other hand, returns predictions, as its name suggests. In other words, it returns zeros and ones. Consider another question:
+
+*In a group of 100 people who are 180 centimeters tall, how many will be women?*
+
+```{r}
+newobs <- tibble(height = rep(180, 100))
+
+pp <- posterior_predict(fit_2, newdata = newobs) %>% 
+  as_tibble() %>% 
+  mutate_all(as.numeric)
+
+pp
+```
+
+
+<!-- DK: I am confused! Is this a posterior predictive distribution or a posterior preditive probability distribution? -->
+
+Each column is 4,000 draws from the posterior predictive distribution for the gender of a person who is 180 cm tall. (Since all 100 people have the same height, all the columns are draws from the same distribution.) We can treat this object on a row-by-row basis.
+
+<!-- DK: More detail! -->
+
+
+```{r}
+pp %>% 
+  rowwise() %>% 
+  mutate(total = sum(c_across(everything()))) %>% 
+  ggplot(aes(x = total)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   bins = 100) +
+    labs(title = "Posterior Probability Distribution",
+         subtitle = "Number of women among 100 people 180 cm tall",
+         x = "Number of Women",
+         y = "Probability",
+         caption = "Data source: NHANES") + 
+    scale_x_continuous(labels = scales::number_format(accuracy = 1)) +
+    scale_y_continuous(labels = scales::percent_format()) 
+```
+
+That 5 or 6 women is the most likely number is very consistent with the answer to the first question. There we found that a random person who is 180 cm tall has a 5% or 6% chance of being female. So, with 100 such people, 5 or 6 seems a reasonable total. But the *expect value* from `posterior_epred()`, although it does provide a sense of where the center of the predictive distribution will be, does not tell us much about the range of possible outcomes. For that, we need `posterior_predict()`.
 
 
 ## Summary
