@@ -1,34 +1,15 @@
 # Functions {#functions}
 
-<!-- Key concept to focus on is the idea of a distribution and draws therefrom. This connects to chapter 2, where we introduced distributions and to chapter 5, where we explain probability distributions. In particular, we should show various ways to measure center and variability. These are cool and important concepts. Is "center" the mean or the median or the trimmed mean or . . . Is "variability" the standard deviation, the mean absolute deviation, the standard deviation of the median absolute deviation or . . . There is nothing explicitly "statistical" here. We are just trying to connect English words to specific formulas. We might show the distributions for which these measures give the same answers and then some (mainly skewed) for which they don't. How to explore these concepts in the context of function writing? Perhaps by writing functions like my_mean() and my_median()? Or maybe focus on a function which calculates MAD SD? Then use list-columns to compare this function to other choices? -->
+<!-- Last exercise: Create a distribution with an very fat tail. Draw a sample 1,000 times. Calculate the mean and the median each time. Overlay a plot of the distribution and of the means and the medians. All the medians will be from the middle of the distribution. They are "informative." All the means will be from the tail, no where near the middle of the distribution. The means will be around the true mean and the medians will be around the true medians. It is just that the true mean is not informative. We could do this by having a distribution with 100,000 observations, from which we draw 4,000 observations, just like the default behavior of stan_glm(). -->
 
-<!-- Lesson: If you have a really skewed distribution, then median is a more stable measure than mean, and MAD (median absolute difference -- which means absolute difference from the median) is a more stable measure than standard deviation. Results depends too much on who ended up in the sample, like Bill Gates. -->
+<!-- Or: Take a real data set, calculated a mean and sd. Then do 1,000 draws from that. Then, plot the densities of the raw data and the simulated data on top of one another. -->
 
-<!-- Related: Teach random draws. We introduce random variables at the end of chapter 2. Do more with them here. For example, with a data set, calculated a mean and sd. Then do 1,000 draws from that. Then, plot the densities of the raw data and the simulated data on top of one another. -->
+<!-- Advanced form of the guessing game in which we are allowed to provide a function. The goal of inference is to come up with a function which wins the prediction game. -->
 
-<!-- Standard errors, qua standard errors, are a tricky thing to teach. But what if, instead of teaching them as standard errors, we just introduce the formula as a simple way to approximate something which, when multiplied by 2, and then added/subtracted from the mean, gives you a pretty useful 95% confidence interval. Then we could do the same for MAD SD, and show how that works better for skewed variables! Here, "works better" means that, if you do it 1,000 times, it works better on average. No! Too much! -->
+<!-- This is currently in problem set #3: Change the objective function. The simplest form of the Guessing Game just counts each contest separately. A more advanced for would give you a penalty which varies depending on how wrong you are. (This, obviously, is one way to think about minimizing the squared residuals.) This is very fun because there are many different penalty functions, each of which may lead to a different function winning the Guessing Game. -->
 
-<!-- The main use case is the "Guessing Game." Imagine that you are I are using the kenya data set and the distance, pop_density or rv13 variables. (All of which are quite skewed. We might also experiment with the poverty variable, which is less skewed. But skewed variables make this more interesting.) -->
 
-<!-- In the Guessing Game, you guess a number and I guess a number. The goal is to get closest to a random draw from all the values of distance (or whatever). We do this 1,000 times. Whoever gets closer more often, wins the Guessing Game.  -->
-
-<!-- This is a useful exercise for several reasons. First, coding it up is a good practice for writing a function. Indeed, we might re-write the whole chapter to focus on this example. Second, once we have a function, which runs one iteration of the Game --- maybe it takes the data set (or maybe a vector of values?), my guess and your guess, and then returns the winner --- we can use list columns and map_functions to run it a thousand times. This is all more fun and more interesting that stupid max-minus-min functions. -->
-
-<!-- Third, the Guessing Game gets at key statistical issues. There is a lot of meat there, all things that we will revisit many times. Some things to highlight, many of which can be put into the Guessing Game. -->
-
-<!-- 1) Guess a formula rather than a number. Presumably, you and I get to see (all of?) the data before playing the game. In the simplest version, we look at the data and give you a number. (The mean and median both do well in this game, obviously.) But, in a more advanced form of the game, we might be allowed to provide a function. The goal of inference is to come up with a function which wins the prediction game.) -->
-
-<!-- 2) Change the objective function. The simplest form of the Guessing Game just counts each contest separately. A more advanced for would give you a penalty which varies depending on how wrong you are. (This, obviously, is one way to think about minimizing the squared residuals.) This is very fun because there are many different penalty functions, each of which may lead to a different function winning the Guessing Game. -->
-
-<!-- 3) The chapter climaxes with the following cool result: If you are minimizing the sum (or average) of the squared residuals, guessing the mean wins the Guessing Game. However, if you are minimizing the sum (or average) of the absolute values of the residuals, you should guess the median. -->
-
-<!-- 4) Another form of the Guessing Game is like a casino. One person (the Casino) gives a 50% confidence interval. The other person gets to pick either inside or outside. Then there is a draw. The Casino wins if the second person can't consistently win. -->
-
-<!-- Key question: Do we explain standard error here? Could be easy! Calculate the mean. Calculate the sd. Divide and scale by the square root of n. Voila! But, still, I think No. But we should explain everything short of standard error.  -->
-
-<!-- group_nest() might be a useful function.  -->
-
-<!-- Might also show how to add lots of plots to a tibble and then pick out the ones that show cool stuff. If you run 1,000 experiments, show the plots of the 5 extreme ones. -->
+<!-- Another form of the Guessing Game is like a casino. One person (the Casino) gives a 50% confidence interval. The other person gets to pick either inside or outside. Then there is a draw. The Casino wins if the second person can't consistently win. -->
 
 
 ## Introduction
@@ -115,7 +96,8 @@ The above object, x, contains a numeric vector as an element. How do we extract 
 x[[1]][1]
 ```
 
-Recall the example from Chapter \@ref(wrangling) that  lists are like a pepper jar which contains more pepper packets. Don't forget the square brackets!
+
+<!-- BG: I removed the "recall pepper packet analogy" because it no longer exists in Ch. 2 -->
 
 There are a number of built-in R functions that output lists. For example, the ***ggplot***s you have been making store all of the plot information in lists.
 
@@ -123,6 +105,8 @@ Any function that returns multiple values can be used to create a list output by
 
 ```{r}
 x <- rnorm(10)
+
+# range() returns the min and max of the argument 
 
 range(x)
 
@@ -157,6 +141,8 @@ nhanes %>%
   drop_na() %>% 
   group_by(gender)
 ```
+
+<!-- BG: Here it says we use list() to wrap quantile(), but map() does that in the code below. Is it supposed to use list() here? -->
 
 Next, we will create a list-column by wrapping `quantile()` with `list()`. `quantile()` naturally produces a numeric vector of the quantiles of `height`, and wrapping with `list()` will capture this numeric vector as a list.
 
@@ -268,8 +254,7 @@ This is related to the valuable Telescope Rule:
 
 > It is faster to make a four-inch mirror and then a six-inch mirror than it is to make a six-inch mirror.
 
-
-### `no_NA_sampler()`
+## `no_NA_sampler()`
 
 Assume that we want to sample 10 observations for `height` from the `nhanes` tibble from the **primer.data** package. That is easy to do with the built in function `sample()`.
 
@@ -368,7 +353,7 @@ no_NA_sampler <- function(tbl, var, n){
 }
 ```
 
-### Prediction Game
+## Prediction Game
 
 Let's play a prediction game. Consider the `kenya` tibble from **primer.data**.
 
@@ -422,7 +407,6 @@ The problem with this version is that we want `prediction_game()` to *return* a 
 
 <!-- DK: Add some code comments, especially {{var}} -->
 
-<!-- MF: Style guide says not to add comments in code chunks, but is that okay here? -->
 
 ```{r}
 prediction_game <- function(guesses, tbl, var){
@@ -564,95 +548,8 @@ tibble(ID = 1:1000, guess_1 = 800, guess_2 = 900) %>%
 
 Empirically, we see than 900 is a much better guess than 800.
 
-#### Measures of the center of a distribution
-
-Let's play a new game. Pretend that we don't have access to the entire `kenya` data set. Instead, someone is going to draw 25 values of `rv13` at random. Our job is to calculate the `mean()` and `median()` of each of those samples and explore which of the two measures is more "stable."
-
-```{r}
-tibble(ID = 1:3) %>% 
-  mutate(samp = map(ID, ~ no_NA_sampler(kenya, rv13, 25))) %>% 
-  mutate(median_rv13 = map_dbl(samp, ~ median(.))) %>% 
-  mutate(mean_rv13 = map_dbl(samp, ~ mean(.)))         
-```
-
-As usual with right-skewed distributions, the median is smaller than the mean. Let's do this 1,000 times and look at the distribution of these estimates.
-
-```{r, cache = TRUE}
-tibble(ID = 1:1000) %>% 
-  mutate(samp = map(ID, ~ no_NA_sampler(kenya, rv13, 25))) %>% 
-  mutate(median_rv13 = map_dbl(samp, ~ median(.))) %>% 
-  mutate(mean_rv13 = map_dbl(samp, ~ mean(.))) %>% 
-  pivot_longer(cols = median_rv13:mean_rv13,
-               names_to = "measure",
-               values_to = "estimate") %>% 
-  ggplot(aes(estimate, fill = measure)) +
-    geom_histogram(alpha = 0.5, 
-                   bins = 100, 
-                   position = "identity") +
-    labs(title = "Distribution of Measures of the Center",
-         subtitle = "The median is a more stable measure than the mean",
-         x = "Estimate",
-         y = "Count") + 
-    scale_x_continuous(labels = scales::number_format())
-```
-
-
-<!-- DK: Not even sure if this shows what we want! But finishing off with a chart like this is probably a good idea. -->
-
-<!-- DK: Useful points to include, maybe.
-
-<!-- MF: Honestly, I think the argument names section is pretty much intuition. If you think it's important, we can add a sentence or two with the same sentiment. -->
-
-<!-- ### Argument names: freedom and conventions -->
-
-
-<!-- Understand the importance of argument names. We can name my arguments almost anything we like. Proof: -->
-
-<!-- ```{r} -->
-<!-- multiple_sampler <- function(bob_ross) { -->
-<!--   nhanes %>%  -->
-<!--     select(height) %>%  -->
-<!--     sample_n(bob_ross) %>%  -->
-<!--     slice() -->
-<!-- } -->
-
-<!-- multiple_sampler(bob_ross = 3) -->
-<!-- ``` -->
-
-<!-- While we *can* name our argument after a famous painter, it's usually a bad idea. Take all opportunities to make things more self-explanatory via meaningful names. -->
-
-<!-- If you are going to pass the arguments of your function as arguments of a built-in function, consider copying the argument names. Unless you have a good reason to do your own thing (some argument names are bad!), be consistent with the existing function. Again, the reason is to reduce your cognitive load.  -->
-
-<!-- We took this detour so you could see there is no *structural* relationship between our argument (`n`) and that of `sample()` (which also includes `n`). The similarity or equivalence of the names __accomplishes nothing__ as far as R is concerned; it is solely for the benefit of humans reading, writing, and using the code. Which is very important! -->
-
-<!-- Maybe useful?
-
-### What a function returns -->
-
-<!-- By default, a function returns the result of the last line of the body. We are just letting that happen with the line `sum(sample(1:6, n, replace = TRUE))`. However, there is an explicit function for this: `return()`. We could just as easily make this the last line of my function's body: -->
-
-<!-- ```{r echo = FALSE} -->
-<!-- add_dice <- function(n = 2) { -->
-<!--   stopifnot(is.numeric(n)) -->
-<!--   stopifnot(n >= 0) -->
-<!--   sum(sample(1:6, n, replace = TRUE)) -->
-<!-- } -->
-<!-- ``` -->
-
-<!-- ```{r eval=FALSE} -->
-<!-- return(sum(sample(1:6, n, replace = TRUE))) -->
-<!-- ``` -->
-
-<!-- You absolutely must use `return()` if you want to return early based on some condition, i.e. before execution gets to the last line of the body. Otherwise, you can decide your own conventions about when you use `return()` and when you don't. -->
-
-
-
-
 ## Summary
 
-<!-- Add summaries for all major sections of the chapter. This is just for the function section and needs more clarification. -->
-
-<!-- MF: Should the summary include enough information that a student could get away with not reading the chapter? Or should it only be a tool of review for students who have read the chapter? -->
 
 ### Lists and list-columns
 
@@ -673,6 +570,21 @@ In particular, when building a function, you want to remember these key lessons:
 - As there is no *structural* relationship between our argument names (`n`) and that of `sample()` (which also includes `n`), ensure that argument names are sensible. This helps not only your readers, but also you. In short: using "bob_ross" to denote the number of samples you want... is a bad idea. 
 - Make sure we account for possible values of NA in our functions. This can be accomplished by placing something like `drop_na()` as another line of code within the function's body, or by adding an `na.rm =` argument to our function. We might even enforce our preferred default -- but at least we're giving the user a way to control the behavior around `NA`s.
 - By default, a function returns the result of the last line of the body.
+- When starting a function, remember that smaller steps are easier than trying to build everything in one motion. In general: start by writing the body, test the body in a basic function, and then add formal arguments.  
+- Use double curly braces around `var`s, since R does not know how to interpret variables when passed in an argument. The double curly braces tell R that `var` is a variable in the tibble created by our function.  
+
+
+### Distributions
+
+
+- The word "distribution" can mean two things. First, it is an object --- a mathematical formula, an imaginary urn --- from which you can draw values. Second, it is a list of such values.   
+- The two most important aspects of a distribution are its *center* and its *variability*.
+- The median is often a more stable measure of the center than the mean. The mad (scaled median absolute deviation) is often a more stable measure of variation than the standard deviation. 
+- Outliers cause a lack a stability. In a distribution without outliers, the mean/median and mad/sd are so close in value that it does not matter much which ones you use.
+
+
+
+
 
 ### Other important information
 - The median is often a more stable measure than the mean. 

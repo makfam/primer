@@ -2,6 +2,12 @@
 
 Everyone loves visualizations. 
 
+<!-- DK: economist theme causes the subtitle (and other labels) to bleed into the title. Can we clean this up? Use a different theme? -->
+
+<!-- DK: Would be nice if the plot featured a statistical measure of some kind (maybe a 95% confidence interval) so that we have a motivation for learning about distributions. Probably need a very different plot. Maybe something political? Election 2020? -->
+
+<!-- DK: Replace airquality data set with one of our primer.data sets. -->
+
 
 ```{r out.width = "100%", message = FALSE, echo = FALSE}
 library(tidyverse)
@@ -956,7 +962,7 @@ A musical interlude inspired by the Tidyverse:
 knitr::include_app("https://www.youtube.com/watch?v=p8Py9C8iq2s")
 ```
 
-
+<!-- DK: Don't use this data set. -->
 
 The next common task when working with data frames is to compute *summary statistics*. Summary statistics are single numerical values that summarize a large number of values. Commonly known examples of summary statistics include the *mean* (also called the average) and the *median* (the middle value). Other examples of summary statistics that might not immediately come to mind include the *sum*, the smallest value also called the *minimum*, the largest value also called the *maximum*, and the *standard deviation*.
 
@@ -975,63 +981,123 @@ Recall the output of the `summary()` function.
 
 ```{r}
 airquality %>% 
-  summarize(mean = mean(Temp), std_dev = sd(Temp))
+  summarize(mean = mean(Temp), 
+            std_dev = sd(Temp))
 ```
 
 The `mean()` and `sd()` summary functions go inside the `summarize()`  function from the **dplyr** package. Note you can also use the British English spelling of `summarise()`. The `summarize()` function takes in a data frame and returns a data frame with only one row corresponding to the summary statistics. 
 
 
 
-### Statistics and missing values
+### Statistics for distributions
 
-<!-- DK: Maybe ntile()? Others? Discuss na.rm = TRUE; quantile; is.na(); acting on logical vectors -->
+A variable in a tibble is a column, a vector of values. We sometimes refer to this vector as a "distribution." This is somewhat sloppy in that a distribution can be many things, most commonly a mathematical formula. But, strictly speaking, a "frequency distribution" or an "empirical distribution" is a list of values, so this usage is not unreasonable.
 
-`mean()` and `sd()` are just two of the summary functions. What are other summary functions we can use inside the `summarize()`? Here are just a few:
+*There are two distinct concepts: a distribution and a set values drawn from that distribution.*  But, in everyday use, we apply "distribution" to both. When given a distribution (meaning a vector of numbers), we often use `geom_histogram()` or `geom_density()` to look at it. But, sometimes, we don't want to look at the whole thing. We just want some summary measures which report the key aspects of the distribution. The two most important attributes of a distribution are its *center* and its *variation* around that center.
 
-* mean(): the the average
-* min() and max(): the minimum and maximum values, respectively
-* sd(): the standard deviation, which is a measure of spread
-* sum(): the total amount when adding multiple numbers
-* n(): a count of the number of rows  
-* n_distinct(): the number of distinct values
-
-
+We use `summarize()` to calculate statistics for a variable, a column, a vector of values or a distribution. Note the language sloppiness. For the purposes of this book, "variable," "column," "vector," and "distribution" all mean the same thing. Popular statistical functions include: `mean()`, `median()`, `min()`, `max()`, `n()` and `sum()`. Functions which may be new to you include three measures of the "spread" of a distribution: `sd()` (the standard deviation), `mad()` (the scaled median absolute deviation) and `quantile()` (use to calculate an *interval* which includes a specified proportion of the values). 
 
 **`mean()`**
 
-The *mean* is the most commonly reported measure of center.  It is commonly called the *average* though this term can be a little ambiguous.  The mean is the sum of all of the data elements divided by how many elements there are. If we have $n$ data points, the mean is given by: 
+The mean, or average, is the most commonly reported measure of the center of a distribution.  The mean is the sum of all of the data elements divided by how many elements there are. If we have $N$ data points, the mean is given by: 
 
-$$Mean = \frac{x_1 + x_2 + \cdots + x_n}{n}$$
+$$\bar{x} = \frac{x_1 + x_2 + \cdots + x_N}{N}$$
 
 **`median()`**
 
-The median is calculated by first sorting a variable's data from smallest to largest. After sorting the data, the middle element in the list is the *median*.  If the middle falls between two values, then the median is the mean of those two middle values.
+<!-- DK: Use math formula, like this one: https://math.stackexchange.com/questions/1097546/what-is-the-general-formula-for-calculating-the-median -->
+
+The median is another commonly reported measure of the center of a distribution, calculated by first sorting the vector of values from smallest to largest. The middle element in the sorted list is the *median*.  If the middle falls between two values, then the median is the mean of those two middle values. The median and the mean are the two most common measures of the *center* of a distribution. The median is more stable, less affected by outliers. There is no widely accepted symbol for the median, although $\tilde{x}$ is not uncommon.
 
 **`sd()`**
 
-The *standard deviation* ($sd$) of a variable is essentially a measure of how far we expect a given data value will be from its mean.  The formula can be a little intimidating at first.
+The standard deviation* (*sd*) of a distribution is a measure of its variation around the mean.  
 
-$$sd = \sqrt{\frac{(x_1 - Mean)^2 + (x_2 - Mean)^2 + \cdots + (x_n - Mean)^2}{n - 1}}$$
+$$\text{sd} = \sqrt{\frac{(x_1 - \bar{x})^2 + (x_2 - \bar{x})^2 + \cdots + (x_n - \bar{x})^2}{n - 1}}$$
+<!-- DK: More detail. How much does it cover? Plot a not-too-weirdish distribution and show two sd's on it. -->
 
 
-We can also run summary statistics `across()` multiple columns at the same time. To get a better understanding of the `across()` helper function, run `?across` in your console and see what arguments it takes. Suppose we wanted to take the `mean()` of both the `Temp` and the `Wind` variables. 
+**`mad()`**
+
+The scaled median absolute deviation (*mad*) is a measure of variation around the median.  It is not as popular as the standard deviation. The formula for calculating *mad* is a bit mysterious.
+
+
+$$\text{mad} = 1.4826 \times \text{median}(abs(x - \tilde{x}))$$
+
+The basic idea for both *sd* and *mad* is that we need a measure of variation around the center of the distribution. *sd* uses the mean, $\bar{x}$, as its estimate of the center while *mad* uses the median, $\tilde{x}$. Because *mad* uses the absolute difference, as opposed to the squared difference, it is more robust to outliers. The 1.4826 multiplier causes the *mad* and the *sd* to be identical in the (important) case of standard normal distributions, a topic we will cover in Chapter \@ref(wrangling).
+
+<!-- DK: Could have more conversation. -->
+
+<!-- DK: These formulas are inconsistent, with one using vectors. Should make these consistent, perhaps even give formula for median. -->
+
+
+**`quantile()`**
+
+The *quantile* of a distribution is the value of that distribution which occupies a specific percentile location in the sorted list of values. 
+
+The 5th percentile distribution is the point below which 5% of the data falls. The 95th percentile is, similarly, the point below which 95% of the data falls. The 50th percentile, the median, splits the data into two separate, and equal, parts. The minimum is at the 0th percentile. The maximum is at the 100th percentile.
+
+Let's take a look at the `poverty` variable in the `kenya` tibble from the **primer.data** package. `poverty` is the percentage of residents in each community with incomes below the poverty line. Let's first confirm that connections between `quantile()` and simpler functions.
 
 ```{r}
-airquality %>%
-  summarize(across(c(Temp, Wind), mean))
+c(min(kenya$poverty), median(kenya$poverty), max(kenya$poverty))
+quantile(kenya$poverty, probs = c(0, 0.5, 1))
 ```
 
+The `probs` argument allows us to specify the percentile(s) we want. Two of the most important percentiles are the 2.5th and 97.5th because they define the *95% interval*, a central range which includes 95% of the values.
+
+```{r}
+quantile(kenya$poverty, probs = c(0.025, 0.975))
+```
+
+The interval between these two percentiles includes 95% of all the values in the distribution. Depending on the context, this interval is sometimes called a "confidence interval" or "uncertainty interval" or "compatibility interval." Different percentile ranges create intervals of different widths. 
+
+An interesting fact is that, most of the time, the 95% confidence interval is, roughly, the same as the center of the distribution $\pm$ two times the standard deviation.
+
+In distributions without major outliers, the mean/median and sd/mad will be very similar to each other.
+
+```{r}
+kenya %>% 
+  summarise(mean = mean(poverty),
+            median = median(poverty),
+            sd = sd(poverty),
+            mad = mad(poverty))
+```
+
+It follows that intervals defined with them will be similar.
+
+```{r}
+kenya %>% 
+  summarise(interval_1_bottom = mean(poverty) - 2 * sd(poverty),
+            interval_1_top = mean(poverty) + 2 * sd(poverty),
+            interval_2_bottom = median(poverty) - 2 * mad(poverty),
+            interval_2_top = median(poverty) + 2 * mad(poverty))
+```
+
+These intervals are similar to each other and similar to the 95% interval calculated above. The match is only roughly true, but it is good enough for most applied work.
+
+If there is an `NA` value in the variable, any statistical function like `mean()` will return `NA`. You can fix this by using `na.rm = TRUE` with the statistical function.
+
+<!-- DK: Might make a nice looking plot. -->
 
 ### `group_by()`
 
-Let's begin by revisiting the code in the previous section. We used the `mean()` argument to `summarize()` to calculate the average `Temp` value of the entire year.
+We can the use `mean()` with `summarize()` to calculate the average `Temp` value of the entire year.
 
 ```{r}
 airquality %>% 
   summarize(mean = mean(Temp))
 ```
 
-However, let's say instead of a single mean temperature for the whole year, you would like 5 mean temperatures, one for each of the 5 months in which data was gathered. In other words, we would like to compute the mean temperature split by month. We can do this by "grouping" temperature observations by the values of `Month`.Run the following code:
+However, let's say instead of a single mean temperature for the whole year, you would like 5 mean temperatures, one for each of the 5 months in which data was gathered. In other words, we would like to compute the mean temperature split by month. We can do this by "grouping" temperature observations by the values of `Month`. Consider:
+
+
+```{r}
+airquality %>% 
+  group_by(Month)
+```
+
+The data is the same as before, but note the "Groups" message at the top. R is informing you that this tibble has been grouped at that any operation you perform now will be done for each `Month`. Example: 
 
 ```{r}
 airquality %>% 
@@ -1039,7 +1105,7 @@ airquality %>%
   summarize(mean = mean(Temp))
 ```
 
-Notice the warning R gives us. The warning means that the tibble which issues forth from the end of the pipe has been "ungrouped". This means the group attribute we applied with `group_by()` no longer exists. This behavior is default, but what if we want to keep the group attribute? (i.e., we want the resulting tibble to still be grouped by month) 
+Notice the message R sends us. The warning means that the tibble which issues forth from the end of the pipe has been "ungrouped". This means the group attribute we applied with `group_by()` has been removed. This behavior is the (sensible) default.
 
 The proper way to handle the situation, here and everywhere else that we use `group_by()` and `summarize()`, is to specify the `.groups` argument.
 
@@ -1052,82 +1118,10 @@ airquality %>%
 
 This code does the same thing as the first version, but does not issue a warning, since we have made an affirmative decision to drop any grouping variables.
 
+The `group_by()` function doesn't change data frames by itself. Rather it changes the *meta-data*, or data about the data, specifically the grouping structure. It is only after we apply the `summarize()` function that the tibble changes.
 
-**Note:** The `group_by()` function doesn't change data frames by itself. Rather it changes the *meta-data*, or data about the data, specifically the grouping structure. It is only after we apply the `summarize()` function that the data frame changes.
+If you have a tibble which has been grouped, you can remove the grouping variable by using `ungroup()`. When your R code is behaving in a weird way, especially when it is "losing" rows, the problem is often solved by using `ungroup()` in the pipe.
 
-
-<!-- #### Grouping by more than one variable -->
-
-<!-- You are not limited to grouping by one variable. Say you want to know the number of flights leaving each of the three New York City airports *for each month*. We can also group by a second variable `month` using `group_by(origin, month)`: -->
-
-<!-- ```{r} -->
-<!-- flights %>%  -->
-<!--   group_by(origin, month) %>%  -->
-<!--   summarize(count = n(), -->
-<!--             .groups = "drop") -->
-<!-- ``` -->
-
-<!-- Observe that there are 36 rows to `by_origin_monthly` because there are 12 months for 3 airports (`EWR`, `JFK`, and `LGA`).  -->
-
-<!-- Why do we `group_by(origin, month)` and not `group_by(origin)` and then `group_by(month)`? Let's investigate: -->
-
-<!-- ```{r} -->
-<!-- flights %>%  -->
-<!--   group_by(origin) %>%  -->
-<!--   group_by(month) %>%  -->
-<!--   summarize(count = n(), -->
-<!--             .groups = "drop") -->
-<!-- ``` -->
-
-<!-- What happened here is that the second `group_by(month)` overwrote the grouping structure meta-data of the earlier `group_by(origin)`, so that in the end we are only grouping by `month`. The lesson here is if you want to `group_by()` two or more variables, you should include all the variables at the same time in the same `group_by()` adding a comma between the variable names. -->
-
-
-### NA values 
-
-In some datasets, some values are returned as `NA`? `NA` is how R encodes *missing values*  where `NA` indicates "not available" or "not applicable." If a value for a particular row and a particular column does not exist, `NA` is stored instead. Values can be missing for many reasons. Perhaps the data was collected but someone forgot to enter it? Perhaps the data was not collected at all because it was too difficult to do so? Who knows! You'll often encounter issues with missing values when working with real data.
-
-
-Recall our dataset `airquality`. Notice the `NA` values in the `Ozone` variable.
-
-```{r}
-airquality %>% 
-  select(Ozone)
-```
-
-Any time you try to calculate a summary statistic of a variable that has one or more `NA` missing values in R, `NA` is returned like such:
-
-```{r}
-airquality %>% 
-  summarize(mean_ozone = mean(Ozone))
-```
-
-To work around this fact, you can set the `na.rm` argument to `TRUE`, where `rm` is short for "remove"; this will ignore any `NA` missing values and only return the summary value for all non-missing values. 
-
-```{r}
-airquality %>% 
-  summarize(ozone_avg = (mean(Ozone, na.rm = TRUE)))
-```
-
-**Note:** The `na.rm = TRUE` are used as arguments to the `mean()` and `sd()` summary functions individually, and not to the `summarize()` function.
-
-However, one needs to be cautious whenever ignoring missing values as we've just done. There are possible ramifications of blindly sweeping rows with missing values "under the rug." This is in fact why the `na.rm` argument to any summary statistic function in R is set to `FALSE` by default. In other words, R does not ignore rows with missing values by default. R is alerting you to the presence of missing data and that you should be mindful of its absence.
-
-
-Another alternative we can use is the `drop_na()` function. We can either drop all `NA` values for the entire data set or individual variables. 
-
-When no argument is placed inside `drop_na()`, the function applies to the entire dataset.
-
-```{r}
-airquality %>% 
-  drop_na()
-```
-
-When the variable of interest is placed inside `drop_na()`, the function only applies to that variable. 
-
-```{r}
-airquality %>% 
-  drop_na(Ozone)
-```
 
 
 ## Advanced Plots
@@ -1400,12 +1394,19 @@ Great. Now our graph is easier to visualize. In addition, note that the `theme()
 
 ## Summary
 
-In this chapter, we first looked at basic coding terminology and concepts that we deal with when programming with R. We then learned about the three basic components that make up each plot: data, mapping, and one or more geoms. The **ggplot2** package offers a wide range of geoms that we can use to create different types of plots. Next, we examined the "super package" **tidyverse**, which includes helpful tools for visualization. It also offers features for importing and manipulating data, which is the main topic of the next chapter. Lastly, we explored advanced plotting features such as axis scaling, faceting, and themes. When we put this all together, we were able to create the following visualization:
+In this chapter, we first looked at basic coding terminology and concepts that we deal with when programming with R. We then learned about the three basic components that make up each plot: data, mapping, and one or more geoms. The **ggplot2** package offers a wide range of geoms that we can use to create different types of plots. Next, we examined the "super package" **tidyverse**, which includes helpful tools for visualization. It also offers features for importing and manipulating data, which is the main topic of Chapter @\ref(wrangling). Lastly, we explored advanced plotting features such as axis scaling, faceting, and themes. 
+
+The main *statistical* concept we discussed was that of a "distribution," a collection of related numbers. In R, these numbers are usually stored as a variable inside of a tibble. "Frequency distribution" and "empirical distribution" are common phrases to describe such objects. We learned how to calculate statistics --- often referred to as "summary statistics" --- about these distributions. The most important involve two concepts: the center of the distribution and the variability of the distribution. The center is most often summarized with the *mean* (`mean()`) or the *median* (`median()`). Variability is measured with the standard deviation (`sd()`) or the scaled median absolute deviation (`mad()`) or the 95% confidence interval (`quantile(probs = c(0.025, 0.975))`).   
+
+
+Recall the plot we began the chapter with:
 
 
 ```{r, echo = FALSE}
 gap_p
 ```
+
+You now know enough to make plots like this by yourself.
 
 It is important to know that we have only seen a small part of what R offers. For example, we can use the **gganimate** package to bring a slightly modified version of our gapminder plot to life:
 
