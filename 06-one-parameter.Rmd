@@ -3,7 +3,9 @@
 
 <!-- Priorities:  --> 
 
-<!-- Switch the urn to 1,000 beads to make the math easier and the code quicker. Use 400 red beads. Do not use number of red beads as unknown parameter. Use p throughout. Introduce $\hat{p}$ earlier and then use it consistently. That sets the stage for the standard error. 
+<!-- Switch the urn to 1,000 beads to make the math easier and the code quicker. Use 400 red beads. Do not use number of red beads as unknown parameter. MF: DONE. 
+
+Use p throughout. Introduce $\hat{p}$ earlier and then use it consistently. That sets the stage for the standard error. 
 
 "The standard error is the standard deviation of any collection of hat things." "... any collection of estimates." 
 
@@ -278,7 +280,7 @@ For reference, `sample_frac()` merely re-arranges the rows of the tibble. We use
 
 ```{r, echo=TRUE}
 set.seed(10)
-urn <- tibble(color = c(rep("red", 400), rep("white", 1500))) %>%
+urn <- tibble(color = c(rep("red", 400), rep("white", 600))) %>%
   sample_frac() %>% 
   mutate(ID = 1:1000) %>% 
   select(ID, color)
@@ -930,7 +932,7 @@ x %>%
     theme_classic()
 ```
 
-To visualize this in a 3D plot, see the slice in the figure below. There are a few things to note. First, the x-axis only extends to 1500 (rather than the total 1000) due to the fact that, when the paddle only draws 17/50 = .34 = 34% red beads, it is almost impossible for the total number red beads in the total urn to exceed 1500. The most likely number of red beads in the total urn, when the paddle draws 17/50 red beads, is somewhere in the 780-850 range. This is signified by the peak between these points. The probability is lower below 780 and above 850 because it is less likely that this is the number of red beads in the urn, conditional on the fact that the paddle drew 17/50 red beads. This is our posterior distribution. 
+To visualize this in a 3D plot, see the slice in the figure below. There are a few things to note. First, the x-axis only extends to 600 (rather than the total 1000) due to the fact that, when the paddle only draws 17/50 = .34 = 34% red beads, it is almost impossible for the total number red beads in the total urn to exceed 600. The most likely number of red beads in the total urn, when the paddle draws 17/50 red beads, is somewhere in the 290-350 range. This is signified by the peak between these points. The probability is lower below 280 and above 350 because it is less likely that this is the number of red beads in the urn, conditional on the fact that the paddle drew 17/50 red beads. This is our posterior distribution. 
 
 For any value of red beads found in the paddle (from 0 to 50), there is a posterior distribution of possible values of red beads in the total urn. This distribution is meant to illustrate that, though our sample gives an estimate of the total proportion of red beads in the entire urn, there is much variation in what the actual proportion might be. 
 
@@ -968,7 +970,7 @@ post %>%
   
 ```
 
-The answer is about 21%. The R code above is a bit tricky. We begin with the `post` tibble, which is a simple way to specify our posterior distribution for the number of red beads in the urn. For each row, we can simulate, 100 times, the number of red beads we might draw, conditional on the assumption that there are `red_urn` red beads in the urn. The list-column which results is annoying to work with, so we `unnest()` it. We then identify the simulations which result in more than 8 red beads drawn. 
+The answer is about 25%. The R code above is a bit tricky. We begin with the `post` tibble, which is a simple way to specify our posterior distribution for the number of red beads in the urn. For each row, we can simulate, 100 times, the number of red beads we might draw, conditional on the assumption that there are `red_urn` red beads in the urn. The list-column which results is annoying to work with, so we `unnest()` it. We then identify the simulations which result in more than 8 red beads drawn. 
 
 But we can not simply take the mean values of these positive results because different rows in the posterior have radically different probabilities of being true. We need a weighted mean, in which the weights correspond to the probability that the number of red beads in the urn is, indeed, equal to `red_urn` in `post`.
 
@@ -1279,6 +1281,7 @@ The first scenario provides a more accurate estimate, since the students outside
 <!-- DK: What are truly the things we want students to remember! -->
 
 <!-- INSERT RECAP FOR EACH SECTION WITH 2-3 IMPORTANT PIECES OF INFORMATION -->
+
 
 In this chapter, we performed both tactile and virtual sampling exercises to infer about an unknown parameter We also presented a case study of sampling in real life with polls. In each case, we used the sample proportion $\hat{p}$ to estimate the population proportion $p$. However, we are not just limited to scenarios related to proportions. In other words, we can use sampling to estimate other population parameters using other point estimates as well.
 
