@@ -3,20 +3,44 @@
 
 <!-- Priorities:  --> 
 
+<!-- Switch the urn to 1,000 beads to make the math easier and the code quicker. Use 400 red beads. Do not use number of red beads as unknown parameter. Use p throughout. Introduce $\hat{p}$ earlier and then use it consistently. That sets the stage for the standard error. 
 
-<!-- 6.2 should do a lot of samples, then calculate the mean of those samples and the standard deviation of those samples. (Explain why?) And then the cool graphics are the standard deviation decreasing and also mean estimates more stable. Maybe use 100 times instead of 1000. That will show mean converging as shovel size increases. -->
+"The standard error is the standard deviation of any collection of hat things." "... any collection of estimates." 
+
+p is the true value of the proportion of red beads, which is 40%. There is only one p.
+
+$\hat{p}$ is the estimated value of p which comes from taking a sample. There can be billions and billions of $\hat{p}$'s.
+
+*********
+p -> to $\hat{p}$ to the standard error of $\hat{p}$ to our posterior probability distribution for p.
+*********
+
+They must understand what the standard error of $\hat{p}$ means. They do not need to understand why.
+
+We do this to set the stage for continuous variables in chapter 7. Also, strictly speaking, the stan_glm() model assumes that p is continuous. -->
+
+
+<!-- 6.2 Add a scatter plot of the results. -->
+
+<!-- The plot the means -->
+
+<!-- 6.2 should do a lot of samples, then calculate the mean of those samples and the standard deviation of those samples. (Explain why?) And then the cool graphics are the standard deviation decreasing and also mean estimates more stable. Maybe use 100 times instead of 1000. That will show mean converging as shovel size increases. Maybe make it a gganimation? -->
 
 <!-- End of 6.1: If you can only keep around two numbers about that distribution, what would they be? You need a measure of the center, maybe mean or median. You need a measure of the spread, sd or mad. Summary statistics for a distribution, for when you can't keep the whole thing around, or show the pretty graph. Do those two numbers tell you everything about a distribution? No! But, if you only get to keep two numbers, those are the probably ones you want. -->
 
 <!-- 6.3  must explain clearly the concept of standard error, p-values and confidence intervals. Need this rock-solid before going into MAD SD complexity in chapter 7. -->
 
-<!-- 6.3 statistical definitions. (Rename as the posterior probablity distribution for p. Show them that posterior.) There is a truth! There is a true value for p which we do not know! We want to create a posterior probability distribution which summarizes our knowledge. (I am not sure if the words "sampling distribution" belong beyond a single sentence.) We care about the posterior probability distribution of p. We will make that, formally, in the next section. For now, here is a preview. The center of that distribution is around the mean or median of the proportion in your sample. (Which makes sense! Show how this line goes through your mean dots.) The sd (or mad) of that posterior is this formula! Give standard error formula. Note that this is the same thing as the standard deviation of the repeated samples! (Or at least say that, and then show how the red line goes through your dots.) -->
+<!-- 6.3 statistical definitions. Expand to include standard error and posterior probabilty distribution. (Rename as the posterior probablity distribution for p. Show them that posterior.) There is a truth! There is a true value for p which we do not know! We want to create a posterior probability distribution which summarizes our knowledge. (I am not sure if the words "sampling distribution" belong beyond a single sentence.) We care about the posterior probability distribution of p. We will make that, formally, in the next section. For now, here is a preview. The center of that distribution is around the mean or median of the proportion in your sample. (Which makes sense! Show how this line goes through your mean dots.) The sd (or mad) of that posterior is this formula! Give standard error formula. Note that this is the same thing as the standard deviation of the repeated samples! (Or at least say that, and then show how the red line goes through your dots.) -->
 
-<!-- Maybe not p-values. -->
 
 <!-- 6.3 finishes with this. -->
 
-<!-- **The standard error is, more or less, the standard deviation of the posterior.** -->
+<!-- **The standard error is, more or less, the standard deviation of the posterior probability distribution for p.** So, +/- two standard errors is about the same as a 95% confidence interval. -->
+
+<!-- "Formula for the standard error. Not justified! How do we calculate a standard error if we only take one sample?!!! -->
+
+<!-- Then provide a demonstration of this! (Next summer!) Simple simulation with urns of various sizes, percentage of red beads which varies, grab a shovel of different sizes, draw a sample, calculate a standard error, calculate a confidence interval, test whetherr ci includes the truth. 95% of the time it should. -->
+
 
 <!-- **The mean or median is a good estimate for the center of the posterior and the standard error or mad is a good estimate for the variability of the posterior, with +/- 2 standard errors covering 95% of the outcomes.** -->
 
@@ -27,7 +51,7 @@
 
 <!-- To Discuss: -->
 
-<!-- Switch the urn to 1,000 beads to make the math easier and the code quicker. Do not use number of red beads as unknown parameter. Use p, assumed to be continious, throughout. -->
+
 
 
 <!-- Get rid of the Obama stuff completely? -->
@@ -892,17 +916,11 @@ $$p(models | data = 17)$$
 The same approach works again. We take a "slice" of the joint distribution where the number of red beads in the paddle is equal to 17. After normalization, that gives us this posterior probability for the number of red beads in the urn. Let's call the tibble with this data in it `post` and then use `post` to create a graphic of the posterior.
 
 ```{r}
-post <- x %>% 
+x %>% 
   filter(red_paddle == 17) %>% 
-  group_by(red_urn) %>% 
-  summarize(total = n(), .groups = "drop") %>%
-  mutate(probs = total/sum(total)) %>% 
-  select(-total)
-
-
-post %>% 
-  ggplot(aes(x = red_urn, y = probs)) +
-    geom_col() +
+  ggplot(aes(x = red_urn)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   bins = 50) + 
     labs(title = "Posterior Probability Distribution",
          subtitle = "Number of red beads is centered at 816",
          x = "Number of Beads in Urn which Are Red",
@@ -931,6 +949,14 @@ knitr::include_graphics("06-one-parameter/images/slice_rayshader.png")
 Now that we have our posterior distribution for the number of red beads in the urn, we can use that object to forecast other outcomes, outcomes which we have not yet observed. Recall, from the start of the Chapter, Question 2: "Conditional on our answer to Question 1, what is the probability, using the same urn, that we will draw more than 8 red beads if we use a shovel of size 20?"
 
 ```{r}
+post <- x %>% 
+  filter(red_paddle == 17) %>% 
+  group_by(red_urn) %>% 
+  summarize(total = n(), .groups = "drop") %>%
+  mutate(probs = total/sum(total)) %>% 
+  select(-total)
+
+
 post %>% 
   mutate(new_reds = map(red_urn, 
                             ~ rbinom(n = 100, 
@@ -952,9 +978,7 @@ But we can not simply take the mean values of these positive results because dif
 
 ### stan_glm()
 
-<!-- Good reference: https://cran.r-project.org/web/packages/rstanarm/vignettes/binomial.html -->
-
-Instead of building the joint and conditional probability distributions "by hand" as above, we can just use `stan_glm()` from the **rstanarm* package. For now, we will just walk through the code for doing this very quickly. Chapter \@ref(two-parameters) will provide a step=by-step explanation.
+Instead of building the joint and conditional probability distributions "by hand" as above, we can just use `stan_glm()` from the **rstanarm* package. For now, we will just walk through the code for doing this very quickly. Chapter \@ref(two-parameters) will provide a step-by-step explanation.
 
 Assume that, as before, a shovel of size 50 drawn from the urn has returned 17 red beads and 33 white. Create an object which contains this data.
 
@@ -962,8 +986,11 @@ Assume that, as before, a shovel of size 50 drawn from the urn has returned 17 r
 shovel <- tibble(red = c(rep(1, 17), rep(0, 33))) %>% 
   
   # `sample_frac()` just re-arranges the rows of `shovel`. Doing so is
-  # aesthetically please but does not matter since the order of the beads in the
-  # shovel is irrelevant to estimating the proportion of red beads in the urn.
+  # aesthetically pleasing but does not matter since the order of the beads in
+  # the shovel is irrelevant to estimating the proportion of red beads in the
+  # urn, given that we assumed that sampling bead X has no impact on whether or
+  # not bead Y ends up in the sample. Such "independence" assumptions are almost
+  # universal.
   
   sample_frac() %>% 
   mutate(ID = 1:nrow(.)) %>% 
@@ -984,20 +1011,19 @@ fit_1 <- stan_glm(formula = red ~ 1,
                   seed = 2020)
 ```
 
-This single function call has done all the work which we did on our own previously: created the joint distribution and then estimated the posterior probability distribution, conditional on the data which was passed in to the `data` argument. With the `fit_1` object, it is just a few lines of code to create the posterior probability distribution for $p$.
+This single function call has done all the work which we did on our own previously: created the joint distribution and then estimated the posterior probability distribution, conditional on the data which was passed in to the `data` argument. Once we have the `fit_1` object, it is just a few lines of code to create the posterior probability distribution for $p$.
 
 ```{r}
 fit_1 %>% 
   posterior_epred(newdata = tibble(constant = 1)) %>% 
   as_tibble() %>% 
-  ggplot(aes(x = `1` * 2400,
+  ggplot(aes(x = `1`,
              y = after_stat(count/sum(count)))) +
     geom_histogram(bins = 100) +
     labs(title = "Posterior Probability Distribution",
          subtitle = "Number of red beads is centered at 768",
-         x = "Number of Beads in Urn which Are Red",
+         x = "TThe Proportion of Red Beads: p",
          y = "Probability") + 
-    scale_x_continuous(labels = scales::number_format(accuracy = 1)) +
     scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
     theme_classic()
 ```
