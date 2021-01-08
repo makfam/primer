@@ -278,9 +278,9 @@ For reference, `sample_frac()` merely re-arranges the rows of the tibble. We use
 
 ```{r, echo=TRUE}
 set.seed(10)
-urn <- tibble(color = c(rep("red", 900), rep("white", 1500))) %>%
+urn <- tibble(color = c(rep("red", 400), rep("white", 1500))) %>%
   sample_frac() %>% 
-  mutate(ID = 1:2400) %>% 
+  mutate(ID = 1:1000) %>% 
   select(ID, color)
 
 urn  
@@ -671,21 +671,21 @@ knitr::include_graphics("06-one-parameter/images/yoda.png")
 
 Let's now introduce some terminology and notation as well as statistical definitions related to sampling. You will likely want to read this section a few times. Keep in mind, however, that all of the concepts underlying these terminology, notation, and definitions tie directly to the concepts underlying our tactile and virtual sampling activities. It will simply take time and practice to master them. 
 
-First, a **population** is a collection of individuals or observations we are interested in. This is also commonly denoted as a **study population**. We mathematically denote the population's size using upper-case $N$.  In our sampling activities, the (study) population is the collection of $N$ = 2400 identically sized red and white beads contained in the urn.
+First, a **population** is a collection of individuals or observations we are interested in. This is also commonly denoted as a **study population**. We mathematically denote the population's size using upper-case $N$.  In our sampling activities, the (study) population is the collection of $N$ = 1000 identically sized red and white beads contained in the urn.
 
 Second, a **population parameter** is a numerical summary quantity about the population that is unknown, but you wish you knew. For example, when this quantity is a mean, the population parameter of interest is the *population mean*. This is mathematically denoted with the Greek letter $\mu$ pronounced "mu." In our earlier sampling from the urn activity, however, since we were interested in the *proportion* of the urn's beads that were red, the population parameter is the *population proportion*. This is mathematically denoted with the letter $p$. 
 
-Third, a **census** is an exhaustive enumeration or counting of all $N$ individuals or observations in the population in order to compute the population parameter's value *exactly*. In our sampling activity, this would correspond to counting the number of beads out of $N$ = 2400 that are red and computing the *population proportion* $p$ that are red *exactly*. When the number $N$ of individuals or observations in our population is large as was the case with our urn, a census can be quite expensive in terms of time, energy, and money. 
+Third, a **census** is an exhaustive enumeration or counting of all $N$ individuals or observations in the population in order to compute the population parameter's value *exactly*. In our sampling activity, this would correspond to counting the number of beads out of $N$ = 1000 that are red and computing the *population proportion* $p$ that are red *exactly*. When the number $N$ of individuals or observations in our population is large as was the case with our urn, a census can be quite expensive in terms of time, energy, and money. 
 
 Fourth, **sampling** is the act of collecting a sample from the population when we don't have the means to perform a census. We mathematically denote the sample's size using lower case $n$, as opposed to upper case $N$ which denotes the population's size. Typically the sample size $n$ is much smaller than the population size $N$. Thus sampling is a cheaper alternative to performing a census. In our sampling activities, we used shovels with varying slots to extract samples of size $n$ = 1 through $n$ = 100. 
 
 Fifth, a **point estimate (AKA sample statistic)** is a summary statistic computed from a sample that *estimates* an unknown population parameter. In our sampling activities, recall that the unknown population parameter was the population proportion and that this is mathematically denoted with $p$. Our point estimate is the *sample proportion*: the proportion of the shovel's beads that are red. In other words, it is our guess of the proportion of the urn's beads that are red. We mathematically denote the sample proportion using $\hat{p}$. The "hat" on top of the $p$ indicates that it is an estimate of the unknown population proportion $p$. 
 
-Sixth is the idea of **representative sampling**. A sample is said to be a *representative sample* if it roughly *looks like* the population. In other words, are the sample's characteristics a good representation of the population's characteristics? In our sampling activity, are the samples of $n$ beads extracted using our shovels representative of the urn's $N$ = 2400 beads?
+Sixth is the idea of **representative sampling**. A sample is said to be a *representative sample* if it roughly *looks like* the population. In other words, are the sample's characteristics a good representation of the population's characteristics? In our sampling activity, are the samples of $n$ beads extracted using our shovels representative of the urn's $N$ = 1000 beads?
 
 Seventh is the idea of **generalizability**. We say a sample is generalizable if any results based on the sample can generalize to the population. In our sampling activity, can we generalize the sample proportion from our shovels to the entire urn? Using our mathematical notation, this is akin to asking if $\hat{p}$ is a "good guess" of $p$?
 
-Eighth, we say **biased sampling** occurs if certain individuals or observations in a population have a higher chance of being included in a sample than others. We say a sampling procedure is *unbiased* if every observation in a population had an equal chance of being sampled. Had the red beads been much smaller than the white beads, and therefore more prone to falling through the shovel, our sample would have been *biased*. In our sampling activities, since we mixed all $N = 2400$ beads prior to each group's sampling and since each of the equally sized beads had an equal chance of being sampled, our samples were *unbiased*.
+Eighth, we say **biased sampling** occurs if certain individuals or observations in a population have a higher chance of being included in a sample than others. We say a sampling procedure is *unbiased* if every observation in a population had an equal chance of being sampled. Had the red beads been much smaller than the white beads, and therefore more prone to falling through the shovel, our sample would have been *biased*. In our sampling activities, since we mixed all $N = 1000$ beads prior to each group's sampling and since each of the equally sized beads had an equal chance of being sampled, our samples were *unbiased*.
 
 Ninth and lastly, the idea of **random sampling**. We say a sampling procedure is *random* if we sample randomly from the population in an unbiased fashion. In our sampling activities, this would correspond to sufficiently mixing the urn before each use of the shovel. 
 
@@ -706,10 +706,10 @@ Phew, that's a lot of new terminology and notation to learn! Let's put them all 
 **Specific to our sampling activity:**
 
 * If we extract a sample of $n=50$ beads at **random**, in other words, we mix all of the equally sized beads before using the shovel, then
-* the contents of the shovel are an **unbiased representation** of the contents of the urn's 2400 beads, thus
+* the contents of the shovel are an **unbiased representation** of the contents of the urn's 1000 beads, thus
 * any result based on the shovel's beads can **generalize** to the urn, thus
-* the sample proportion $\hat{p}$ of the $n=50$ beads in the shovel that are red is a **"good guess"** of the population proportion $p$ of the $N=2400$ beads that are red, thus
-* instead of manually going over all 2400 beads in the urn, we can **infer** about the urn using the shovel. 
+* the sample proportion $\hat{p}$ of the $n=50$ beads in the shovel that are red is a **"good guess"** of the population proportion $p$ of the $N=1000$ beads that are red, thus
+* instead of manually going over all 1000 beads in the urn, we can **infer** about the urn using the shovel. 
 
 Note that last word we wrote in bold: **infer**. The act of "inferring" means to deduce or conclude information from evidence and reasoning. In our sampling activities, we wanted to infer about the proportion of the urn's beads that are red. [*Statistical inference*](https://en.wikipedia.org/wiki/Statistical_inference) is the "theory, methods, and practice of forming judgments about the parameters of a population and the reliability of statistical relationships, typically on the basis of random sampling." In other words, statistical inference is the act of inference via sampling.
 
@@ -798,7 +798,7 @@ Remember the key message of this last table: that as the sample size $n$ goes up
 
 <!-- REWRITE THIS ENTIRE SECTION TO REFLECT FOCUS ON STANDARD ERROR. -->
 
-<!-- What was the value of the population proportion $p$ of the $N$ = 2400 beads in the actual urn that were red? There were 900 red beads, for a proportion red of 900/2400 = 0.375 = 37.5%! How do we know this? Did the authors do an exhaustive count of all the beads? No! They were listed in the contents of the box that the urn came in! Hence we were able to make the contents of the virtual `urn` match the tactile urn:
+<!-- What was the value of the population proportion $p$ of the $N$ = 1000 beads in the actual urn that were red? There were 400 red beads, for a proportion red of 400/1000 = 0.375 = 37.5%! How do we know this? Did the authors do an exhaustive count of all the beads? No! They were listed in the contents of the box that the urn came in! Hence we were able to make the contents of the virtual `urn` match the tactile urn:
 
 ```{r}
 urn %>% 
@@ -877,7 +877,7 @@ We can do the same thing with our sampling problem. Assume that we know that the
 ```{r, echo = FALSE, cache=TRUE}
 set.seed(10)
 
-urn_size <- 2400
+urn_size <- 1000
 paddle_size <- 50
 
 # Make a tibble with 2.4 millions rows . . . Maybe that works OK. But making the
@@ -901,7 +901,7 @@ x %>%
 
 ```
 
-To better visualize this distribution, take a look at the 3D version of this plot. Note the U shape of the graph. By this, we mean to note the peaks at the areas where the number of red beads in the paddle is 0 out of 50 and 50 out of 50. This is due to the fact that, when we draw 0 red beads in a sample of 50 beads, the possibilities for the number of red beads in the urn is consistently close to 0. Similarily, when our sample of 50 beads comes out with 50 red beads, the possibilities for the number of red beads in the urn is consistently closer to 2400. 
+To better visualize this distribution, take a look at the 3D version of this plot. Note the U shape of the graph. By this, we mean to note the peaks at the areas where the number of red beads in the paddle is 0 out of 50 and 50 out of 50. This is due to the fact that, when we draw 0 red beads in a sample of 50 beads, the possibilities for the number of red beads in the urn is consistently close to 0. Similarily, when our sample of 50 beads comes out with 50 red beads, the possibilities for the number of red beads in the urn is consistently closer to 1000. 
 
 ```{r, echo = FALSE, cache=TRUE, fig.cap = "A 3D image of our joint distribution created with Rayshader."}
 knitr::include_graphics("06-one-parameter/images/rayshader_full.png")
@@ -930,7 +930,7 @@ x %>%
     theme_classic()
 ```
 
-To visualize this in a 3D plot, see the slice in the figure below. There are a few things to note. First, the x-axis only extends to 1500 (rather than the total 2400) due to the fact that, when the paddle only draws 17/50 = .34 = 34% red beads, it is almost impossible for the total number red beads in the total urn to exceed 1500. The most likely number of red beads in the total urn, when the paddle draws 17/50 red beads, is somewhere in the 780-850 range. This is signified by the peak between these points. The probability is lower below 780 and above 850 because it is less likely that this is the number of red beads in the urn, conditional on the fact that the paddle drew 17/50 red beads. This is our posterior distribution. 
+To visualize this in a 3D plot, see the slice in the figure below. There are a few things to note. First, the x-axis only extends to 1500 (rather than the total 1000) due to the fact that, when the paddle only draws 17/50 = .34 = 34% red beads, it is almost impossible for the total number red beads in the total urn to exceed 1500. The most likely number of red beads in the total urn, when the paddle draws 17/50 red beads, is somewhere in the 780-850 range. This is signified by the peak between these points. The probability is lower below 780 and above 850 because it is less likely that this is the number of red beads in the urn, conditional on the fact that the paddle drew 17/50 red beads. This is our posterior distribution. 
 
 For any value of red beads found in the paddle (from 0 to 50), there is a posterior distribution of possible values of red beads in the total urn. This distribution is meant to illustrate that, though our sample gives an estimate of the total proportion of red beads in the entire urn, there is much variation in what the actual proportion might be. 
 
@@ -961,7 +961,7 @@ post %>%
   mutate(new_reds = map(red_urn, 
                             ~ rbinom(n = 100, 
                                      size = 20,
-                                     prob = ./2400))) %>% 
+                                     prob = ./1000))) %>% 
   unnest(new_reds) %>% 
   mutate(res = ifelse(new_reds > 8, TRUE, FALSE)) %>% 
   summarise(final = weighted.mean(res, probs))
@@ -1085,7 +1085,7 @@ Let's tie elements of the real life poll in this new article with our "tactile" 
 
 First, who is the **(Study) Population** of $N$ individuals or observations of interest? 
 
-* Urn: $N$ = 2400 identically sized red and white beads
+* Urn: $N$ = 1000 identically sized red and white beads
 * Obama poll: $N$ = ? young Americans aged 18-29
 
 Second, what is the **population parameter**? 
@@ -1095,7 +1095,7 @@ Second, what is the **population parameter**?
 
 Third, what would a **census** look like?
 
-* Urn: Manually going over all $N$ = 2400 beads and exactly computing the population proportion $p$ of the beads that are red.
+* Urn: Manually going over all $N$ = 1000 beads and exactly computing the population proportion $p$ of the beads that are red.
 * Obama poll: Locating all $N$ young Americans and asking them all if they approve of Obama's job performance. In this case, we don't even know what the population size $N$ is!
 
 Fourth, how do you perform **sampling** to obtain a sample of size $n$?
@@ -1143,10 +1143,10 @@ Let's now revisit the sampling paradigm from Subsection \@ref(terminology-and-no
 **Specific to the urn:**
 
 * If we extract a sample of $n = 50$ beads at **random**, in other words, we mix all of the equally sized beads before using the shovel, then
-* the contents of the shovel are an **unbiased representation** of the contents of the urn's 2400 beads, thus
+* the contents of the shovel are an **unbiased representation** of the contents of the urn's 1000 beads, thus
 * any result based on the shovel's beads can **generalize** to the urn, thus
-* the sample proportion $\hat{p}$ of the $n = 50$ beads in the shovel that are red is a **"good guess"** of the population proportion $p$ of the $N = 2400$ beads that are red, thus
-* instead of manually going over all 2400 beads in the urn, we can **infer** about the urn using the shovel. 
+* the sample proportion $\hat{p}$ of the $n = 50$ beads in the shovel that are red is a **"good guess"** of the population proportion $p$ of the $N = 1000$ beads that are red, thus
+* instead of manually going over all 1000 beads in the urn, we can **infer** about the urn using the shovel. 
 
 **Specific to the Obama poll:**
 
@@ -1190,7 +1190,7 @@ As is the case in the Rubin Causal Model, we *wish* we knew the values for every
 ```{r, echo = FALSE}
 
 urn %>%
-  slice(1:2, 200, 201, 2399, 2400) %>%
+  slice(1:2, 200, 201, 2399, 1000) %>%
   mutate(ID = as.character(ID),
          color = as.character(color)) %>%
   add_row(ID = "...", color = "...", .after  = 2) %>%
@@ -1218,7 +1218,7 @@ Let's imagine we use our shovel and sample 100 beads from the urn. After taking 
 
 # Actual Preceptor Table to be created by the very helpful Cass!
 
-tibble(ID = c("1", "2", "...", "...", "200", "201", "...", "...", "2399", "2400"),
+tibble(ID = c("1", "2", "...", "...", "200", "201", "...", "...", "999", "1000"),
        color = c("?", "?", "...", "...", "red", "?", "...", "...", "red", "?")) %>%
   gt() %>%
   cols_label(ID = md("**ID**"),
@@ -1232,13 +1232,13 @@ tibble(ID = c("1", "2", "...", "...", "200", "201", "...", "...", "2399", "2400"
 
 &nbsp;
 
-Where is all of our data? Well, when we take a sample of 100 beads, we only have color identifications for 100 of the total 2400 beads in the urn. The rest of the beads were not sampled and we cannot say for certain whether they are white or red.
+Where is all of our data? Well, when we take a sample of 100 beads, we only have color identifications for 100 of the total 1000 beads in the urn. The rest of the beads were not sampled and we cannot say for certain whether they are white or red.
 
 Something else we must consider is why some beads **do** get sampled, while others do not. This is a consequence of the sampling mechanism. Because we are drawing the sample using a shovel with 100 slots, we only have 100 known values. Therefore, our shovel (in addition to mixing the urn beforehand) is our sampling mechanism.
 
 Consider this: what does this information tell us, specifically, about Bead 1? Bead 2? We know the proportion of red beads in our sample is 40%. Does this mean that bead 1 has *precisely* a 40% chance of being red? As we learned in Chapter 5, this is not true! There is uncertainty.
 
-We can only claim *for certain* that, of the 100 beads that we sampled (of the total 2400 beads in the urn), 40% were red. If we were making a prediction of the probability of one of our **sampled** beads being red, 40% would be the correct probability. If we were making a prediction of the probability that an **unsampled** bead was red, the answer of 40% would be incorrect, but nor is it likely to be extremely incorrect. The sample does tell us something.
+We can only claim *for certain* that, of the 100 beads that we sampled (of the total 1000 beads in the urn), 40% were red. If we were making a prediction of the probability of one of our **sampled** beads being red, 40% would be the correct probability. If we were making a prediction of the probability that an **unsampled** bead was red, the answer of 40% would be incorrect, but nor is it likely to be extremely incorrect. The sample does tell us something.
 
 
 ### Precision versus accuracy (or bias versus variance)
