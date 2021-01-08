@@ -49,12 +49,7 @@ We do this to set the stage for continuous variables in chapter 7. Also, strictl
 <!-- 6.4 shows the right way -->
 
 
-
-
 <!-- To Discuss: -->
-
-
-
 
 <!-- Get rid of the Obama stuff completely? -->
 
@@ -62,11 +57,9 @@ We do this to set the stage for continuous variables in chapter 7. Also, strictl
 
 <!-- Get rid of sampling distribution? Too confusing and unnecessary? -->
 
-
 <!-- Explain in a comment the reason for  fun = function(.x) 1/(2 * sqrt(.x)) in the plot. I don't know why we need the 2. Deleted. -->
 
 <!-- us this quote: "May the odds be ever in your favor!" -->
-
 
 <!-- Discuss hypothesis tests and why we hate them. See misc/themes.Rmd for details. -->
 
