@@ -531,8 +531,11 @@ virtual_samples_100 %>%
 ```{r, echo = FALSE, fig.cap = "Comparing the number of slots in the shovel with the standard deviation of proportions red."}
 comparing_n_table <- virtual_prop %>% 
   group_by(n) %>% 
-  summarize(sd = sd(prop_red), .groups = 'drop_last') %>% 
-  rename(`Number of slots in shovel` = n, `Standard deviation of proportions red` = sd) 
+  summarize(sd = sd(prop_red), .groups = 'drop_last',
+            mean = mean(prop_red)) %>% 
+  rename(`Number of slots in shovel` = n, 
+         `Standard deviation of proportions red` = sd,
+         `Mean of proportions red` = mean) 
 
 comparing_n_table  %>% 
   gt() %>% 
@@ -631,7 +634,9 @@ glimpse(shovels_100)
 
 Now, we have the standard deviation of `prop_red` for all shovel sizes from 1 to 100.  Let's plot that value to see how it changes as the shovel gets larger:
 
-<!-- DK: Explain function(.x) 1/(2 * sqrt(.x)) -->
+<!-- DK: Explain function(.x) 1/(2 * sqrt(.x)) 
+
+MF: I'm confused why we are using (2 * sqrt(.x)). If we are plotting for standard error, shouldn't we have the standard deviation (prop_red_sd) over sqrt of the sample size, x? -->
 
 
 ```{r, echo = FALSE, fig.cap = "Comparing standard deviations of proportions red for 100 different shovels. The standard deviation decreases as the square root of shovel size."}
@@ -644,6 +649,7 @@ shovels_100 %>%
  labs(x = "Shovel size",
       y = "Standard deviation of the proportion red")
 ```
+The red line here represents an important statistical concept: standard error (SE). The mathematical definition of SE for our purposes is the standard deviation divided by the square root of the sample size. As the shovel size increases, and thus our sample size increases, we find that the standard error decreases.  If this is confusing right now, fear not! We will delve into this explanation in our next section. 
 
 ```{r, echo = FALSE, out.width="80%", fig.align='center', fig.cap = "To any poets and philosophers confused about this: don't worry! It won't be on a problem set."}
 knitr::include_graphics("06-one-parameter/images/meme_math.png")
