@@ -5,13 +5,13 @@
 
 <!-- Switch the urn to 1,000 beads to make the math easier and the code quicker. Use 400 red beads. Do not use number of red beads as unknown parameter. MF: DONE. 
 
-Use p throughout. Introduce $\hat{p}$ earlier and then use it consistently. That sets the stage for the standard error. 
+Use p throughout. Introduce $\hat{p}$ earlier and then use it consistently. That sets the stage for the standard error. MF: DONE. 
 
 "The standard error is the standard deviation of any collection of hat things." "... any collection of estimates." 
 
-p is the true value of the proportion of red beads, which is 40%. There is only one p.
+, which is 40%. There is only one p.
 
-$\hat{p}$ is the estimated value of p which comes from taking a sample. There can be billions and billions of $\hat{p}$'s.
+$\hat{p}$ is the estimated value of p which comes from taking a sample. There can be billions and billions of $\hat{p}$'s. 
 
 *********
 p -> to $\hat{p}$ to the standard error of $\hat{p}$ to our posterior probability distribution for p.
@@ -157,9 +157,11 @@ knitr::include_graphics("06-one-parameter/images/sampling_bowl_3_cropped.jpg")
 
 Observe that 17 of the 50 sampled beads are red and thus 17/50 = 0.34 = 34% of the shovel's beads are red. We can view the proportion of beads that are red in this shovel as a guess of the proportion of beads that are red in the entire urn. While not as exact as doing an exhaustive count of all the beads in the urn, our guess of 34% took much less time and energy to make. 
 
+Recall that $p$ is the true value of the proportion of red beads. There is only one $p$. Our guesses at the proportion of red beads are known as $\hat{p}$, where $\hat{p}$ is the estimated value of $p$ which comes from taking a sample. There can be an infinite number of $\hat{p}$. 
+
 Imagine that we started this activity over from the beginning, replacing the 50 beads back into the urn and starting over. Would we remove exactly 17 red beads? Maybe? 
 
-What if we repeated this activity *many* times? Would our guess at the proportion of the urn's beads that are red be exactly 34% every time? Surely not. 
+What if we repeated this activity *many* times? Would our guess at the proportion of the urn's beads that are red, $\hat{p}$, be exactly 34% every time? Surely not. 
 
 Let's repeat this exercise with the help of 33 groups of friends to understand how the value varies across 33 independent trials. 
 
@@ -229,7 +231,7 @@ tactile_sample_urn %>%
   geom_histogram(binwidth = 0.05, 
                  boundary = 0.4, 
                  color = "white") +
-  labs(x = "Proportion of 50 beads that were red",
+  labs(x = expression(paste("Proportion of 50 beads that were red ", hat(p))),
        y = "Count",
        title = "Proportions Red in 33 Samples") 
 ```
@@ -346,13 +348,13 @@ virtual_samples
 
 Let's visualize this variation in a histogram in Figure 6.8.
 
-Note that we add 'binwidth = 0.05' and 'boundary = 0.4' arguments as well. Recall that setting 'boundary = 0.4' ensures a binning scheme with one of the bins' boundaries at 0.4. Since the 'binwidth = 0.05' is also set, this will create bins with boundaries at 0.30, 0.35, 0.45, 0.5, etc. as well.
+Note that we add 'binwidth = 0.05' and 'boundary = 0.4' arguments as well. Recall that setting 'boundary = 0.4' ensures a binning scheme with one of the bins' boundaries at 0.4. Since the 'binwidth = 0.05' is also set, this will create bins with boundaries at 0.30, 0.35, 0.45, 0.5, etc. as well. Recall that $\hat{p}$ is equal to the proportions red in our samples. 
 
 ```{r}
 virtual_samples %>% 
 ggplot(aes(x = prop_red)) +
   geom_histogram(binwidth = 0.05, boundary = 0.4, color = "white") +
-  labs(x = "Proportion of 50 beads that were red",
+  labs(x = expression(hat(p)),
        y = "Count",
        title = "Distribution of 33 proportions red") 
 ```
@@ -374,7 +376,7 @@ facet_compare <- bind_rows(virtual_samples %>%
   ggplot(aes(x = prop_red)) +
     geom_histogram(binwidth = 0.05, boundary = 0.4, color = "white") +
     facet_wrap(~ type) +
-    labs(x = "Proportion of 50 beads that were red", 
+    labs(x = expression(paste("Proportion of 50 beads that were red ", hat(p))),
          title = "Comparing distributions") 
 
 facet_compare
@@ -408,7 +410,7 @@ virtual_samples %>%
     geom_histogram(binwidth = 0.01, 
                    boundary = 0.4, 
                    color = "white") +
-    labs(x = "Proportion of 50 beads that were red", 
+    labs(x = expression(hat(p)), 
          y = "Count",
          title = "Distribution of 1,000 proportions red") 
 ```
@@ -442,7 +444,8 @@ virtual_samples_25 <- tibble(ID = 1:1000) %>%
 virtual_samples_25 %>%
   ggplot(aes(x = prop_red)) +
   geom_histogram(binwidth = 0.05, boundary = 0.4, color = "white") +
-  labs(x = "Proportion of 25 beads that were red", title = "25") 
+  labs(x = "Proportion of 25 beads that were red", 
+       title = "25") 
 ```
 
 We will repeat this process with a shovel size of **50**. 
