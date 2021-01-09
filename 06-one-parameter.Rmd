@@ -28,23 +28,22 @@ We do this to set the stage for continuous variables in chapter 7. Also, strictl
 
 <!-- 6.2 should do a lot of samples, then calculate the mean of those samples and the standard deviation of those samples. (Explain why?) And then the cool graphics are the standard deviation decreasing and also mean estimates more stable. Maybe use 100 times instead of 1000. That will show mean converging as shovel size increases. Maybe make it a gganimation? -->
 
-<!-- End of 6.1: If you can only keep around two numbers about that distribution, what would they be? You need a measure of the center, maybe mean or median. You need a measure of the spread, sd or mad. Summary statistics for a distribution, for when you can't keep the whole thing around, or show the pretty graph. Do those two numbers tell you everything about a distribution? No! But, if you only get to keep two numbers, those are the probably ones you want. -->
+<!-- End of 6.1: If you can only keep around two numbers about that distribution, what would they be? You need a measure of the center, maybe mean or median. You need a measure of the spread, sd or mad. Summary statistics for a distribution, for when you can't keep the whole thing around, or show the pretty graph. Do those two numbers tell you everything about a distribution? No! But, if you only get to keep two numbers, those are the probably ones you want. MF: DONE BUT placed in 6.3 instead, since we hadn't covered summary statistics yet. I can modify and place at the beginning if you prefer it to come up earlier. -->
 
-<!-- 6.3  must explain clearly the concept of standard error, p-values and confidence intervals. Need this rock-solid before going into MAD SD complexity in chapter 7. -->
+<!-- 6.3  must explain clearly the concept of standard error, p-values and confidence intervals. Need this rock-solid before going into MAD SD complexity in chapter 7. MF: Are we still incorporating p-values here? -->
 
 <!-- 6.3 statistical definitions. Expand to include standard error and posterior probabilty distribution. (Rename as the posterior probablity distribution for p. Show them that posterior.) There is a truth! There is a true value for p which we do not know! We want to create a posterior probability distribution which summarizes our knowledge. (I am not sure if the words "sampling distribution" belong beyond a single sentence.) We care about the posterior probability distribution of p. We will make that, formally, in the next section. For now, here is a preview. The center of that distribution is around the mean or median of the proportion in your sample. (Which makes sense! Show how this line goes through your mean dots.) The sd (or mad) of that posterior is this formula! Give standard error formula. Note that this is the same thing as the standard deviation of the repeated samples! (Or at least say that, and then show how the red line goes through your dots.) -->
 
 
 <!-- 6.3 finishes with this. -->
 
-<!-- **The standard error is, more or less, the standard deviation of the posterior probability distribution for p.** So, +/- two standard errors is about the same as a 95% confidence interval. -->
+<!-- **The standard error is, more or less, the standard deviation of the posterior probability distribution for p.** So, +/- two standard errors is about the same as a 95% confidence interval. MF: DONE-->
 
 <!-- "Formula for the standard error. Not justified! How do we calculate a standard error if we only take one sample?!!! -->
 
 <!-- Then provide a demonstration of this! (Next summer!) Simple simulation with urns of various sizes, percentage of red beads which varies, grab a shovel of different sizes, draw a sample, calculate a standard error, calculate a confidence interval, test whetherr ci includes the truth. 95% of the time it should. -->
 
-
-<!-- **The mean or median is a good estimate for the center of the posterior and the standard error or mad is a good estimate for the variability of the posterior, with +/- 2 standard errors covering 95% of the outcomes.** -->
+<!-- **The mean or median is a good estimate for the center of the posterior and the standard error or mad is a good estimate for the variability of the posterior, with +/- 2 standard errors covering 95% of the outcomes.** MF: DONE-->
 
 <!-- 6.4 shows the right way -->
 
@@ -796,6 +795,13 @@ shovels_100 %>%
 Remember the key message of this last table: that as the sample size $n$ goes up, the "typical" error of your point estimate will go down, as quantified by the *standard error*.
 
 ### The moral of the story {#moral-of-the-story}
+
+If we could only know two pieces of information from our data, what would they be? First, you need a measure of the **center** of the distribution. This would include the mean or median, which shows the center of our data points. Second, we need a measure of the **variability** of the distribution. To understand our center, we must understand how different (or how spread) our data points are from one another. Thus, we need a measure like sd() or MAD. These are summary statistics which are necessary to understanding a distribution. Do those two figures encompass all you need to know about a distribution? No! But, if you are only allowed two numbers to keep, those are the most valuable. 
+
+> The mean or median is a good estimate for the center of the posterior and the standard error or mad is a good estimate for the variability of the posterior, with +/- 2 standard errors covering 95% of the outcomes.
+
+The standard error measures the accuracy of a sample distribution as compared to the population by using the standard deviation. Specifically, the standard deviation of our data points divided by the square root of the sample size. As such, we find that larger sample sizes = lower standard errors = more accurate and representative guesses. 
+
 
 <!-- REWRITE THIS ENTIRE SECTION TO REFLECT FOCUS ON STANDARD ERROR. -->
 
