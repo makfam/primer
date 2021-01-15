@@ -36,7 +36,7 @@
 
 <!-- --------------------- -->
 
-<!-- Replace 6.1 (and other hard-coded numbers) with reference/label. -->
+<!-- Replace 6.1 (and other hard-coded numbers) with reference/label. MF: DONE. -->
 
 <!-- Add longer figure captions, at your discretion. Student should be able to look at figure, read its caption, and understand the whole thing. -->
 
@@ -146,11 +146,11 @@ knitr::include_graphics("06-one-parameter/images/danny_sampling.png")
 
 Last chapter, we learned about probability, the act of quantifying uncertainty. This chapter, we will learn about *sampling*, the beginning of our journey toward inference. When we sample, we take a *portion* of a total population and attempt to draw a conclusion about the portion, a conclusion which we can then *generalize* to the entire population. 
 
-Observe the urn in Figure 6.2. It has a certain number of red and a certain number of white beads all of equal size. It appears the urn has been mixed beforehand, as there does not seem to be any coherent pattern to the spatial distribution of the red and white beads.
+Observe the urn in Figure \@ref(fig:urn_pic_one). It has a certain number of red and a certain number of white beads all of equal size. It appears the urn has been mixed beforehand, as there does not seem to be any coherent pattern to the spatial distribution of the red and white beads.
 
 Let's now ask ourselves, what proportion of this urn's beads are red? 
 
-```{r, echo = FALSE, fig.cap = "An urn with red and white beads."}
+```{r urn_pic_one, echo = FALSE, fig.cap = "An urn with red and white beads."}
 knitr::include_graphics("06-one-parameter/images/sampling_bowl_1.jpg")
 ```
 
@@ -178,14 +178,14 @@ knitr::include_graphics("06-one-parameter/images/sampling_bowl_1.jpg")
 
 ### Using the shovel method once 
 
-Instead of performing an exhaustive count, let's insert a shovel into the urn as seen in Figure 6.2. Using the shovel, let's remove $5 \cdot 10 = 50$ beads, as seen in Figure 6.3. Here, we are taking a *sample* of the total population of beads. 
+Instead of performing an exhaustive count, let's insert a shovel into the urn as seen in Figure \@ref(fig:urn_pic_two). Using the shovel, let's remove $5 \cdot 10 = 50$ beads, as seen in Figure \@ref(fig:urn_pic_3). Here, we are taking a *sample* of the total population of beads. 
 
-```{r, echo = FALSE, fig.cap = "Inserting a shovel into the urn."}
+```{r urn_pic_two, echo = FALSE, fig.cap = "Inserting a shovel into the urn."}
 knitr::include_graphics("06-one-parameter/images/sampling_bowl_2.jpg")
 ```
 
 
-```{r, echo = FALSE, fig.cap = "Removing 50 beads from the urn."}
+```{r urn_pic_3, echo = FALSE, fig.cap = "Removing 50 beads from the urn."}
 knitr::include_graphics("06-one-parameter/images/sampling_bowl_3_cropped.jpg")
 ```
 
@@ -379,11 +379,11 @@ virtual_samples
 ```
 
 
-Let's visualize this variation in a histogram in Figure 6.8.
+Let's visualize this variation in a histogram in Figure \@ref(fig:histogram).
 
 Note that we add 'binwidth = 0.05' and 'boundary = 0.4' arguments as well. Recall that setting 'boundary = 0.4' ensures a binning scheme with one of the bins' boundaries at 0.4. Since the 'binwidth = 0.05' is also set, this will create bins with boundaries at 0.30, 0.35, 0.45, 0.5, etc. as well. Recall that $\hat{p}$ is equal to the proportions red in our samples. 
 
-```{r}
+```{r histogram}
 virtual_samples %>% 
 ggplot(aes(x = prop_red)) +
   geom_histogram(binwidth = 0.05, 
@@ -442,9 +442,9 @@ virtual_samples <- tibble(ID = 1:1000) %>%
 virtual_samples
 ```
 
-Observe that we now have 1,000 replicates of `prop_red`, the proportion of 50 beads that are red. Using the same code as earlier, let's now visualize the distribution of these 1,000 replicates of `prop_red` in a histogram in Figure 6.10.
+Observe that we now have 1,000 replicates of `prop_red`, the proportion of 50 beads that are red. Using the same code as earlier, let's now visualize the distribution of these 1,000 replicates of `prop_red` in a histogram in Figure \@ref(fig:hist_distribution).
 
-```{r}
+```{r hist_distribution}
 virtual_samples %>% 
   ggplot(aes(x = prop_red)) +
     geom_histogram(binwidth = 0.01, 
@@ -520,9 +520,9 @@ virtual_samples_100 %>%
   labs(x = "Proportion of 100 beads that were red", title = "100") 
 ```
 
-For easy comparison, we present the three resulting histograms in a single row with matching x and y axes in Figure 6.12.
+For easy comparison, we present the three resulting histograms in a single row with matching x and y axes in Figure \@ref(fig:multiple_hist).
 
-```{r, fig.cap = "Comparing the distributions of proportion red for different sample sizes."}
+```{r multiple_hist, fig.cap = "Comparing the distributions of proportion red for different sample sizes."}
 
 # Use bind_rows to combine the data from our three saved virtual sampling
 # objects. Use mutate() in each to clarify the n as the necessary number
@@ -689,6 +689,7 @@ shovels_100 %>%
  labs(x = "Shovel size",
       y = "Standard deviation of the proportion red")
 ```
+
 The red line here represents an important statistical concept: standard error (SE). The mathematical definition of SE for our purposes is the standard deviation divided by the square root of the sample size. As the shovel size increases, and thus our sample size increases, we find that the standard error decreases.  If this is confusing right now, fear not! We will delve into this explanation in our next section. 
 
 ```{r, echo = FALSE, out.width="80%", fig.align='center', fig.cap = "To any poets and philosophers confused about this: don't worry! It won't be on a problem set."}
@@ -799,9 +800,9 @@ Many students struggle to differentiate the standard error from the standard dev
 
 The more data points involved in the calculations of the mean, the smaller the standard error tends to be. When the standard error is small, the data is said to be more representative of the true mean. In cases where the standard error is large, the data may have some notable irregularities. Thus, larger sample size = smaller standard error = more representative of the truth. 
 
-To help reinforce these concepts, let's re-display Figure 6.14 but using our new terminology, notation, and definitions relating to sampling in the figure below.
+To help reinforce these concepts, let's re-display Figure \@ref(fig:compare_p_hat) but using our new terminology, notation, and definitions relating to sampling in the figure below.
 
-```{r, echo = FALSE, fig.cap = "Three sampling distributions of the sample proportion $\\hat{p}$."}
+```{r compare_p_hat, echo = FALSE, fig.cap = "Three sampling distributions of the sample proportion $\\hat{p}$."}
 p_hat_compare <- virtual_prop %>% 
   mutate(
     n = str_c("n = ", n),
@@ -1293,7 +1294,7 @@ We can only claim *for certain* that, of the 100 beads that we sampled (of the t
 
 We saw in a previous section that as our sample size $n$ increases, our point estimates will vary less and less and be more and more concentrated around the true population parameter. This variation is quantified by the decreasing *standard error*. In other words, the typical error of your point estimates will decrease. In our sampling exercise, as the sample size increased, the variation of our sample proportions $\hat{p}$ decreased. This is also known as having a *precise* estimate. 
 
-So random sampling ensures our point estimates are *accurate*, while on the other hand having a large sample size ensures our point estimates are *precise*. While the terms "accuracy" and "precision" may sound like they mean the same thing, there is a subtle difference. Accuracy describes how "on target" our estimates are, whereas precision describes how "consistent" our estimates are. The figure below illustrates the difference.
+So random sampling ensures our point estimates are *accurate*, while on the other hand having a large sample size ensures our point estimates are *precise*. While the terms "accuracy" and "precision" may sound like they mean the same thing, there is a subtle difference. Accuracy describes how "on target" our estimates are, whereas precision describes how "consistent" our estimates are. The image below illustrates the difference.
 
 ```{r, echo = FALSE, out.width="80%", fig.align='center', fig.cap = "Comparing accuracy and precision."}
 knitr::include_graphics("06-one-parameter/images/accuracy_vs_precision.jpg")
