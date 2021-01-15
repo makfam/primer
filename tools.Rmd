@@ -1,3 +1,5 @@
+<!-- Fix images in UNIX section so that they use 1005 instead, to match the new text. -->
+
 
 <!-- Explain importance of scripting versus click-and-drag and copy-pasting.
 Add section about useful keyboard shortcuts. -->
@@ -20,6 +22,8 @@ Add section about useful keyboard shortcuts. -->
 
 <!-- 9) Add some optional videos, especially the ones from RStudio which give nice tours of RStudio stuff. -->
 
+<!-- 10. Buttons we press should be bolded, not wrapped with backticks. -->
+
 
 # Tools {-}
 
@@ -38,9 +42,7 @@ The chapter will be broken into the following sections. Read whichever ones are 
 <!-- DK: Could rework everything to use this:  -->
 <!-- https://merely-useful.github.io/py-rse/bash-basics.html -->
 
-The Terminal is a very powerful window because it allows you to interact with your computer's filesystem directly without having to touch your mouse or trackpad! Learning how to work with the filesystem is important to keep your work organized and quickly allow you to move files across folders.
-
-Now, let's open up the Terminal tab on the left window and start learning how to use the Terminal.
+The Terminal is a very powerful window because it allows you to interact with your computer's filesystem directly. Let's open up the Terminal tab on the left window and start learning how to use the Terminal.
 
 ### `pwd`: Working directory {-}
 
@@ -72,13 +74,13 @@ knitr::include_graphics("other/images/ls_icons.png")
 
 Speaking of opening folders, let's open a few folders to enter a more familiar place. To open and close folders, we use `cd` (change directory). We'll be using `cd` to change into the Desktop folder, a place we should all be familiar with.
 
-To change into the Desktop directory, we type `cd Desktop/`. A helpful hint, after you type the first few letters of a folder or file name, you can hit tab and the computer will auto complete the name. Try it! type `cd Desk` and then hit tab to auto complete the name!
+To change into the Desktop directory, we type `cd Desktop/`. A helpful hint, after you type the first few letters of a folder or file name, you can hit tab and the computer will auto complete the name. Try it! Type `cd Desk` and then hit tab to auto complete the name!
 
 ```{r, echo = FALSE}
 knitr::include_graphics("other/images/cd_desktop.png")
 ```
 
-Now, if you type `ls` again, you can see all the item on your Desktop listed! 
+If you type `ls` again, you can see all the item on your Desktop listed. 
 
 To go back to the previous folder (aka the directory above), we can type `cd ..` The two periods represent one level above. You can see this hierarchy in this view on a Mac:
 
@@ -88,13 +90,13 @@ knitr::include_graphics("other/images/directory_hierarchy.png")
 
 ### `mkdir` and `rmdir`: Make and remove a directory {-}
 
-Now that we're in the Desktop folder, let's get set-up to stay organized for Gov 50. Staying organized is critical when working with many data projects. So, using `mkdir Gov-50` (make directory) we can create a folder exclusively for Gov 50 like so:
+Now that we're in the Desktop folder, let's get set-up to stay organized for Gov 1005. Staying organized is critical when working with many data projects. So, using `mkdir Gov-1005` (make directory) we can create a folder exclusively for Gov 1005 like so:
 
 ```{r, echo = FALSE}
 knitr::include_graphics("other/images/mkdir.png")
 ```
 
-Now, when we type ls, we can see our new folder created! Note that we used a hyphen between Gov and 50. This is because the Terminal can't recognize spaces unless you put `\` before it, like so: `mkdir Gov\ 50`. You can read more on programming naming convention [here](https://en.wikipedia.org/wiki/Naming_convention_(programming)).
+Now, when we type ls, we can see our new folder created! Note that we used a hyphen between Gov and 1005. This is because the Terminal can't recognize spaces unless you put `\` before it, like so: `mkdir Gov\ 1005`. You can read more on programming naming convention [here](https://en.wikipedia.org/wiki/Naming_convention_(programming)).
 
 To remove a folder, use `rmdir` (remove directory). We won't be using this right now because we don't need to remove anything.
 
@@ -110,13 +112,13 @@ And, of course, we can see that the test.txt file has been created using `ls`.
 
 ### `mv`: Moving files {-}
 
-Oh no! We created our test.txt file, but it should be in our Gov-50 folder, right now it's on the desktop. This happened because while we created the Gov-50 folder using `mkdir`, we forgot to open it using `cd Gov-50/`. But no worries, we can move the file to that folder using `mv`:
+Oh no! We created our test.txt file, but it should be in our Gov-1005 folder, right now it's on the desktop. This happened because while we created the Gov-1005 folder using `mkdir`, we forgot to open it using `cd Gov-1005/`. But no worries, we can move the file to that folder using `mv`:
 
 ```{r, echo = FALSE}
 knitr::include_graphics("other/images/mv.png")
 ```
 
-When using `mv` the first thing you type after `mv` is the file you want to move. The next thing is the location where you want to move it to. In our case we want to move test.txt to Gov-50/ so we type `mv test.txt Gov-50/`. After we do this, we can use `cd` to enter the Gov-50 folder and then use `ls` to see that our test.txt file successfully was moved into the Gov-50 folder:
+When using `mv` the first thing you type after `mv` is the file you want to move. The next thing is the location where you want to move it to. In our case we want to move test.txt to Gov-1005/ so we type `mv test.txt Gov-1005/`. After we do this, we can use `cd` to enter the Gov-1005 folder and then use `ls` to see that our test.txt file successfully was moved into the Gov-1005 folder:
 
 ```{r, echo = FALSE}
 knitr::include_graphics("other/images/mv_confirm.png")
@@ -124,10 +126,10 @@ knitr::include_graphics("other/images/mv_confirm.png")
 
 ### `cp`: Copying files {-}
 
-Copying files is very similar to moving files in the Terminal. Using the previous example, if we wanted to copy test.txt into the Gov-50 folder but not delete the original test.txt file, we just replace `mv` with `cp` (copy paste):
+Copying files is very similar to moving files in the Terminal. Using the previous example, if we wanted to copy test.txt into the Gov-1005 folder but not delete the original test.txt file, we just replace `mv` with `cp` (copy paste):
 
 ```{r eval=FALSE}
-cp test.txt Gov-50/
+cp test.txt Gov-1005/
 ```
 
 
@@ -139,7 +141,7 @@ Ok, we are at the last Terminal command that this book will be teaching you. So,
 knitr::include_graphics("other/images/mv_confirm.png")
 ```
 
-Make sure you are the in Gov-50 folder before you type `rm test.txt`! Using `ls`, we can see that our test file is now gone.
+Make sure you are the in Gov-1005 folder before you type `rm test.txt`! Using `ls`, we can see that our test file is now gone.
 
 Congrats! You are now able to do most basic tasks with the Terminal! If you want to learn more Terminal commands, check out Sean Kross's [The Unix Workbench](https://seankross.com/the-unix-workbench/).
 
@@ -156,7 +158,7 @@ The first step to using GitHub is installing Git on your computer. But first, yo
 
 <!-- DK: Add Happy advice on  this and other topics? -->
 
-After installing Git, you'll need a [GitHub](https://github.com/join) account. This is like a Google account. However, the one difference with GitHub is that your account is visible to the public. You want to pick a name carefully. It should be professional since you will be sending potential employers a link to your GitHub account in the near future. Check out some former Gov 50 students' GitHub profiles for inspiration: 
+After installing Git, you'll need a [GitHub](https://github.com/join) account. This is like a Google account. However, the one difference with GitHub is that your account is visible to the public. You want to pick a name carefully. It should be professional since you will be sending potential employers a link to your GitHub account in the near future. Check out some former Gov 1005 students' GitHub profiles for inspiration: 
 
 * [Evelyn Cai](https://github.com/caievelyn)
 
@@ -168,7 +170,7 @@ Once you have a GitHub account, you are ready to connect Git and RStudio to this
 
 ```{eval=FALSE, echo=TRUE}
 git config --global user.name "Your Name"
-git config --global user.mail "your@email.com"
+git config --global user.email "your@email.com"
 ```
 
 ### GitHub repositories {-}
@@ -205,7 +207,10 @@ Next, you'll need to go through these steps to create the project: Version Contr
 knitr::include_graphics("other/images/new_project.gif")
 ```
 
-Congrats! You've linked your `productivity` repo to RStudio.
+Congrats! You've linked your `productivity` repo to RStudio. Note that Github will ask you for a location in which to place this and other projects. We recommend creating a folder on your desktop called "projects" and placing all your RStudio projects there. Don't just scatter them across your computer in a mess. There will be dozens of them. Be organized!
+
+<!-- DK: Create a gif which walks through the above process. -->
+
 
 ### Updating `.gitignore` {-}
 
@@ -242,7 +247,7 @@ knitr::include_graphics("other/images/commit_push.png")
 ```
 
 
-Press `commit`. This is your way of telling Git "Yes these are the files I want to upload. I'm committed." Next, you want to press `push`. This pushes or uploads the files to GitHub. (You can probably guess what pull does, but we won't be using that yet)
+Press `commit`. This is your way of telling Git "Yes these are the files I want to upload. I'm committed." Next, press **Push**. This pushes or uploads the files to GitHub. (You can probably guess what pull does, but we won't be using that yet)
 
 Now, if you go to your GitHub repo and refresh the page, you can see that the `.gitignore` file has been uploaded with your commit message:
 
@@ -252,7 +257,28 @@ knitr::include_graphics("other/images/github_updating.gif")
 
 Congrats! You just uploaded your first file to GitHub.
 
-One tricky aspect is the caching of your Github ID and password. Most likely, you had to type these things in when you did your first push. Doing so was not too bad. And, after all, Github needs to know who you are, otherwise other people could mess with your repo. But you will be doing hundreds of commits/pushes this term. You don't want to type in your ID/password each time! Follow the instructions in [here](https://usethis.r-lib.org/articles/articles/git-credentials.html#get-a-personal-access-token-pat). [*Happy Git and GitHub for the useR*](https://happygitwithr.com/) is the best source for when Git or Github problems arise.
+One tricky aspect is the caching of your Github ID and password. Most likely, you had to type these things in when you did your first push. Doing so was not too bad. And, after all, Github needs to know who you are, otherwise other people could mess with your repo. But you will be doing hundreds of commits/pushes this term. You don't want to type in your ID/password each time! Follow the instructions in [here](https://usethis.r-lib.org/articles/articles/git-credentials.html#get-a-personal-access-token-pat). Read what is at this link, but the key commands, all issued from the R Console, are:
+
+```{r, eval = FALSE}
+usethis::create_github_token()
+```
+
+This will, after logging in, bring you back to Github. Accept the defaults and press the **Generate token** button at the bottom. (You may need to change the **Note** if you have generated tokens before.) Copy the token which has been created. It will look something like:
+
+8be3e800891425f8462c4491d9a4dbb5b1c1f35c
+
+Then, issue this R command:
+
+```{r, eval = FALSE}
+gitcreds::gitcreds_set()
+```
+
+Provide your token. After you start a new RStudio instance, Github should not ask you for your login/password again. Or it might just ask one more time. Seek help if this does not work.
+
+<!-- DK: Could use a gif for the above as well. -->
+
+
+[*Happy Git and GitHub for the useR*](https://happygitwithr.com/) is the best source for when Git or Github problems arise.
 
 
 ## PDF {-}

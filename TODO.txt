@@ -1,8 +1,8 @@
 # Topics
 
-* Show the secret weapon of doing the same regression many times and then gathering the results. nest_by(), perhaps.
+* https://xkcd.com/2048/
 
-* Show how distribution turns into a plot with counting. That is how we simplify the vector. Then, same thing in probability distribution, except need to normalize it.
+* Show the secret weapon of doing the same regression many times and then gathering the results. nest_by(), perhaps.
 
 * The elipses should be vertical, not horizontal in all Preceptor Tables.
 
@@ -14,7 +14,6 @@ https://erikgahner.dk/2020/a-response-to-andrew-gelman/
 https://statmodeling.stat.columbia.edu/2020/07/02/no-i-dont-believe-that-claim-based-on-regression-discontinuity-analysis-that/
 https://github.com/jonspring/discontinuity/blob/master/fileb23c55435f90.gif
 
-* Does the beginning of governors from Chapter 11 really belong in chapter 10 as the core interaction effect example? The shaming, in which the simplest most has 6 parameters because of all the treatments, would be in chapter 11.
 
 * Make rayshader movies for all the 3D plots in Chapter 5. Guidance:
 https://joeystanley.com/blog/3d-vowel-plots-with-rayshader
@@ -36,34 +35,39 @@ https://joeystanley.com/blog/3d-vowel-plots-with-rayshader
 
 ## To Discuss Later
 
+* Fix this for next fall: https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/
+
 * Discuss: Should "posterior probability distribution" become "ppd" or "PPD" everywhere?
 
-* Consider this for entire document:  
-html_document:
-    code_folding: "hide"
 
 * Track down these warnings from the end of book-building. Not sure where they come from.
 
 Output created: docs/index.html
 Warning messages:
 1: Removed 19 rows containing missing values (geom_point). 
-2: Removed 2 rows containing missing values (geom_bar). 
+2: `group_by_()` is deprecated as of dplyr 0.7.0.
+Please use `group_by()` instead.
+See vignette('programming') for more help
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_warnings()` to see where this warning was generated. 
 3: Removed 2 rows containing missing values (geom_bar). 
+4: Removed 2 rows containing missing values (geom_bar). 
 
 
 
-* Lots of interesting items: https://holtzy.github.io/Pimp-my-rmd/. I like the hack of making your Rmd an index.Rmd and then the html will appear as a Github pages for free.
+
+* Lots of interesting items: . I like the hack of making your Rmd an index.Rmd and then the html will appear as a Github pages for free.
 
 
 * Should use summary(fit_1) and discuss at some point. But when? Maybe Chapter 10?
 
-Do we need a cool graphics appendix, with  brief descriptions, pretty pictures from cool packages like: ggrepel, gghighlights, plotly. Others?
+* Do we need a cool graphics appendix, with  brief descriptions, pretty pictures from cool packages like: ggrepel, gghighlights, plotly. Others?
 
 * posterior package useful?
 
 * More discussion of what it means to "control for" something in a regression. Right now, we don't mention this until chapter 11. Needs to be covered earlier, especially in chapter 9. That sets the stage for later.
 
-* Use tidybayes?
+* Use tidybayes? Or just ggdist?
 
 
 * Standardize notation. What are predicted/fitted values? Use y_i everywhere, instead of using problem specific terms? That seems a bad (good?!) idea.
@@ -73,8 +77,6 @@ Do we need a cool graphics appendix, with  brief descriptions, pretty pictures f
 * Discuss base R versus tidyverse so that students are not confused when they see base R. Maybe this is week 3 in functions? And have a tutorial for this.
 
 * Teach more file management, organization, use of R scripts. (Should have done that in some of the problem sets. Maybe a milestone could require that the graphic is created with a .R script with an image saved and then placed in the app directory.) Maybe add to tools? Create a tutorial for week 4?
-
-* Remove all estimand references. Too confusing for this book.
 
 
 *  Better workflow, automatic (with click confirmation) replacement of docs/ after successful check. Two parts: First, change the check so that it builds the book nicely. (Maybe not necessary. Maybe building the book in junk/ is OK?) Second, move the newly created book --- once it is accepted --- to docs/ on the master branch. Should we be taking multiple branches more seriously. Probably.
@@ -234,12 +236,18 @@ pp. 5-6 discuss rmd_files as the way to define your own ordering for output file
 
 ## Next Summer
 
+
+* Consider this for entire document:  
+html_document:
+    code_folding: "hide"
+
+
 Add Tukey quote about burning desire. 
 
 * To Blog:
 
 Entry about best class.
-
+Why Bayesian
 
 * Books
 
@@ -259,7 +267,7 @@ https://athanasiamo.github.io/tidyquintro/
 
 https://evamaerey.github.io/flipbooks/about (use flipbooks for classroom exercises?)
 https://nickch-k.github.io/EconometricsSlides/
-
+https://holtzy.github.io/Pimp-my-rmd/
 
  https://fromthebottomoftheheap.net/2020/04/30/rendering-your-readme-with-github-actions/
  https://github.com/itsyaoyu/github_actions/blob/master/.github/workflows/main.yml
@@ -300,3 +308,37 @@ https://moderndive.github.io/moderndive_labs/index.html
 https://education.rstudio.com/blog/2020/07/learning-learnr/
 https://rmarkdown.rstudio.com/authoring_shiny_prerendered.HTML
 
+
+
+
+# FAS On Demand Meeting
+
+## Package Issues
+
+## Performance
+
+Seems really slow, even with just 2 + 2
+
+Notice how much longer it takes the tutorials to build on OnDemand relative to a local machine. Maybe?
+
+Tools tuorial builds fine. Wrangling-A and B fail to build, but work locally. Biggest difference in Wrangling-A is that it works/copies local files. But Wrangling-B fails as well, and it is very average. Maybe all non-small tutorials fail? Timing out somehow? After testing, still an intermittent problem.
+
+
+## Miscelaneous
+
+
+  
+----  
+
+Why I am still getting this message when I commit? (I have configured these properly already. And restarted a new instance.)
+
+ Committer: David Kane <u_241292_g_86443@holy2a02103.rc.fas.harvard.edu>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+----  
+
+I am also being forced to provide my login/password even though I set up a Github PAT.
