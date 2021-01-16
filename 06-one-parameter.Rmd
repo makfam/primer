@@ -2,15 +2,15 @@
 
 <!-- Priorities:  --> 
 
-<!-- Change axis labels as you like. Make better use of pedagogical opportunities. -->
+<!-- Change axis labels as you like. Make better use of pedagogical opportunities. MF: Done.-->
 
-<!-- Add code comments (if you want) which explain some of your choices. Think of them like footnotes. -->
+<!-- Add code comments (if you want) which explain some of your choices. Think of them like footnotes. MF: Done.-->
 
 <!-- If you like, improve the quality of the graphics as you go along. -->
 
-<!-- THIS IS YOUR CHAPTER! Put multiple bad standard error discussions everywhere! -->
+<!-- THIS IS YOUR CHAPTER! Put multiple bad standard error discussions everywhere! MF: Done.-->
 
-<!-- Delete all old code that you are not using. -->
+<!-- Delete all old code that you are not using. MF: Done.-->
 
 <!-- Standard error is just a fancy term for your uncertainty about something you don't know. Standard error == my (uncertain) beliefs. Tell me your standard error and then I know your 95% confidence interval.-->
 
@@ -38,11 +38,11 @@
 
 <!-- Replace 6.1 (and other hard-coded numbers) with reference/label. MF: DONE. -->
 
-<!-- Add longer figure captions, at your discretion. Student should be able to look at figure, read its caption, and understand the whole thing. -->
+<!-- Add longer figure captions, at your discretion. Student should be able to look at figure, read its caption, and understand the whole thing. MF: Done.-->
 
 <!-- Fix 816 -->
 
-<!-- Show code for final plots. Add comments to that code. -->
+<!-- Show code for final plots. Add comments to that code. MF: Done except for one overly complicated plot. -->
 
 <!-- Explain stan_glm usage! -->
 
@@ -418,12 +418,26 @@ Compare our virtual results with our tactile results from the previous section. 
 
 <!-- DK: Clean up this code. Discuss more? -->
 
-```{r, echo = FALSE, fig.cap = "Comparing 33 virtual and 33 tactile proportions red."}
+```{r, fig.cap = "Comparing 33 virtual and 33 tactile proportions red. Note that, though the figures differ slightly, both are centered around .35 to .40. This shows that, in both sampling distributions, the most frequently occuring proportion red is between 35 and 40%."}
+
+# bind_rows() takes our data from virtual_samples and 
+# "binds" it with our data from tactile_sample_urn, resulting
+# in one set of data for us to work with. Mutating to create
+# the "type" column allows us to see which pieces of data come
+# from virtual sampling and which come from tactical sampling.
+
 facet_compare <- bind_rows(virtual_samples %>% 
                               mutate(type = "Virtual sampling"), 
                            tactile_sample_urn %>% 
                               select(ID, red = red_beads, prop_red) %>% 
                               mutate(type = "Tactile sampling")) %>% 
+  
+  # Use mutate() to alter the column factor into a factor
+  # column, rather than the default character column. Calling
+  # levels() establishes our two "factors". This step is 
+  # here to help R interpret this column for when we perform 
+  # our facet_wrap(). 
+  
   mutate(type = factor(type, 
                        levels = c("Virtual sampling", 
                                   "Tactile sampling"))) %>% 
@@ -431,7 +445,17 @@ facet_compare <- bind_rows(virtual_samples %>%
     geom_histogram(binwidth = 0.05, 
                    boundary = 0.4, 
                    color = "white") +
+  
+  # facet_wrapping by type creates two different graphs
+  # on our plane. The data is separated into two graphs 
+  # based upon the column after the ~. 
+  
     facet_wrap(~ type) +
+  
+  # Add an x axis with p-hat using expression() with paste()
+  # for clarification on p-hat's meaning. Add an appropriate 
+  # title and inspect our creation. 
+  
     labs(x = expression(paste("Proportion of 50 beads that were red ", hat(p))),
          title = "Comparing distributions") 
 
@@ -547,7 +571,7 @@ virtual_samples_100 %>%
 
 For easy comparison, we present the three resulting histograms in a single row with matching x and y axes in Figure \@ref(fig:multiple_hist).
 
-```{r multiple_hist, fig.cap = "Comparing the distributions of proportion red for different sample sizes."}
+```{r multiple_hist, fig.cap = "Comparing the distributions of proportion red for different sample sizes (25, 50, 100). The important takeaway is that our center becomes more concentrated as our sample size increases, indicating a smaller standard deviation between our guesses."}
 
 # Use bind_rows to combine the data from our three saved virtual sampling
 # objects. Use mutate() in each to clarify the n as the necessary number
@@ -593,20 +617,42 @@ virtual_samples_100 %>%
 ```
 
 
-```{r, echo = FALSE, fig.cap = "Comparing the number of slots in the shovel with the standard deviation of proportions red."}
+```{r, fig.cap = "Comparing the number of slots in the shovel with the standard deviation of proportions red. Here, we see that SD decreases with higher sample sizes. This indicates that larger sample sizes yield more precise estimates."}
+
+# Start by performing group_by(n) to get data separated
+# by our different shovel sizes. 
+
 comparing_n_table <- virtual_prop %>% 
   group_by(n) %>% 
+  
+  # Take the standard deviation and mean of prop_red
+  # using summarize. 
+  
   summarize(sd = sd(prop_red), .groups = 'drop_last',
             mean = mean(prop_red)) %>% 
+  
+  # Rename using backslashes (with the desired) text
+  # on the left and the existing column on the right.
+  # This is for clarity once we create our table. 
+  
   rename(`Number of slots in shovel` = n, 
          `Standard deviation of proportions red` = sd,
          `Mean of proportions red` = mean) 
 
+# Create a table using gt().
+
 comparing_n_table  %>% 
   gt() %>% 
+  
+  # Use tab_header to add an appropriate title. 
+  
   tab_header(
     title = "Comparing standard deviations of proportions red for three different shovels"
   ) %>% 
+  
+  # Use fmt_number() to adjust the number of desired decimals
+  # in the resulting table. 
+  
   fmt_number(
     columns = "Standard deviation of proportions red",
     decimals = 3
@@ -838,7 +884,7 @@ The more data points involved in the calculations of the mean, the smaller the s
 
 To help reinforce these concepts, let's re-display Figure \@ref(fig:compare_p_hat) but using our new terminology, notation, and definitions relating to sampling in the figure below.
 
-```{r compare_p_hat, echo = FALSE, fig.cap = "Three sampling distributions of the sample proportion $\\hat{p}$."}
+```{r compare_p_hat, echo = FALSE, fig.cap = "Three sampling distributions of the sample proportion $\\hat{p}$. Note the increased concentration on the bins around .4 as our sample size increases."}
 p_hat_compare <- virtual_prop %>% 
   mutate(
     n = str_c("n = ", n),
@@ -880,48 +926,15 @@ If we could only know two pieces of information from our data, what would they b
 
 The standard error measures the accuracy of a sample distribution as compared to the population by using the standard deviation. Specifically, the standard deviation of our data points divided by the square root of the sample size. As such, we find that larger sample sizes = lower standard errors = more accurate and representative guesses. 
 
+To really drive home our point: standard error is just a fancy term for your uncertainty about something you don't know. Standard error == our (uncertain) beliefs. 
 
-<!-- REWRITE THIS ENTIRE SECTION TO REFLECT FOCUS ON STANDARD ERROR. DK: Agreed! -->
+<!-- MF: Add more SE discussion here. -->
 
-<!-- What was the value of the population proportion $p$ of the $N$ = 1000 beads in the actual urn that were red? There were 400 red beads, for a proportion red of 400/1000 = 0.375 = 37.5%! How do we know this? Did the authors do an exhaustive count of all the beads? No! They were listed in the contents of the box that the urn came in! Hence we were able to make the contents of the virtual `urn` match the tactile urn:
-
-```{r}
-urn %>% 
-  summarize(sum_red = sum(color == "red"), 
-            sum_not_red = sum(color != "red"), .groups = 'drop_last')
-```
-
-Let's re-display our sampling distributions from earlier, but now with a vertical red line marking the true population proportion $p$ of beads that are red = 37.5% in Figure 6.19. We see that while there is a certain amount of error in the sample proportions $\hat{p}$ for all three sampling distributions, on average the $\hat{p}$ are centered at the true population proportion red $p$. -->
-
-<!-- DK: Clean up code. 
-
-```{r, echo = FALSE, fig.cap = "Three sampling distributions with population proportion $p$ marked by vertical line."}
-p <- urn %>% 
-  summarize(mean(color == "red")) %>% 
-  pull()
-
-samp_distn_compare <- virtual_prop %>% 
-  mutate(
-    n = str_c("n = ", n),
-    n = factor(n, levels = c("n = 25", "n = 50", "n = 100"))
-    ) %>% 
-  ggplot(aes(x = prop_red)) +
-  geom_histogram(binwidth = 0.05, boundary = 0.4, 
-                 color = "black", fill = "white") +
-  labs(x = expression(paste("Sample proportion ", hat(p))), 
-       title = expression(paste("Sampling distributions of ", hat(p), 
-                                " based on n = 25, 50, 100.")) ) +
-  facet_wrap(~ n) +
-  geom_vline(xintercept = p, col = "red", size = 1)
-
-samp_distn_compare
-```
+Before we move on from our urn, do we know what the true value of the population proportion $p$ of the $N$ = 1000 beads in the urn was? Yes, actually. There were 400 red beads, for a proportion red of 400/1000 = .40 = 40%! How do we know this? Did the authors do an exhaustive count of all the beads? No! They were listed in the contents of the box that the urn came in! Hence we were able to make the contents of the virtual `urn` match the tactile urn. 
 
 At this point, you might be asking yourself: "If we already knew the true proportion of the urn's beads that are red was 37.5%, then why did we do any sampling?" You might also be asking: "Why did we take 1,000 repeated samples of various sizes (n = 1 to n = 100)? Shouldn't we be taking only *one* sample that's as large as possible?". If you did ask yourself these questions, your suspicion is merited! 
 
-The sampling activity involving the urn is merely an *idealized version* of how sampling is done in real life. 
-
-This is not how sampling is done in real life. In a real life scenario, we won't know what the true value of the population parameter is. Furthermore, we wouldn't be able to take 1,000 replicated samples. Rather, we take a single sample that's as large as we can afford. In the next section, we'll study a real life example of sampling: polls. -->
+The sampling activity involving the urn is merely an *idealized version* of how sampling is done in real life. This is *not* how sampling is done in real life. In a real life scenario, we won't know what the true value of the population parameter is. Furthermore, we wouldn't be able to take 1,000 replicated samples. Rather, we take a single sample that's as large as we can afford. In the next section, we'll study a real life example of sampling: polls. 
 
 ```{r, echo = FALSE, out.width="80%", fig.align='center', fig.cap = "Real life sampling is hard! In most scenarios, it's impossible to ask the entire population for their opinions."}
 knitr::include_graphics("06-one-parameter/images/that_would_be_great.png")
