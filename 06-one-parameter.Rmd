@@ -265,6 +265,11 @@ tactile_sample_urn %>%
   geom_histogram(binwidth = 0.05, 
                  boundary = 0.4, 
                  color = "white") +
+  
+  # The call expression() is used to insert a mathematical
+  # expression, like p-hat. The paste after expression allows 
+  # us to paste text prior to said expression. 
+  
   labs(x = expression(paste("Proportion of 50 beads that were red ", hat(p))),
        y = "Count",
        title = "Proportions Red in 33 Samples") 
@@ -316,6 +321,12 @@ Let's take a sample of 50 beads from our virtual urn.
 
 
 ```{r}
+
+# Define ID as 1 to look at one example of drawing
+# fifty beads. When ID is called within map(), we
+# are performing sample_n() upon our urn once (ID
+# = 1) and taking a sample of 50 beads.
+
 tibble(ID = 1) %>% 
   mutate(shovel = map(ID, ~ sample_n(urn, size = 50)))
 ```
@@ -369,6 +380,7 @@ We'll save these results in a data frame called `virtual_samples`.
 
 ```{r}
 set.seed(9)
+
 virtual_samples <- tibble(ID = 1:33) %>% 
   mutate(shovel = map(ID, ~ sample_n(urn, size = 50))) %>% 
   mutate(numb_red = map_int(shovel, ~ sum(.$color == "red"))) %>% 
@@ -393,8 +405,9 @@ ggplot(aes(x = prop_red)) +
        y = "Count",
        title = "Distribution of 33 proportions red") +
   
-  # Labels the axes in an attractive fashion. Without this code, the axes labels
-  # would include 2.5, which makes no sense because all the values are integers.
+  # Labels the axes in an attractive fashion. Without this code, 
+  # the axes labels would include 2.5, which makes no sense because
+  # all the values are integers.
   
   scale_y_continuous(breaks = seq(2, 10, 2))
 ```
@@ -412,9 +425,12 @@ facet_compare <- bind_rows(virtual_samples %>%
                               select(ID, red = red_beads, prop_red) %>% 
                               mutate(type = "Tactile sampling")) %>% 
   mutate(type = factor(type, 
-                       levels = c("Virtual sampling", "Tactile sampling"))) %>% 
+                       levels = c("Virtual sampling", 
+                                  "Tactile sampling"))) %>% 
   ggplot(aes(x = prop_red)) +
-    geom_histogram(binwidth = 0.05, boundary = 0.4, color = "white") +
+    geom_histogram(binwidth = 0.05, 
+                   boundary = 0.4, 
+                   color = "white") +
     facet_wrap(~ type) +
     labs(x = expression(paste("Proportion of 50 beads that were red ", hat(p))),
          title = "Comparing distributions") 
@@ -433,6 +449,7 @@ Now say we want to study the effects of sampling variation not for 33 samples, b
 
 ```{r}
 set.seed(9)
+
 virtual_samples <- tibble(ID = 1:1000) %>% 
   mutate(shovel = map(ID, ~ sample_n(urn, size = 50))) %>% 
   mutate(numb_red = map_int(shovel, ~ sum(.$color == "red"))) %>% 
@@ -483,7 +500,9 @@ virtual_samples_25 <- tibble(ID = 1:1000) %>%
 
 virtual_samples_25 %>%
   ggplot(aes(x = prop_red)) +
-  geom_histogram(binwidth = 0.05, boundary = 0.4, color = "white") +
+  geom_histogram(binwidth = 0.05, 
+                 boundary = 0.4, 
+                 color = "white") +
   labs(x = "Proportion of 25 beads that were red", 
        title = "25") 
 ```
@@ -500,8 +519,11 @@ virtual_samples_50 <- tibble(ID = 1:1000) %>%
 
 virtual_samples_50  %>%
   ggplot(aes(x = prop_red)) +
-  geom_histogram(binwidth = 0.05, boundary = 0.4, color = "white") +
-  labs(x = "Proportion of 50 beads that were red", title = "50")  
+  geom_histogram(binwidth = 0.05, 
+                 boundary = 0.4, 
+                 color = "white") +
+  labs(x = "Proportion of 50 beads that were red", 
+       title = "50")  
 ```
 
 Finally, we will perform the same process with 1000 replicates to map the histogram using a shovel size of **100**.
@@ -516,8 +538,11 @@ virtual_samples_100 <- tibble(ID = 1:1000) %>%
 
 virtual_samples_100 %>%
   ggplot(aes(x = prop_red)) +
-  geom_histogram(binwidth = 0.05, boundary = 0.4, color = "white") +
-  labs(x = "Proportion of 100 beads that were red", title = "100") 
+  geom_histogram(binwidth = 0.05, 
+                 boundary = 0.4, 
+                 color = "white") +
+  labs(x = "Proportion of 100 beads that were red", 
+       title = "100") 
 ```
 
 For easy comparison, we present the three resulting histograms in a single row with matching x and y axes in Figure \@ref(fig:multiple_hist).
@@ -654,7 +679,16 @@ shovels <- tibble(shovel_size = c(25, 50, 100)) %>%
                                 ~ prop_red(x = urn, 
                                            shovel_size = .x, 
                                            reps = 1000))) %>% 
-  mutate(prop_red_sd = map_dbl(prop_red_results, ~ pull(., prop_red) %>% sd()))
+  
+  # Use map_dbl() to create a column that draws the 
+  # standard deviations of our prop_red values. We 
+  # can use pull after our ~ to isolate the prop_red
+  # values and use a pipe (as we normally do) here
+  # to draw the sd() of this column. 
+  
+  
+  mutate(prop_red_sd = map_dbl(prop_red_results, 
+                               ~ pull(., prop_red) %>% sd()))
 
 glimpse(shovels)
 ```
@@ -679,7 +713,7 @@ Now, we have the standard deviation of `prop_red` for all shovel sizes from 1 to
 MF: I'm confused why we are using (2 * sqrt(.x)). If we are plotting for standard error, shouldn't we have the standard deviation (prop_red_sd) over sqrt of the sample size, x? DK: I don't know! Math is hard! -->
 
 
-```{r, echo = FALSE, fig.cap = "Comparing standard deviations of proportions red for 100 different shovels. The standard deviation decreases as the square root of shovel size."}
+```{r, echo = FALSE, fig.cap = "Comparing standard deviations of proportions red for 100 different shovels. The standard deviation decreases at the same rate as the square root of shovel size. The red line shows the standard error."}
 shovels_100 %>%
  ggplot(aes(x = shovel_size, y = prop_red_sd)) +
  geom_point() +
@@ -700,9 +734,15 @@ This is the power of running many analyses at once using `map_*` functions and l
 
 ## Standard error {#standard-errors}
 
-<!-- DK: The point of this section is to make the concept of a standard error crystal clear. Also, explain that the standard error is just one possible measure of how close we are to the truth. It isn't magic! There are other reasonable measures, like average absolute error. Connect this to MAD SD so that students are no surprised. Title of this section should be -->
+Standard errors quantify the effect of sampling variation induced on our estimates. In other words, they quantify how much we can expect different proportions of a shovel's beads that are red *to vary* from one sample to another sample to another sample, and so on. As a general rule, as sample size increases, the standard error decreases.
 
-<!-- When we sample, how close is our guess to the truth? How close is our guess if we do it 100 times? Lots of different ways to measure that! -->
+*SE refers to the standard deviation of a sample statistic (aka point estimate), such as the mean or median.* For example, the "standard error of the mean" refers to the standard deviation of the distribution of sample means taken from a population. 
+
+The relationship between the standard error and the standard deviation is such that, for a given sample size, the standard error equals the standard deviation divided by the square root of the sample size. Accordingly, the standard error is inversely proportional to the sample size; the larger the sample size, the smaller the standard error because the statistic will approach the actual value. 
+
+If this sounds confusing, don't worry! It should. Before we can explain this in more depth, it is important to understand some terminology pertaining to standard error. 
+
+<!-- DK: The point of this section is to make the concept of a standard error crystal clear. Also, explain that the standard error is just one possible measure of how close we are to the truth. It isn't magic! There are other reasonable measures, like average absolute error. Connect this to MAD SD so that students are no surprised. Title of this section should be -->
 
 
 ### Terminology and notation {#terminology-and-notation}
@@ -785,10 +825,6 @@ So as the sample size increases, the standard deviation of the proportion of red
 ### What is a "standard error"?
 
 <!-- MF: I took from explanations online, but still feel SE isn't crystal clear. Need to revisit. Agreed! -->
-
-<!-- Standard errors quantify the effect of sampling variation induced on our estimates. In other words, they quantify how much we can expect different proportions of a shovel's beads that are red *to vary* from one sample to another sample to another sample, and so on. As a general rule, as sample size increases, the standard error decreases.
-
-Unfortunately, these names confuse many people who are new to statistical inference. For example, it's common for people who are new to statistical inference to call the "sampling distribution" the "sample distribution." Another additional source of confusion is the name "standard deviation" and "standard error." Remember that a standard error is merely a *kind* of standard deviation: the standard deviation of any point estimate from sampling. In other words, all standard errors are standard deviations, but not every standard deviation is necessarily a standard error. -->
 
 The "standard error" (SE) is a term that measures the accuracy with which a sample distribution represents a population through the use of standard deviation. Specifically, SE is used to refer to the standard deviation of a sample statistic (aka point estimate), such as the mean or median. For example, the "standard error of the mean" refers to the standard deviation of the distribution of sample means taken from a population. 
 
