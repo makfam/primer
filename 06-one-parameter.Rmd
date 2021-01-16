@@ -747,7 +747,8 @@ shovels_100 <- tibble(shovel_size = 1:100) %>%
                                 ~ prop_red(x = urn, 
                                            shovel_size = .x, 
                                            reps = 1000))) %>% 
-  mutate(prop_red_sd = map_dbl(prop_red_results, ~ pull(., prop_red) %>% sd()))
+  mutate(prop_red_sd = map_dbl(prop_red_results, 
+                               ~ pull(., prop_red) %>% sd()))
 
 glimpse(shovels_100)
 ```
@@ -1374,11 +1375,39 @@ The first scenario provides a more accurate estimate, since the students outside
 
 ## Summary
 
+To finish our chapter, we will summarize each section and emphasize the most important takeaways. 
+
 <!-- DK: What are truly the things we want students to remember! -->
 
 <!-- INSERT RECAP FOR EACH SECTION WITH 2-3 IMPORTANT PIECES OF INFORMATION DK: YES. -->
 
+### Tactial sampling
 
+- Sampling allows us to make guesses at an unknown, difficult-to-obtain value by looking at a smaller subset of data and generalizing it to the larger population. 
+- Sampling is preferable in the urn example because counting out 1000 beads from an urn is intensive and tedious. 
+- Sampling is preferable in the real-world because it is often impossible to sample "all the beads" (all the people) in a population. 
+- With sampling, you see variations in your results. This is known as sampling variation and is expected, especially if you draw samples at random (unbiased).
+
+### Virtual sampling
+
+- By creating a virtual analog of our urn and our shovel, we were able to look at *even more* samples and observe the effects of sampling size on our results. 
+- More samples yield more even distributions which should resemble a bell. 
+- Larger sample sizes decrease standard deviation, meaning that the resulting proportions red are closer to one another than when the sample sizes are smaller. This means that larger samples = lower SD = more precise guesses. 
+- When we are writing a lot of code for something we want to perform frequently, write a function instead! This saves time and functions can be called within `map()` for more ease when plotting results.
+
+### Standard error
+
+- Standard error is just a fancy term for your uncertainty about something you don't know. Standard error == our (uncertain) beliefs. 
+- The standard error measures the accuracy of a sample distribution as compared to the population by using the standard deviation. 
+- We find that larger sample sizes = lower standard errors = more accurate and representative guesses. 
+- If we could only know two pieces of information from our data, we would need a measure of the **center** of the distribution (like mean or median) and a measure of the **variability** of the distribution (like sd or MAD). 
+- SE refers to the standard deviation of a sample statistic (aka point estimate), such as the mean or median. Therefore, the "standard error of the mean" refers to the standard deviation of the distribution of sample means taken from a population. 
+
+### Answering the questions
+
+### Discussion
+
+<!-- MF: ADD SUMMARY FOR LAST TWO SECTIONS AFTER RE-READING AND EDITING. -->
 
 In this chapter, we performed both tactile and virtual sampling exercises to infer about an unknown parameter We also presented a case study of sampling in real life with polls. In each case, we used the sample proportion $\hat{p}$ to estimate the population proportion $p$. However, we are not just limited to scenarios related to proportions. In other words, we can use sampling to estimate other population parameters using other point estimates as well.
 
