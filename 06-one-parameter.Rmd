@@ -6,7 +6,7 @@
 
 <!-- Add code comments (if you want) which explain some of your choices. Think of them like footnotes. MF: Done.-->
 
-<!-- If you like, improve the quality of the graphics as you go along. -->
+<!-- If you like, improve the quality of the graphics as you go along. MF: Done (sparingly).-->
 
 <!-- THIS IS YOUR CHAPTER! Put multiple bad standard error discussions everywhere! MF: Done.-->
 
@@ -265,6 +265,14 @@ tactile_sample_urn %>%
   geom_histogram(binwidth = 0.05, 
                  boundary = 0.4, 
                  color = "white") +
+  
+  # Add scale_y_continuous with breaks by 
+  # 1, as the default shows the y-axis from
+  # 1 to 10 with breaks at .5. Breaks by 1 
+  # is better for this plot, as all resulting 
+  # values are integers. 
+  
+  scale_y_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
   
   # The call expression() is used to insert a mathematical
   # expression, like p-hat. The paste after expression allows 
