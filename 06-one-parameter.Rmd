@@ -11,7 +11,7 @@
 <!-- Standard error is just a fancy term for your uncertainty about something you don't know. Standard error == my (uncertain) beliefs. Tell me your standard error and then I know your 95% confidence interval.-->
 
 <!-- --------------------- -->
-
+<!-- MF: DONE -->
 <!-- Do this like Maslow -->
 
 <!-- Preceptor's Seven Level Hierarchy of Teaching Knowledge Good -->
@@ -36,7 +36,7 @@
 
 <!-- Explain stan_glm usage! -->
 
-<!-- Find a gif for: "Standard errors are just the way that old people talk about confidence intervals." -->
+<!-- Find a gif for: "Standard errors are just the way that old people talk about confidence intervals." MF: DONE-->
 
 <!-- 
 
@@ -779,6 +779,10 @@ This is the power of running many analyses at once using `map_*` functions and l
 
 ## Standard error {#standard-errors}
 
+```{r, echo = FALSE, fig.cap= "Standard errors are just the way old people talk about confidence intervals.", fig.align= 'center'}
+knitr::include_graphics("06-one-parameter/images/old_man_SE.png")
+```
+
 Standard errors quantify the effect of sampling variation induced on our estimates. In other words, they quantify how much we can expect different proportions of a shovel's beads that are red *to vary* from one sample to another sample to another sample, and so on. As a general rule, as sample size increases, the standard error decreases.
 
 *SE refers to the standard deviation of a sample statistic (aka point estimate), such as the mean or median.* For example, the "standard error of the mean" refers to the standard deviation of the distribution of sample means taken from a population. 
@@ -924,6 +928,10 @@ If we could only know two pieces of information from our data, what would they b
 The standard error measures the accuracy of a sample distribution as compared to the population by using the standard deviation. Specifically, the standard deviation of our data points divided by the square root of the sample size. As such, we find that larger sample sizes = lower standard errors = more accurate and representative guesses. 
 
 To really drive home our point: standard error is just a fancy term for your uncertainty about something you don't know. Standard error == our (uncertain) beliefs. 
+
+```{r, echo = FALSE, fig.cap= "If you are wondering how much you need to know, follow this helpful guide of the information we have learned this chapter!", fig.align= 'center'}
+knitr::include_graphics("06-one-parameter/images/preceptor_hierarchy.png")
+```
 
 <!-- Add more SE discussion here. -->
 
