@@ -20,7 +20,7 @@
 
 <!-- You must understand what the standard error of $\hat{p}$ means. You do not need to understand why. -->
 
-<!-- Drop Mean of proportions red part of table. -->
+<!-- Drop Mean of proportions red part of table. MF: Done.-->
 
 <!-- In the Functions are your friend! section -->
 
@@ -552,16 +552,14 @@ comparing_n_table <- virtual_prop %>%
   # Take the standard deviation and mean of prop_red
   # using summarize. 
   
-  summarize(sd = sd(prop_red), .groups = 'drop_last',
-            mean = mean(prop_red)) %>% 
+  summarize(sd = sd(prop_red), .groups = 'drop_last') %>% 
   
   # Rename using backslashes (with the desired) text
   # on the left and the existing column on the right.
   # This is for clarity once we create our table. 
   
   rename(`Number of slots in shovel` = n, 
-         `Standard deviation of proportions red` = sd,
-         `Mean of proportions red` = mean) 
+         `Standard deviation of proportions red` = sd)
 
 # Create a table using gt().
 
