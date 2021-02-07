@@ -10,7 +10,7 @@
 
 <!-- Add to Maslow something like 95% confidence interval squiggly mean plus/minus 2 standard errors MF: Done. -->
 
-<!-- Make the stan_glm graphic look like the Using the posterior graphic. -->
+<!-- Make the stan_glm graphic look like the Using the posterior graphic. MF: This seems to be done already. -->
 
 <!-- Find a place to include these useful sentences: -->
 
@@ -1348,7 +1348,9 @@ Other highlights:
 - SE refers to the standard deviation of a sample statistic (aka point estimate), such as the mean or median. Therefore, the "standard error of the mean" refers to the standard deviation of the distribution of sample means taken from a population. 
 
 ### Answering the questions
-<!-- MF: ADD SUMMARY FOR ANSWERING THE QUESTIONS AFTER RE-READING AND EDITING. -->
+- A joint distribution allows us to explore the most likely possibilities according to all possible models of this scenario. 
+- The posterior distribution takes a *slice* of our joint distribution that is more specific to our question. 
+- Both models are valuable for answering questions about our model. 
 
 ### Discussion
 
