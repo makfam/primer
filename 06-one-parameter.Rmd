@@ -2,7 +2,7 @@
 
 <!-- Priorities:  --> 
 
-<!-- Need some discussion of the Cardinal Virtues, even just a brief reminder in the Discussion section. -->
+<!-- Need some discussion of the Cardinal Virtues, even just a brief reminder in the Discussion section. MF: Should this go through each virtue and apply it to the urn? Or should we only mention the virtues?  -->
 
 <!-- All references to estimating the number of red beads should be change to estimating p, the proportion of red beads.  -->
 
@@ -38,7 +38,7 @@
 
 <!-- in Discussion, discuss hypothesis tests and why we hate them. New section. After stan_glm().  Cover most of the points here: https://ppbds.github.io/primer/five-parameters.html#testing. One hypothesis: There are equal number of red and white beads in the urn. Can we reject that hypothesis? Convention: if the 95% confidence interval excludes the null hypthesis, then we reject it. Otherwise, we don't reject it. (Not we accept it.)
 
-Who cares! Rejecting or not rejecting hypotheses never helps us to answer real questions. In general, null hypthoses are never true. A big enough will always reject the null hypothesis. So, it is not that interesting. -->
+Who cares! Rejecting or not rejecting hypotheses never helps us to answer real questions. In general, null hypthoses are never true. A big enough will always reject the null hypothesis. So, it is not that interesting. MF: Done. -->
 
 <!-- 1) Make a 15 second video, put it on YouTube. "We don't estimate parameters because we care about parameters. Parameters are imaginary! Like unicorns! [Put finger on forehead and imitate unicorn.] We estimate parameters to build Data Generating Mechanisms. And with a DGM, you can move the world!" NOTE: will do when I can get access to better internet. -->
 
@@ -1110,6 +1110,14 @@ posterior_predict(fit_1,
 This posterior is similar to the one we created, much more laboriously, above. 
 
 <!-- DK: But they are still different! Why is that? -->
+
+### Hypothesis tests
+
+Recall our view on hypothesis tests: **Amateurs test. Professionals summarize.**
+
+Let's look at a possible hypothesis in our urn paradigm: there are equal number of red and white beads in the urn. Can we reject that hypothesis? Convention: if the 95% confidence interval excludes the null hypothesis, then we reject it. Otherwise, we don't reject it. However, this does not mean that we accept it. 
+
+More to the point: who cares! Rejecting or not rejecting hypotheses never helps us to answer real questions. A Yes/No question throws away too much information to (almost) ever be useful. There is no reason to test when you can summarize by providing the full posterior probability distribution. 
 
 
 ### Case study: Polls {#sampling-case-study}
