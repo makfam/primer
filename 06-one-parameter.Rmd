@@ -926,7 +926,7 @@ joint_dist %>%
   sample_n(10)
 ```
 
-After looking at our joint distribution, let's plot it. Call the `red_in_urn` for our y-axis, to indicate the number of red beads in the urn. Call `red_in_paddle` for our x-axis, to indicate the number of red beads in each paddle. This allows us to see which possible values of red beads in our samples correspond with the total number of red beads in the urn.
+After looking at our joint distribution, let's plot it. Call the `red_in_urn` for our y-axis, to indicate the number of red beads in the urn. Call `red_in_paddle` for our x-axis, to indicate the number of red beads in each paddle. This allows us to see which possible values of red beads in our samples correspond with $p$, the proportion of red beads in the urn.
 
 ```{r, cache = TRUE}
 joint_dist %>%
