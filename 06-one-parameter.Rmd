@@ -8,13 +8,13 @@
 
 <!-- Could not get figure references to work. They have been removed. But we ought to figure that out and add them back!  Should create a simple example (three line Rmd file) and then ask on RStudio Community.  -->
 
-<!-- Add to Maslow something like 95% confidence interval squiggly mean plus/minus 2 standard errors -->
+<!-- Add to Maslow something like 95% confidence interval squiggly mean plus/minus 2 standard errors MF: Done. -->
 
 <!-- Make the stan_glm graphic look like the Using the posterior graphic. -->
 
 <!-- Find a place to include these useful sentences: -->
 
-<!-- $\hat{p}$ is the estimated value of p which comes from taking a sample. There can be billions and billions of $\hat{p}$'s.  -->
+<!-- $\hat{p}$ is the estimated value of p which comes from taking a sample. There can be billions and billions of $\hat{p}$'s. MF: Done. -->
 
 <!-- p -> to $\hat{p}$ to the standard error of $\hat{p}$ to our posterior probability distribution for p. Yellow brick road? Wizard of Posterior? -->
 
@@ -28,13 +28,13 @@
 
 <!-- Maybe make it a gganimation? -->
 
-<!-- Make the last portion of The moral of the story better. Delete old stuff! After the Maslow graphic, you have two paragraphs to make the key point. Use similar stuff in Chapter summary, especially the key sentence. -->
+<!-- Make the last portion of The moral of the story better. Delete old stuff! After the Maslow graphic, you have two paragraphs to make the key point. Use similar stuff in Chapter summary, especially the key sentence. MF: Done. -->
 
 <!-- Does this belong in the Summary? There is a truth! There is a true value for p which we do not know! We want to create a posterior probability distribution which summarizes our knowledge. We care about the posterior probability distribution of p.  The center of that distribution is around the mean or median of the proportion in your sample. The sd (or mad) of that posterior is this formula! Give standard error formula. Note that this is the same thing as the standard deviation of the repeated samples! -->
 
 <!-- Explain in a comment the reason for  fun = function(.x) 1/(2 * sqrt(.x)) in the plot. I don't know why we need the 2. -->
 
-<!-- Use this quote: "May the odds be ever in your favor!" Or, better, "May the posterior be ever in your favor!" -->
+<!-- Use this quote: "May the odds be ever in your favor!" Or, better, "May the posterior be ever in your favor!" MF: Done. -->
 
 <!-- in Discussion, discuss hypothesis tests and why we hate them. New section. After stan_glm().  Cover most of the points here: https://ppbds.github.io/primer/five-parameters.html#testing. One hypothesis: There are equal number of red and white beads in the urn. Can we reject that hypothesis? Convention: if the 95% confidence interval excludes the null hypthesis, then we reject it. Otherwise, we don't reject it. (Not we accept it.)
 
@@ -852,9 +852,14 @@ The standard error measures the accuracy of a sample distribution as compared to
 To really drive home our point: standard error is just a fancy term for your uncertainty about something you don't know. Standard error == our (uncertain) beliefs. 
 
 ```{r, echo = FALSE, fig.cap= "If you are wondering how much you need to know, follow this helpful guide of the information we have learned this chapter!", fig.align= 'center'}
-knitr::include_graphics("06-one-parameter/images/preceptor_hierarchy.png")
+knitr::include_graphics("06-one-parameter/images/new_maslow.png")
 ```
 
+This hierarchy represents the knowledge we need to understand standard error (SE). At the bottom, we have math. It's the foundation for our understanding, but it doesn't need to be what we take away from this lesson. As we go up, we simplify the topic. The top of the pyramid are the basic levels of understanding that will help you to remember in the future. 
+
+If I know your estimate plus or minus *two* standard errors, I know your 95% confidence interval. This is valuable information. Standard error is really just a measure for how uncertain we are about something we do not know, the thing we are estimating. When we recall SE, we should remember that, all in all, it's a complicated concept that can be distilled into: the way old people talk about confidence intervals. 
+
+Recall that $\hat{p}$ is the estimated value of p which comes from taking a sample. There can be billions and billions of $\hat{p}$'s. We look at a large group of $\hat{p}$'s, create a distribution of results to represent the possible values of p based on our findings, and then we compute a standard error to account for our own uncertainty about our predictions. Our 95% confidence interval for our prediction == our estimate plus or minus **two** standard errors. 
 
 <!-- DK: Does the student have the main lessons? Standard error is a measure of how close you expect your guess to be to the truth. There are many other measures like mean absolute deviation and MAD SD (where this is the median absolute deviation). I am confused about this! -->
 
@@ -1346,5 +1351,5 @@ Other highlights:
 
 In this chapter, we performed both tactile and virtual sampling exercises to infer about an unknown parameter We also presented a case study of sampling in real life with polls. In each case, we used the sample proportion $\hat{p}$ to estimate the population proportion $p$. However, we are not just limited to scenarios related to proportions. In other words, we can use sampling to estimate other population parameters using other point estimates as well.
 
-As we continue our journey, recall the case of Primrose Everdeen and what she represents: no matter how realistic is our model is, our predictions are **never certain**.  
+As we continue our journey, recall the case of Primrose Everdeen and what she represents: no matter how realistic is our model is, our predictions are **never certain**.  "May the posterior be ever in your favor!"
 
