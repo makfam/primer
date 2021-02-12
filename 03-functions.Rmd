@@ -1,13 +1,14 @@
 # Functions {#functions}
 
-<!-- Last exercise: Create a distribution with an very fat tail. Draw a sample 1,000 times. Calculate the mean and the median each time. Overlay a plot of the distribution and of the means and the medians. All the medians will be from the middle of the distribution. They are "informative." All the means will be from the tail, no where near the middle of the distribution. The means will be around the true mean and the medians will be around the true medians. It is just that the true mean is not informative. We could do this by having a distribution with 100,000 observations, from which we draw 4,000 observations, just like the default behavior of stan_glm(). -->
+<!-- The functions created here should be more tightly connected to the functions created in the tutorial. Recall that we will be merging the tutorial into the chapter this summer, I hope! -->
 
-<!-- Or: Take a real data set, calculated a mean and sd. Then do 1,000 draws from that. Then, plot the densities of the raw data and the simulated data on top of one another. -->
+<!-- And we also want to lay the groundwork for the problem set (and exam) which require writing a function. And, finally, all these exercises should be teaching something which is then referenced in probability and in stan_glm. Yet it is not clear what those would be. Maybe some simulations? -->
 
-<!-- Advanced form of the guessing game in which we are allowed to provide a function. The goal of inference is to come up with a function which wins the prediction game. -->
+<!-- If the Democrats have a 50% chance of winning each seat in the Senate, what are the odds of them getting 60 seats (to beat the filibuster) at any one time? How much does their advantage have to be to have a 20% chance of getting 60? Do this first while pretending that all senates run each two years. Then do it staggered. Or is all that too complex? -->
+
+<!-- Maybe an advanced form of the guessing game in which we are allowed to provide a function. The goal of inference is to come up with a function which wins the prediction game. -->
 
 <!-- This is currently in problem set #3: Change the objective function. The simplest form of the Guessing Game just counts each contest separately. A more advanced for would give you a penalty which varies depending on how wrong you are. (This, obviously, is one way to think about minimizing the squared residuals.) This is very fun because there are many different penalty functions, each of which may lead to a different function winning the Guessing Game. -->
-
 
 <!-- Another form of the Guessing Game is like a casino. One person (the Casino) gives a 50% confidence interval. The other person gets to pick either inside or outside. Then there is a draw. The Casino wins if the second person can't consistently win. -->
 
@@ -16,7 +17,7 @@
 
 A function is a piece of code that is packaged in a way that makes it easy to reuse. Functions make it easy for you to `filter()`, `arrange()`, `select()`, and create a `tibble()`, as you have seen in Chapters \@ref(visualization) and \@ref(wrangling). Functions also allow you to transform variables and perform mathematical calculations. We use functions like `rnorm()` and `runif()` to generate random draws from a distribution.
 
-Note that every time we discuss a function, we include the parentheses. This is because you call a function by including its parentheses and any necessary arguments within those parentheses. This is a correct call of `rnorm()`:
+every time we reference a function, we include the parentheses. You call a function by including its parentheses and any necessary arguments within those parentheses. This is a correct call of `rnorm()`:
 
 ```{r}
 rnorm(n = 1)
@@ -40,7 +41,7 @@ Functions can also take in other functions as arguments. For example, `replicate
 replicate(10, sample(1:6, 1))
 ```
 
-An especially useful type of function is the family of `map_*` functions. `map_*` functions come from the **purrr** package, which is automatically loaded with `library(tidyverse)`. These functions apply the same function to every row in a tibble.
+An especially useful type of function is the family of `map_*` functions, from the **purrr** package, which is automatically loaded with `library(tidyverse)`. These functions apply some other function to every row in a tibble.
 
 ```{r, message = FALSE}
 library(tidyverse)
@@ -49,24 +50,38 @@ library(tidyverse)
 Let's create a tibble with one variable `x` which takes on three values: 3, 7, and 2.
 
 ```{r}
-tibble(x = c(3, 7, 2))
+tibble(x = c(4, 16, 9))
 ```
 
 It is easy to use mutate to create a new variable, `sq_root`, which is the square root of each value of x.
 
 ```{r}
-tibble(x = c(3, 7, 2)) %>% 
+tibble(x = c(4, 16, 9)) %>% 
   mutate(sq_root = sqrt((x)))
 ```
 
 `map_*` functions provide another approach. A `map_*` function takes two required arguments. First is the object over which you want to iterate. This will generally be a column in the tibble you are working in. Second is the function which you want to run for each row in the tibble.
 
 ```{r}
-tibble(x = c(3, 7, 2)) %>% 
+tibble(x = c(4, 16, 9)) %>% 
   mutate(sq_root = map_dbl(x, ~ sqrt(.)))
 ```
 
-`map_dbl()` (pronounced "map-double") took the function `sqrt()` and applied it to each element of `x`. There are two tricky parts to the use of map_* functions. First, you need to put the tilde symbol --- the "~" --- before the call to the function. Second, you need to include a period --- the "." --- in the spot where the variable goes.
+`map_dbl()` (pronounced "map-double") took the function `sqrt()` and applied it to each element of `x`. There are two tricky parts to the use of map_* functions. First, you need to put the tilde symbol --- the "~" --- before the name of  the function which you want to call. Without the `~`, you will get an error:
+
+```{r, error = TRUE}
+tibble(x = c(4, 16, 9)) %>% 
+  mutate(sq_root = map_dbl(x, sqrt(.)))
+```
+
+Second, you need to include a period --- the "." --- in the spot where the variable goes. Using the name of the variable --- `x` in this case --- will generate an error.
+
+```{r, error = TRUE}
+tibble(x = c(4, 16, 9)) %>% 
+  mutate(sq_root = map_dbl(x, ~ sqrt(x)))
+```
+
+Tilde and dot --- that is, `~` and `.` --- are easy to forget.
 
 We called these `map_*` functions (plural) before.  If you know the expected output of your function, you can specify that kind of vector:
 
@@ -77,31 +92,29 @@ We called these `map_*` functions (plural) before.  If you know the expected out
 - `map_chr()`: character
 - `map_df()`: data frame
 
-Since our example produces numeric output, we use `map_dbl()` instead of `map()`.
+Since our example returns numeric output, we use `map_dbl()` instead of `map()`.
 
-What's the difference between using `mutate()` and `map_*` functions? `map_*` functions are useful because of their ability to apply functions to every single element of a list, which `mutate()` cannot handle.
+The key difference between using `mutate()` and `map_*` functions is that `map_*` functions are designed to work well with lists, both as inputs and as outputs.  `mutate()` is designed for vectors.
 
 ## List-columns and map functions
 
 Recall that a list is different from an atomic vector. In atomic vectors, each element of the vector has one value.  Lists, however, can contain vectors, and even more complex objects, as elements.
 
 ```{r}
-x <- list(c(3, 7, 2))
+x <- list(c(4, 16, 9))
 x
 ```
 
-The above object, x, contains a numeric vector as an element. How do we extract the first element of the list?
+`x` is a list with one element. That element is a numeric vector of length 3. We use `[[]]` to extract specific elements. Example:
 
 ```{r}
-x[[1]][1]
+x[[1]][3]
 ```
 
+The first `[[]]` extracts the first (and only, in this case) element form the list `x`. The second `[[]]`` extracts the 3rd element from the vector which is that first element.
 
-<!-- BG: I removed the "recall pepper packet analogy" because it no longer exists in Ch. 2 -->
 
-There are a number of built-in R functions that output lists. For example, the ***ggplot***s you have been making store all of the plot information in lists.
-
-Any function that returns multiple values can be used to create a list output by wrapping those values with `list()`.
+There are a number of built-in R functions that output lists. For example, the ***ggplot*** objects you have been making store all of the plot information in lists. Any function that returns multiple values can be used to create a list output by wrapping those values with `list()`.
 
 ```{r}
 x <- rnorm(10)
@@ -113,27 +126,26 @@ range(x)
 tibble(col_1 = list(range(x))) 
 ```
 
-Notice this is a 1x1 tibble with one observation, which is a list of one element. Voila! You have just created a *list-column**.
+Notice this is a 1x1 tibble with one observation, which is a list of one element. Voila! You have just created a **list-column**.
 
 *If a function returns multiple values as a vector, like `range()` does, you must use `list()` as a wrapper if you want to create a list-column.*
 
-A list column is a column of your data which is a [list](https://adv-r.hadley.nz/vectors-chap.html#lists) rather than an atomic vector.  Like with lists, you can pipe in `str()` to read the column more easily.
+A list column is a column of your data which is a [list](https://adv-r.hadley.nz/vectors-chap.html#lists) rather than an atomic vector.  Like with lists, you can pipe to `str()` to examine the column more easily.
 
 ```{r message=FALSE}
 tibble(col_1 = list(range(x))) %>%
   str()
 ```
 
+<!-- DK: This goes way to fast. We need several simple examples, more or less the same as in the tutorials. -->
 
-Let's practice with the `nhanes` dataset. How could we add a column to the dataset that included the quantiles of the `height` variable for each `gender`?
-
-First, we load the necessary **primer.data** library.
+Let's practice with the `nhanes` dataset from the **primer.data** package. How could we add a column to the dataset that included the quantiles of the `height` variable for each `gender`?
 
 ```{r}
 library(primer.data)
 ```
 
-Then, select the relevant variables, and group by `gender`. We are grouping because we are curious as to how `height` is distributed in between `gender`. We drop any rows with missing data.
+Select the relevant variables, and group by `gender`. We are grouping because we are curious as to how `height` is distributed in between `gender`. We drop any rows with missing data.
 
 ```{r}
 nhanes %>%
@@ -142,37 +154,48 @@ nhanes %>%
   group_by(gender)
 ```
 
-<!-- BG: Here it says we use list() to wrap quantile(), but map() does that in the code below. Is it supposed to use list() here? -->
+There are two approaches. In the first, we are happy to have an output tibble with just two rows:
 
-<!-- DK: Alex also found this section confusing.  -->
-
-Next, we will create a list-column by wrapping `quantile()` with `list()`. `quantile()` naturally produces a numeric vector of the quantiles of `height`, and wrapping with `list()` will capture this numeric vector as a list.
 
 ```{r}
-tmp <- nhanes %>%
+nhanes %>%
   select(gender, height) %>%
   drop_na() %>% 
   group_by(gender) %>% 
-  mutate(height_quantiles = map(height, ~ quantile(.)))
-
-tmp
+  summarise(q_height = list(quantile(height)),
+            .groups = "drop")
 ```
 
-Take a look at the values for `height_quantiles`:
+Note that there was no need to use `map_*` functions in this case. The simple **dplyr** approach works fine. The only "trick" is the use of `list()` to wrap the output of `quantile()`. Use `str()` to examine the exact values.
 
 ```{r}
-tmp %>% 
-  select(gender, height_quantiles) %>% 
-  slice(1,5) %>% 
+nhanes %>%
+  select(gender, height) %>%
+  drop_na() %>% 
+  group_by(gender) %>% 
+  summarise(q_height = list(quantile(height)),
+            .groups = "drop") %>% 
   str()
 ```
 
-<!-- DK: This is confusing! Cut it? Or explain better what a list column actually looks like? One or the other! -->
+Men are taller than women throughout the distribution, but the smallest individual (child) in the data, see the 0% quantile, happens to be male.
 
-Men are taller than women, except at the very bottom of the height distribution, which includes children.
+The second case involves a scenario in which we do not want to "lose" any rows in our tibble. We want a `q_height` column for all the rows, even if the values included are repetitive.  A common scenario is that we want to use `q_height` to perform a calculate for each individual. To do this, we need a `map_*` function.
+
+```{r}
+nhanes %>%
+  select(gender, height) %>%
+  drop_na() %>% 
+  group_by(gender) %>% 
+  summarize(q_height = map(height, ~ quantile(.)),
+            .groups = "drop")
+```
+
+The first four lines of the pipe are the same in both cases. The only difference is the use of `list(quantile(height))` in the first and `map(height, ~ quantile(.)` in the second.
 
 We can use `map_*` functions to both create a list-column and then, much more importantly, work with that list-column afterwards. Example:
 
+<!-- DK: This is a good example. Needs to go slower, or be repeated several times. -->
 
 ```{r}
 tibble(ID = 1:3) %>% 
@@ -181,35 +204,18 @@ tibble(ID = 1:3) %>%
   mutate(range = map(draws, ~ range(.)))
 ```
 
-This flexibility is only possible via the use of list-columns and  `map_*` functions.
+This flexibility is only possible via the use of list-columns and  `map_*` functions. This workflow is extremely common. We start with an empty tibble, using ID to specify the number of rows. With that skeleton, each step of the pipe adds a new column, working off a column which already exists. 
 
-Until now, we have practiced using `map_*` functions with built-in R functions. Next, we will show you how to write your very own functions!
+<!-- DK: Lots of awkward. -->
+
+Until now, we have practiced using `map_*` functions with built-in R functions. Sometimes, however, there is not an R function which does what we want. When that happens, we need to create our own function.
+
 
 ## Custom Functions
 
-### Anonymous functions with `map_*` functions
-
-We can create functions that do operations "on the fly" without bothering to give them a name. These nameless functions are called [anonymous functions.](https://coolbutuseless.github.io/2019/03/13/anonymous-functions-in-r-part-1/)
-
-You can use anonymous functions in conjunction with the `map_*` family of functions. They're commonly used to conduct mathematical operations repeatedly.
-
-You can call an anonymous function using a `~` operator and then using a `.` to represent the current element.
-
-```{r}
-tibble(old = c(3, 7, 2)) %>% 
-  mutate(new = map_dbl(old, ~ (. + 1)))
-```
-
-Note that the parentheses are not necessary. As long as everything after the `~` works as R code, the anonymous function should work, each time replace the `.` with the value of the relevant value of the `.x` variable --- which is `old` in this case --- with its value in that row.
-
-```{r}
-tibble(old = c(3, 7, 2)) %>% 
-  mutate(new = map_dbl(old, ~ . + 1))
-```
-
 ### Creating your own functions
 
-There are plenty of built-in functions in R, such as the ones mentioned above. You can also create your own custom functions, which may look something like this:
+There are many built-in functions in R. You can also create your own custom functions, which may look something like this:
 
 ```{r}
 add_one_and_one <- function(){
@@ -220,7 +226,8 @@ add_one_and_one()
 ```
 
 You just created a function! This function will return `1 + 1` whenever called. 
-What if we wanted to leave some mystery in the function? That is to say, we want to add the number 6 to a value `x`, that the user provides for us. 
+
+Consider a function which adds the number 6 to a value `x`, a value which we want to allow the user provide. 
 
 ```{r}
 add_six_to_something <- function(x){
@@ -230,7 +237,7 @@ add_six_to_something <- function(x){
 add_six_to_something(x = 1)
 ```
 
-Congratulations! You have incorporated your first **formal argument**. Formal arguments in functions are additional parameters that allow the user to customize the use of your function. Instead of adding `1 + 1` over and over again, your function takes in a number `x` that the user defines and adds 6. Now let's drive it home and make a function with *two* formal arguments.
+You have incorporated your first **formal argument**. Formal arguments in functions are additional parameters that allow the user to customize the use of the function. Instead of adding `1 + 1` over and over again, your function takes in a number `x` that the user defines and adds 6. Consider a function with *two* formal arguments.
 
 ```{r}
 add_x_to_y <- function(x, y) {
@@ -239,6 +246,48 @@ add_x_to_y <- function(x, y) {
 
 add_x_to_y(1, 2)
 add_x_to_y(4, 3)
+```
+
+
+
+### Anonymous functions with `map_*` functions
+
+We can create functions that perform operations "on the fly," without bothering to give them a name. These nameless functions are called [anonymous functions.](https://coolbutuseless.github.io/2019/03/13/anonymous-functions-in-r-part-1/)
+
+You can use anonymous functions in conjunction with the `map_*` family of functions. They are commonly used to conduct the same operations repeatedly.
+
+You can call an anonymous function using a `~` operator and then using a `.` to represent the current element. Consider these three approaches: 
+
+```{r}
+tibble(old = c(4, 16, 9)) %>% 
+  mutate(new_1 = old + 6) %>% 
+  mutate(new_2 = map_dbl(old, ~ add_six_to_something(.))) %>% 
+  mutate(new_3 = map_dbl(old, ~ (. + 6)))
+```
+
+<!-- DK: Explicitly show how rnorm() won't work with just mutate because you get the same answer. -->
+
+All three produce the same answer, as we would expect. Just using `mutate()` is best, as long as it accomplishes your goal. In complex situations, especially those involving simulation, it often won't. Example:
+
+```{r}
+tibble(ID = 1:3) %>% 
+  mutate(x = rnorm(1))
+```
+
+Calling `rnorm()`, or any function with a randon component, does not have the effect which you probably want if you do it in the context of a simple `mutate()`. Instead, R runs `rnorm(1)` once, and then copies the value generated to the remaining two rows of the tibble. To get a different value in each row, you need to explicitly tell R to do that:
+
+```{r}
+tibble(ID = 1:3) %>% 
+  mutate(x = rnorm(1)) %>% 
+  mutate(y = map_dbl(ID, ~ rnorm(1)))
+```
+
+
+Note that the parentheses in the anonymous function are not necessary. As long as everything after the `~` works as R code, the anonymous function should work, each time replace the `.` with the value of the relevant value of the `.x` variable --- which is `old` in this case --- with its value in that row.
+
+```{r}
+tibble(old = c(4, 16, 9)) %>% 
+  mutate(new = map_dbl(old, ~ . + 1))
 ```
 
 
@@ -320,11 +369,15 @@ no_NA_sampler <- function(tbl, var, n){
     pull({{var}})
 }
 
-no_NA_sampler(nhanes, height, n = 2)
-no_NA_sampler(trains, age, n = 5)
+no_NA_sampler(tbl = nhanes, var = height, n = 2)
 ```
 
-R does not know how to interpret something like `age` when it is passed in an argument. The double curly braces around `var` tell R, in essence, that `var` is a variable in the tibble created from sampling from our imputed data set (`tbl`). 
+R does not know how to interpret something like `age` when it is passed in an argument. The double curly braces around `var` tell R, in essence, that `var` is a variable in the tibble created from sampling from our input tibble (`tbl`). We use the order of the arguments, without naming them, with `no_NA_sampler()`, just as with any other R function:
+
+```{r}
+no_NA_sampler(trains, age, 5)
+```
+
 
 <!-- DK: I realize that the above is a lousy explanation. Feel free to change it completely. -->
 
@@ -379,9 +432,9 @@ if(your_error > my_error) cat("I win!")
 ```
 
 
-Run this code in your R Console to try it out. It works! It is also sloppy and disorganized. *But the first step in writing good code is to write bad code*.
+Run this code in your R Console to try it out. It works! It is also sloppy and disorganized. *The first step in writing good code is to write bad code*.
 
-We don't want to play the Prediction Game just once. We want to do it thousands of times. Copy/pasting this code a thousand times would be stupid. Instead, we need a function. Just place the working code within a function definition, and Voila!
+We don't want to play the Prediction Game just once. We want to play it thousands of times. Copy/pasting this code a thousand times would be stupid. Instead, we need a function. Just place the working code within a function definition, and Voila!
 
 ```{r}
 prediction_game <- function(){
@@ -398,14 +451,14 @@ prediction_game <- function(){
 }
 ```
 
-Other than the function definition itself, there are no changes. Yet, by creating a function, we can now easily run this multiple times.
+Other than the function definition itself, there are no changes. Yet, by creating a function, we can now easily run this many times.
 
 
 ```{r}
 replicate(3, prediction_game())
 ```
 
-The problem with this version is that we want `prediction_game()` to *return* a message about the winner. Right now, it returns nothing. It just prints the winner. Let's change that, and also allow for guesses to be passed in as an argument, along with the tibble and variable. We can leave `n` hard coded as 1 since, by definition, the Prediction Game is an attempt to guess one number, at least for now.
+The problem with this version is that we want `prediction_game()` to *return* a message about the winner. Right now, it returns nothing. It just prints the winner. Let's change that, and also allow for guesses to be passed in as an argument, along with the tibble and variable. We can leave `n` hard coded as 1 since, by definition, the Prediction Game is an attempt to guess one number, at least for now. To do this, we need to use the `return()` function which, when executed, causes the function to finish and return whatever value is within the paratheses. 
 
 <!-- DK: Add some code comments, especially {{var}} -->
 
@@ -413,8 +466,7 @@ The problem with this version is that we want `prediction_game()` to *return* a 
 ```{r}
 prediction_game <- function(guesses, tbl, var){
   
-  # This is telling our function to stop if we do not select two guesses 
-  # in the format of c(guess 1, guess 2).
+  # Check to make sure that guesses is a vector of doubles of length 2.
   
   stopifnot(all(is_double(guesses)))
   stopifnot(length(guesses) == 2)
@@ -548,32 +600,28 @@ tibble(ID = 1:1000, guess_1 = 800, guess_2 = 900) %>%
     geom_bar()
 ```
 
-Empirically, we see than 900 is a much better guess than 800.
+Empirically, we see than 900 is a much better guess than 800. Instead of calling a function to be run 1,000 times, we just performed each step within each row of a tibble with 1,000 rows. Both approaches work. The best choice depends on the context of your problem.
 
 ## Summary
 
+*The first step in writing good code is to write bad code*.
 
 ### Lists and list-columns
 
-The introduction of the chapter was centered on a discussion of lists and list-columns. Key points from this section include:
-
-- A list is different from an atomic vector. Atomic vectors are familiar to us: each element of the vector has one value, and thus if an atomic vector is a column in your data set, each observation gets a single value.  Lists, however, can contain vectors as elements.
-- There are various ways to create lists. We can directly input values inside `list()`, or wrap the values in `c()` first to create a vector element.
-- Any function that returns multiple values can be used to create a list output. To turn the output into a list, simply wrap the line of code with `list()`.
-- We can take a list column and, by applying an anonymous function to it with `map()`, create another list column. This is similar to taking a tibble and piping it into a `dplyr` function (such as `mutate()`) which gives you a new tibble that you can work with.
+- A list is different from an atomic vector. Atomic vectors are familiar to us: each element of the vector has one value, and thus if an atomic vector is a column in your data set, each observation gets a single value.  Lists, however, can contain vectors, and other more complex objects, as elements.
+- There are various ways to create lists. The most common is to use the `list()` function to "wrap" some object. `map()` always returns a list.
+- We can take a list column and, by applying an anonymous function to it with `map()`, create another list column. This is similar to taking a tibble and piping it into a function, like  `mutate()`, which returns a new tibble to work with.
 - You can also use `map_*` functions to take a list column as an input and return an atomic vector -- a column with a single value per observation -- as an output. 
 
-### Custom functions
+*If a function returns multiple values as a vector, you must use `list()` as a wrapper if you want to create a list-column.*
 
-This chapter, we focused on functions. 
+### Writing functions
 
-In particular, when building a function, you want to remember these key lessons:
 - Optimize usefulness by adding more formal arguments when needed. A function that only gives an option for `n` may not be as helpful as a function that allows us to enter options for a data set, variable, and n value. 
-- As there is no *structural* relationship between our argument names (`n`) and that of `sample()` (which also includes `n`), ensure that argument names are sensible. This helps not only your readers, but also you. In short: using "bob_ross" to denote the number of samples you want... is a bad idea. 
-- Make sure we account for possible values of NA in our functions. This can be accomplished by placing something like `drop_na()` as another line of code within the function's body, or by adding an `na.rm =` argument to our function. We might even enforce our preferred default -- but at least we're giving the user a way to control the behavior around `NA`s.
-- By default, a function returns the result of the last line of the body.
+- Give your arguments sensible names.  
+- By default, a function returns the result of the last line of the body. Use `return()` to override this default.
 - When starting a function, remember that smaller steps are easier than trying to build everything in one motion. In general: start by writing the body, test the body in a basic function, and then add formal arguments.  
-- Use double curly braces around `var`s, since R does not know how to interpret variables when passed in an argument. The double curly braces tell R that `var` is a variable in the tibble created by our function.  
+- Use double curly braces around `var`s, since R does not know how to interpret variable names when they are passed in an argument. The double curly braces tell R that `var` is a variable in a tibble.  
 
 
 ### Distributions
@@ -585,12 +633,4 @@ In particular, when building a function, you want to remember these key lessons:
 - Outliers cause a lack a stability. In a distribution without outliers, the mean/median and mad/sd are so close in value that it does not matter much which ones you use.
 
 
-
-
-
-### Other important information
-- The median is often a more stable measure than the mean. 
-- When starting a function, remember that smaller steps are easier than trying to build everything in one motion. In general: start by writing the body, test the body in a basic function, and then add formal arguments. 
-- Use double curly braces around `var`s, since R does not know how to interpret variables when passed in an argument. The double curly braces tell R that `var` is a variable in the tibble created by our function.
-- Sensible names for formal arguments will not only help you, but also anyone who is reading your code. 
 
