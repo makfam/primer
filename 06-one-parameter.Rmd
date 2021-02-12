@@ -4,7 +4,7 @@
 
 <!-- Need some discussion of the Cardinal Virtues, even just a brief reminder in the Discussion section. MF: Should this go through each virtue and apply it to the urn? Or should we only mention the virtues? Yes. In 6.4.4, about 4 paragraphs. -->
 
-<!-- All references to estimating the number of red beads should be change to estimating p, the proportion of red beads.  Or, just make clear a couple of times that they are the same thing. And that we "pretend" that p is continuous even though, stritcly speaking it is not. -->
+<!-- All references to estimating the number of red beads should be change to estimating p, the proportion of red beads.  Or, just make clear a couple of times that they are the same thing. And that we "pretend" that p is continuous even though, stritcly speaking it is not. MF: Done.-->
 
 <!-- Could not get figure references to work. They have been removed. But we ought to figure that out and add them back!  Should create a simple example (three line Rmd file) and then ask on RStudio Community.  -->
 
@@ -12,7 +12,7 @@
 
 <!-- Put these two in the Summary: -->
 
-<!-- Does this belong in the Summary? There is a truth! There is a true value for p which we do not know! We want to create a posterior probability distribution which summarizes our knowledge. We care about the posterior probability distribution of p.  The center of that distribution is around the mean or median of the proportion in your sample. The sd (or mad) of that posterior is this formula! Give standard error formula. Note that this is the same thing as the standard deviation of the repeated samples! -->
+<!-- Does this belong in the Summary? There is a truth! There is a true value for p which we do not know! We want to create a posterior probability distribution which summarizes our knowledge. We care about the posterior probability distribution of p.  The center of that distribution is around the mean or median of the proportion in your sample. The sd (or mad) of that posterior is this formula! Give standard error formula. Note that this is the same thing as the standard deviation of the repeated samples! MF: Done.-->
 
 <!-- p (the truth) -> to $\hat{p}$  (my estimate) -> to the standard error of $\hat{p}$ (black box of math mumbo jumbo and computer simulation magic; details of the box and how it works do not matter!) -> to our posterior probability distribution for p (your beliefs about the truth). Yellow brick road? Wizard of Posterior? At least a paragraph of text going through this. Maybe as the start of the Summary. Current Key Lesson is not Key! -->
 
@@ -23,7 +23,6 @@
 <!-- The variation in p-hat (when we do 1,000 reps) decreases as shovel size increases. For each shovel size, you plot 1,000 points. Small shovels have lots of overlap, so, use alpha. Even big shovels only have scores of possible p-hats. Then, say, can we measure the decrease in varition more precisely then just looking at this cloud of points? Yes! Plot the standard deviation of the cloud for each shovel size. -->
 
 <!-- Maybe make it a gganimation? -->
-
 
 <!-- Explain in a comment the reason for  fun = function(.x) 1/(2 * sqrt(.x)) in the plot. I don't know why we need the 2. We would probably use geom_function(). Maybe using geom_function with the function for a standard error will just magically work! -->
 
@@ -767,10 +766,6 @@ Note that last word we wrote in bold: **infer**. The act of "inferring" means to
 
 ### Statistical definitions {#sampling-definitions}
 
-```{r, echo = FALSE, fig.cap = "We are almost done! Hang in there."}
-knitr::include_graphics("06-one-parameter/images/really_more.png")
-```
-
 Now, for some important statistical definitions related to sampling. As a refresher of our 1,000 repeated/replicated virtual samples of size $n$ = 25, $n$ = 50, and $n$ = 100 in Section \@ref(virtual-sampling), let's display our figure showing the difference in proportions red according to different shovel sizes.  
 
 ```{r, echo = FALSE, fig.cap = "Previously seen three distributions of the sample proportion $\\hat{p}$."}
@@ -1012,6 +1007,10 @@ The key issue with the urn paradigm is that, unlike real world data science, we 
 knitr::include_graphics("06-one-parameter/images/slice_rayshader.png")
 ```
 
+### Hypothesis test
+
+<!-- Put Hypothesis section right before using the posterior. Give a clear two paragraph description of hypothesis test. "Traditionally, most scientific papers are not so much interested in estimating p. They are interested in testing specific hypotheses." Explain it exactly the way that Khan explains it. -->
+
 ### Using the posterior
 
 Now that we have our posterior distribution for the proportion $p$ of red beads in the urn, we can use that object to forecast other outcomes, outcomes which we have not yet observed. Recall, from the start of the Chapter: 
@@ -1062,6 +1061,10 @@ sum(post_dist$new_reds > 8) /  length(post_dist$new_reds)
 ```
 
 The answer is about `r round(100 *sum(post_dist$new_reds > 8) /  length(post_dist$new_reds))`%. 
+
+### Cardinal virtues
+
+<!-- Add cardinal virtues discussion in terms of our findings and their relevancy. -->
 
 ## Discussion
 
@@ -1320,7 +1323,7 @@ The first scenario provides a more accurate estimate, since the students outside
 
 Key lesson:
 
-> The mean or median is a good estimate for the center of the posterior and the standard error or mad is a good estimate for the variability of the posterior, with +/- 2 standard errors covering 95% of the outcomes.
+> There is a truth! There is a true value for p which we do not know! We want to create a posterior probability distribution which summarizes our knowledge. We care about the posterior probability distribution of p. The center of that distribution is around the mean or median of the proportion in your sample. The sd (or mad) of that posterior is the standard deviation divided by the square root of our sample size! Note that this is the same thing as the standard deviation of the repeated samples.
 
 Other highlights:
 
