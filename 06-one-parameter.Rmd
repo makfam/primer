@@ -6,8 +6,6 @@
 
 <!-- All references to estimating the number of red beads should be change to estimating p, the proportion of red beads.  Or, just make clear a couple of times that they are the same thing. And that we "pretend" that p is continuous even though, stritcly speaking it is not. MF: Done.-->
 
-<!-- Could not get figure references to work. They have been removed. But we ought to figure that out and add them back!  Should create a simple example (three line Rmd file) and then ask on RStudio Community.  -->
-
 <!-- Fix up Maslow. MF: Done.-->
 
 <!-- Put these two in the Summary: -->
@@ -39,6 +37,8 @@
 <!-- A paragraph about the distinction between distributions and probability distributions. We often can work with the former till the very end. When answering most questions, I can just work with the "raw" distribution. I don't need the posterior probability distribution. -->
 
 <!-- Also, no need for sample_n(10) when looking at post_dist, I think. So, just look at first ten. Then discuss the size of post_dist, which will be some random number like 2,567. -->
+
+<!-- Could not get figure references to work. They have been removed. But we ought to figure that out and add them back!  Should create a simple example (three line Rmd file) and then ask on RStudio Community.  -->
 
 <!-- 1) Make a 15 second video, put it on YouTube. "We don't estimate parameters because we care about parameters. Parameters are imaginary! Like unicorns! [Put finger on forehead and imitate unicorn.] We estimate parameters to build Data Generating Mechanisms. And with a DGM, you can move the world!" NOTE: will do when I can get access to better internet. -->
 
@@ -1023,19 +1023,39 @@ We need to create an (unnormalized) posterior distribution for the number of red
 ```{r}
 set.seed(17)
 
+# Define a paddle size for our
+# joint distributions
+
 paddle_size <- 20
 
+# To create our posterior distribution,
+# filter for where the red in paddle 
+# is equal to 17. This takes our slice.
 
 post_dist <- joint_dist %>% 
   filter(red_in_paddle == 17) %>% 
+  
+  # Remove the columns of red_in_urn
+  # and red_in_paddle so we are left 
+  # with p.
+  
   select(-red_in_urn, -red_in_paddle) %>% 
+  
+  # Create object new_reds which 
+  # maps p using rbinom with size
+  # defined as our previously created
+  # paddle_size of 20. 
+  
   mutate(new_reds = map_int(p, ~ rbinom(n = 1,
                                         size = paddle_size,
                                         prob = .)))
+
+# Look at our created posterior distribution.
   
-post_dist %>% 
-  sample_n(10)
+post_dist 
 ```
+
+Note that we have two columns to focus on after removing the columns `red_in_urn` and `red_in_paddle`. The column `p` represents our probability for the number of red beads we draw with our paddle size of 20 (conditional upon a previous draw of 17 red beads). The column `new_reds` represents the number of red beads found in our draw of twenty beads. Scroll through our object to look at the probabilities for various results of `new_reds`. 
 
 With this unnormalized distribution, it is easy to create the normalized posterior probability distribution.
 
@@ -1053,6 +1073,10 @@ post_dist %>%
     theme_classic()
 ```
 
+To emphasize the ease with this method of creating our joint distribution compared to our previous example, let's show the two created figures next to one another:
+
+<!-- MF: Add patchwork here. -->
+
 To calculate the exact probability of drawing more than 8 reds, we can work directly with the unnormalized distribution.
 
 ```{r}
@@ -1060,11 +1084,19 @@ sum(post_dist$new_reds > 8) /  length(post_dist$new_reds)
   
 ```
 
-The answer is about `r round(100 *sum(post_dist$new_reds > 8) /  length(post_dist$new_reds))`%. 
+The answer is about `r round(100 *sum(post_dist$new_reds > 8) /  length(post_dist$new_reds))`%. To examine the validity of this conclusion, let's look to our Cardinal Virtues. 
 
 ### Cardinal virtues
 
-<!-- Add cardinal virtues discussion in terms of our findings and their relevancy. -->
+To start, recall the virtue of Wisdom. Wisdom encompasses the topics of validity, data, population, and ethics. Most importantly, we want to know if there is a decent connection between the problem we face and the data we have. Our problem is answering the following question: *Conditional on our answer to Question 1, what is the probability, using the same urn, that we will draw more than 8 red beads if we use a shovel of size 20?* The way in which we have approached answering this question is to, from our posterior distribution from our urn, create a joint distribution to estimate the probability of drawing more than 8 red beads with a shovel of size 20. Is this question about *this* particular urn, or all urns? Clearly, as it is conditional upon a result from our specific urn, our conclusions can only be applied to *this particular urn*; our conclusions are not generalizable to all urns.
+
+Justice encompasses two main topics that apply to our urn: predictive versus causal model and mathematical formulas. Are we are modeling (just) for prediction or are we (also) modeling for causation? Predictive models care nothing about causation. With prediction, all we care about is forecasting Y given X on some as-yet-unseen data. There is no notion of “manipulation” in such models. As we can see, then, our model is **predictive**; we are not manipulating anything. The math of our model can be: 
+$$ T_i  \sim B(p_H, n = 20) $$
+The total number $T$ of red beads in experiment $i$ with 20 sampled beads, $T_i$, is distributed as a binomial with $n = 20$ and an unknown probability $\rho_h$ of the proportion red exceeding 8 out of 20 beads.
+
+Courage focuses on code -- the structure of our model. Code allows us to “fit” a model by estimating the values of the unknown parameters. Though we can never know the true values of these parameters, we can express our uncertain knowledge in the form of posterior probability distributions. With those distributions, we can compare the actual values of the outcome variable with the “fitted” or “predicted” results of the model. We can examine the “residuals,” the difference between the fitted and actual values. To answer our question, we have taken a slice of our posterior distribution to create a joint distribution. To find our final solution, we looked at the area under the curve that includes all values of 8 red beads or above. 
+
+When we think of Temperance, we should think of uncertainty. Our models are never as accurate as we believe them to be. Would we really like to bet on our finding? That  `r round(100 *sum(post_dist$new_reds > 8) /  length(post_dist$new_reds))`% of the time, we will get more than 8 red beads from our sample of size 20? The truth is, outliers are *much more common* than we might think. Unknown unknowns, prediction uncertainty, the ever changing world -- all of these factors should be a warning to us: always expect the unexpected.
 
 ## Discussion
 
