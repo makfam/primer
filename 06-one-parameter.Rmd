@@ -2,17 +2,27 @@
 
 <!-- Priorities:  --> 
 
-<!-- Need some discussion of the Cardinal Virtues, even just a brief reminder in the Discussion section. MF: Should this go through each virtue and apply it to the urn? Or should we only mention the virtues? Yes. In 6.4.4, about 4 paragraphs. -->
+<!-- Need some discussion of the Cardinal Virtues, even just a brief reminder in the Discussion section. MF: Should this go through each virtue and apply it to the urn? Or should we only mention the virtues? Yes. In 6.4.4, about 4 paragraphs. MF: Done.-->
 
 <!-- All references to estimating the number of red beads should be change to estimating p, the proportion of red beads.  Or, just make clear a couple of times that they are the same thing. And that we "pretend" that p is continuous even though, stritcly speaking it is not. MF: Done.-->
 
 <!-- Fix up Maslow. MF: Done.-->
 
-<!-- Put these two in the Summary: -->
+<!-- Put these two in the Summary: MF: Done.-->
 
 <!-- Does this belong in the Summary? There is a truth! There is a true value for p which we do not know! We want to create a posterior probability distribution which summarizes our knowledge. We care about the posterior probability distribution of p.  The center of that distribution is around the mean or median of the proportion in your sample. The sd (or mad) of that posterior is this formula! Give standard error formula. Note that this is the same thing as the standard deviation of the repeated samples! MF: Done.-->
 
 <!-- p (the truth) -> to $\hat{p}$  (my estimate) -> to the standard error of $\hat{p}$ (black box of math mumbo jumbo and computer simulation magic; details of the box and how it works do not matter!) -> to our posterior probability distribution for p (your beliefs about the truth). Yellow brick road? Wizard of Posterior? At least a paragraph of text going through this. Maybe as the start of the Summary. Current Key Lesson is not Key! MF: Done.-->
+
+<!-- Put Hyppthesis section right before using the posterior. Give a clear two paragraph description of hyppthesis test. "Traditionally, most scientific papers are not so much interested in estimating p. They are interested in testing specific hypotheses." Explain it exactly the way that Khan explains it. MF: Done.-->
+
+<!-- Cover most of the points here: https://ppbds.github.io/primer/five-parameters.html#testing. One hypothesis: There are equal number of red and white beads in the urn. Can we reject that hypothesis? Convention: if the 95% confidence interval excludes the null hypthesis, then we reject it. Otherwise, we don't reject it. (Not we accept it.) MF: Done. -->
+
+<!-- Who cares! Rejecting or not rejecting hypotheses never helps us to answer real questions. In general, null hypthoses are never true. A big enough will always reject the null hypothesis. So, it is not that interesting.  MF: Done. -->
+
+<!-- Also, no need for sample_n(10) when looking at post_dist, I think. So, just look at first ten. Then discuss the size of post_dist, which will be some random number like 2,567. MF: Done. -->
+
+<!-- Add a second posterior plot with all the results with red > 8 colored red. *Each question requires looking at a new area under the curve.* When someones asks you a question, they are doing two things. First, they are providing instructions as to the posterior your should create. (Shovel with 20 spots.) Second, they are asking a question about the area under the curve in a specific region. MF: Done.-->
 
 <!-- You must understand what the standard error of $\hat{p}$ means. You do not need to understand why. -->
 
@@ -24,19 +34,9 @@
 
 <!-- Explain in a comment the reason for  fun = function(.x) 1/(2 * sqrt(.x)) in the plot. I don't know why we need the 2. We would probably use geom_function(). Maybe using geom_function with the function for a standard error will just magically work! -->
 
-<!-- Put Hyppthesis section right before using the posterior. Give a clear two paragraph description of hyppthesis test. "Traditionally, most scientific papers are not so much interested in estimating p. They are interested in testing specific hypotheses." Explain it exactly the way that Khan explains it. -->
-
-<!-- Cover most of the points here: https://ppbds.github.io/primer/five-parameters.html#testing. One hypothesis: There are equal number of red and white beads in the urn. Can we reject that hypothesis? Convention: if the 95% confidence interval excludes the null hypthesis, then we reject it. Otherwise, we don't reject it. (Not we accept it.)  -->
-
-<!-- Who cares! Rejecting or not rejecting hypotheses never helps us to answer real questions. In general, null hypthoses are never true. A big enough will always reject the null hypothesis. So, it is not that interesting.  -->
-
 <!-- Another paragraph or two of discussion about the final posterior. How do we use it? Within what range would you offer 50/50 odds that the true percentage lies? (use quantile(0.25, 0.75). Area under the curve? Explain clearly how that 26% is calculated. What is post_dist? What does it mean? How can I use it? Maybe show it sorted? Add some code comments. -->
 
-<!-- Add a second posterior plot with all the results with red > 8 colored red. *Each question requires looking at a new area under the curve.* When someones asks you a question, they are doing two things. First, they are providing instructions as to the posterior your should create. (Shovel with 20 spots.) Second, they are asking a question about the area under the curve in a specific region. -->
-
 <!-- A paragraph about the distinction between distributions and probability distributions. We often can work with the former till the very end. When answering most questions, I can just work with the "raw" distribution. I don't need the posterior probability distribution. -->
-
-<!-- Also, no need for sample_n(10) when looking at post_dist, I think. So, just look at first ten. Then discuss the size of post_dist, which will be some random number like 2,567. -->
 
 <!-- Could not get figure references to work. They have been removed. But we ought to figure that out and add them back!  Should create a simple example (three line Rmd file) and then ask on RStudio Community.  -->
 
@@ -674,8 +674,6 @@ glimpse(shovels_100)
 
 Now, we have the standard deviation of `prop_red` for all shovel sizes from 1 to 100.  Let's plot that value to see how it changes as the shovel gets larger:
 
-<!-- MF: Still researching the below problem. -->
-
 
 ```{r, echo = FALSE, fig.cap = "Comparing standard deviations of proportions red for 100 different shovels. The standard deviation decreases at the same rate as the square root of shovel size. The red line shows the standard error."}
 shovels_100 %>%
@@ -859,7 +857,6 @@ Recall that $\hat{p}$ is the estimated value of p which comes from taking a samp
 
 ## Answering the questions
 
-
 Recall the questions we asked at the beginning of our chapter: 
 
 *If we get 17 red beads in a random sample of size 50 taken from an urn, what proportion $p$ of the beads in the urn are red?*
@@ -1007,9 +1004,13 @@ The key issue with the urn paradigm is that, unlike real world data science, we 
 knitr::include_graphics("06-one-parameter/images/slice_rayshader.png")
 ```
 
-### Hypothesis test
+### Hypothesis tests
 
-<!-- Put Hypothesis section right before using the posterior. Give a clear two paragraph description of hypothesis test. "Traditionally, most scientific papers are not so much interested in estimating p. They are interested in testing specific hypotheses." Explain it exactly the way that Khan explains it. -->
+Recall our view on hypothesis tests: **Amateurs test. Professionals summarize.** Traditionally, most scientific papers are not so much interested in estimating p. They are interested in testing specific hypotheses. But, how useful is that method?
+
+Let's look at a possible hypothesis in our urn paradigm: there are equal number of red and white beads in the urn. Can we reject that hypothesis? Convention: if the 95% confidence interval excludes the null hypothesis, then we reject it. Otherwise, we don't reject it. However, this does not mean that we accept it. More to the point: rejecting or not rejecting hypotheses never helps us to answer real questions. A Yes/No question throws away too much information to (almost) ever be useful. There is no reason to test when you can summarize by providing the full posterior probability distribution, as we will perform below.
+
+The same arguments apply in the case of “insignificant” results, with p > 0.5, when we can’t "reject" the null hypothesis. The fact that a difference is not “significant” has no relevance to how we use the posterior to make decisions. The same reasoning applies to every parameter we estimate, to every prediction we make. Never test — unless your boss demands a test. **Use your judgment, make your models, summarize your knowledge of the world, and use that summary to make decisions.** In the next section, we will create our posterior distribution and use this posterior to predict outcomes. 
 
 ### Using the posterior
 
@@ -1055,7 +1056,7 @@ post_dist <- joint_dist %>%
 post_dist 
 ```
 
-Note that we have two columns to focus on after removing the columns `red_in_urn` and `red_in_paddle`. The column `p` represents our probability for the number of red beads we draw with our paddle size of 20 (conditional upon a previous draw of 17 red beads). The column `new_reds` represents the number of red beads found in our draw of twenty beads. Scroll through our object to look at the probabilities for various results of `new_reds`. 
+Note that we have two columns to focus on after removing the columns `red_in_urn` and `red_in_paddle`. The column `p` represents our probability for the number of red beads we draw with our paddle size of 20 (conditional upon a previous draw of 17 red beads). The column `new_reds` represents the number of red beads found in our draw of twenty beads with the corresponding value for `p`. Scroll through our object to look at the probabilities for various results of `new_reds`. 
 
 With this unnormalized distribution, it is easy to create the normalized posterior probability distribution.
 
@@ -1073,10 +1074,6 @@ post_dist %>%
     theme_classic()
 ```
 
-To emphasize the ease with this method of creating our joint distribution compared to our previous example, let's show the two created figures next to one another:
-
-<!-- MF: Add patchwork here. -->
-
 To calculate the exact probability of drawing more than 8 reds, we can work directly with the unnormalized distribution.
 
 ```{r}
@@ -1084,7 +1081,24 @@ sum(post_dist$new_reds > 8) /  length(post_dist$new_reds)
   
 ```
 
-The answer is about `r round(100 *sum(post_dist$new_reds > 8) /  length(post_dist$new_reds))`%. To examine the validity of this conclusion, let's look to our Cardinal Virtues. 
+The answer is about `r round(100 *sum(post_dist$new_reds > 8) /  length(post_dist$new_reds))`%. To observe this visually, take a look at the `post_dist` object when we filter for where the number of red beads is equal to and greater than 8. The answer above measures the area under *this* portion of the curve as compared to the *entire* area under the curve. *Each question requires looking at a new area under the curve.* When someones asks you a question, they are doing two things. First, they are providing instructions as to the posterior your should create. Here, the results with a shovel of 20 slots. Second, they are asking a question about the area under the curve in a specific region. Here, the region where the number of red beads is greater than 8. 
+
+```{r}
+post_dist %>% 
+  filter(new_reds >= 8) %>% 
+  ggplot(aes(x = new_reds)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   bins = 50) + 
+    labs(title = "Posterior Probability Distribution",
+         subtitle = "Number of red beads in new draw of 20",
+         x = "Number of Red Beads",
+         y = "Probability") + 
+    scale_x_continuous(labels = scales::number_format(accuracy = 1)) +
+    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    theme_classic()
+```
+
+To examine the validity of our final conclusion, let's look to our Cardinal Virtues. 
 
 ### Cardinal virtues
 
@@ -1143,15 +1157,6 @@ posterior_predict(fit_1,
 This posterior is similar to the one we created, much more laboriously, above. 
 
 <!-- DK: But they are still different! Why is that? -->
-
-### Hypothesis tests
-
-Recall our view on hypothesis tests: **Amateurs test. Professionals summarize.**
-
-Let's look at a possible hypothesis in our urn paradigm: there are equal number of red and white beads in the urn. Can we reject that hypothesis? Convention: if the 95% confidence interval excludes the null hypothesis, then we reject it. Otherwise, we don't reject it. However, this does not mean that we accept it. 
-
-More to the point: who cares! Rejecting or not rejecting hypotheses never helps us to answer real questions. A Yes/No question throws away too much information to (almost) ever be useful. There is no reason to test when you can summarize by providing the full posterior probability distribution. 
-
 
 ### Case study: Polls {#sampling-case-study}
 
