@@ -6,13 +6,13 @@
 
 <!-- sqrt from hierarchy should be math symbol, not R function.  -->
 
-<!-- Add this Q&A below the hierarchy. And clean it up! -->
+<!-- Add this Q&A below the hierarchy. And clean it up! MF: Done.-->
 
-<!-- "I thought that MADs were the same thing as standard deviations. Now you say they are the same things as standard errors. Which is it?"  -->
+<!-- "I thought that MADs were the same thing as standard deviations. Now you say they are the same things as standard errors. Which is it?" MF: Done. -->
 
-<!-- MADs and standard deviations are, more or less, the same thing. They are both measures of the variability of a distribution. In most cases, they have very similar values. A *standard error* is also a standard devitaion. It is just the standard deviation of the distribution of the estimates, and that distribution of estimates is, more or less, your posterior. So, we can use MAD to describe that distribution. It just does not have a special name, like standard error.  -->
+<!-- MADs and standard deviations are, more or less, the same thing. They are both measures of the variability of a distribution. In most cases, they have very similar values. A *standard error* is also a standard devitaion. It is just the standard deviation of the distribution of the estimates, and that distribution of estimates is, more or less, your posterior. So, we can use MAD to describe that distribution. It just does not have a special name, like standard error.  MF: Done. -->
 
-<!-- default comment formating is fine. Mostly fixed. -->
+<!-- default comment formating is fine. Mostly fixed. MF: Done.-->
 
 <!-- Show post_dist for n > 8 as whole dist with n > 8 colored red. Not >= 8. -->
 
@@ -179,17 +179,15 @@ tactile_sample_urn %>%
                  boundary = 0.4, 
                  color = "white") +
   
-  # Add scale_y_continuous with breaks by 
-  # 1, as the default shows the y-axis from
-  # 1 to 10 with breaks at .5. Breaks by 1 
-  # is better for this plot, as all resulting 
-  # values are integers. 
+  # Add scale_y_continuous with breaks by 1, as the default shows the y-axis
+  # from 1 to 10 with breaks at .5. Breaks by 1 is better for this plot, as all
+  # resulting values are integers.
   
   scale_y_continuous(breaks = seq(from = 0, to = 10, by = 1)) +
   
-  # The call expression() is used to insert a mathematical
-  # expression, like p-hat. The paste after expression allows 
-  # us to paste text prior to said expression. 
+  # The call expression() is used to insert a mathematical expression, like
+  # p-hat. The paste after expression allows us to paste text prior to said
+  # expression.
   
   labs(x = expression(paste("Proportion of 50 beads that were red ", hat(p))),
        y = "Count",
@@ -249,10 +247,9 @@ Let's take a sample of 50 beads from our virtual urn.
 
 ```{r}
 
-# Define ID as 1 to look at one example of drawing
-# fifty beads. When ID is called within map(), we
-# are performing sample_n() upon our urn once (ID
-# = 1) and taking a sample of 50 beads.
+# Define ID as 1 to look at one example of drawing fifty beads. When ID is
+# called within map(), we are performing sample_n() upon our urn once (ID = 1)
+# and taking a sample of 50 beads.
 
 tibble(ID = 1) %>% 
   mutate(shovel = map(ID, ~ sample_n(urn, size = 50)))
@@ -330,9 +327,8 @@ ggplot(aes(x = prop_red)) +
        y = "Count",
        title = "Distribution of 33 proportions red") +
   
-  # Labels the axes in an attractive fashion. Without this code, 
-  # the axes labels would include 2.5, which makes no sense because
-  # all the values are integers.
+  # Labels the axes in an attractive fashion. Without this code, the axes labels
+  # would include 2.5, which makes no sense because all the values are integers.
   
   scale_y_continuous(breaks = seq(2, 10, 2))
 ```
@@ -347,11 +343,10 @@ Compare our virtual results with our tactile results from the previous section. 
 
 ```{r, fig.cap = "Comparing 33 virtual and 33 tactile proportions red. Note that, though the figures differ slightly, both are centered around .35 to .40. This shows that, in both sampling distributions, the most frequently occuring proportion red is between 35 and 40%."}
 
-# bind_rows() takes our data from virtual_samples and 
-# "binds" it with our data from tactile_sample_urn, resulting
-# in one set of data for us to work with. Mutating to create
-# the "type" column allows us to see which pieces of data come
-# from virtual sampling and which come from tactical sampling.
+# bind_rows() takes our data from virtual_samples and "binds" it with our data
+# from tactile_sample_urn, resulting in one set of data for us to work with.
+# Mutating to create the "type" column allows us to see which pieces of data
+# come from virtual sampling and which come from tactical sampling.
 
 facet_compare <- bind_rows(virtual_samples %>% 
                               mutate(type = "Virtual sampling"), 
@@ -359,11 +354,10 @@ facet_compare <- bind_rows(virtual_samples %>%
                               select(ID, red = red_beads, prop_red) %>% 
                               mutate(type = "Tactile sampling")) %>% 
   
-  # Use mutate() to alter the column factor into a factor
-  # column, rather than the default character column. Calling
-  # levels() establishes our two "factors". This step is 
-  # here to help R interpret this column for when we perform 
-  # our facet_wrap(). 
+  # Use mutate() to alter the column factor into a factor column, rather than
+  # the default character column. Calling levels() establishes our two
+  # "factors". This step is here to help R interpret this column for when we
+  # perform our facet_wrap().
   
   mutate(type = factor(type, 
                        levels = c("Virtual sampling", 
@@ -373,15 +367,13 @@ facet_compare <- bind_rows(virtual_samples %>%
                    boundary = 0.4, 
                    color = "white") +
   
-  # facet_wrapping by type creates two different graphs
-  # on our plane. The data is separated into two graphs 
-  # based upon the column after the ~. 
+  # facet_wrapping by type creates two different graphs on our plane. The data
+  # is separated into two graphs based upon the column after the ~.
   
     facet_wrap(~ type) +
   
-  # Add an x axis with p-hat using expression() with paste()
-  # for clarification on p-hat's meaning. Add an appropriate 
-  # title and inspect our creation. 
+  # Add an x axis with p-hat using expression() with paste() for clarification
+  # on p-hat's meaning. Add an appropriate title and inspect our creation.
   
     labs(x = expression(paste("Proportion of 50 beads that were red ", hat(p))),
          title = "Comparing distributions") 
@@ -512,10 +504,10 @@ virtual_prop <- bind_rows(virtual_samples_25 %>%
                           virtual_samples_100 %>% 
                             mutate(n = 100))
 
-# Plot our new object with the x-axis showing prop_red. Add elements
-# binwidth, boundary, and color for stylistic clarity. Use 
-# labs() to add an x-axis label and title. Facet_wrap()  
-# splits the graph into multiple plots by the variable (~n). 
+# Plot our new object with the x-axis showing prop_red. Add elements binwidth,
+# boundary, and color for stylistic clarity. Use labs() to add an x-axis label
+# and title. Facet_wrap() splits the graph into multiple plots by the variable
+# (~n).
 
 comparing_sampling_distributions <- ggplot(virtual_prop, aes(x = prop_red)) +
   geom_histogram(binwidth = 0.05, boundary = 0.4, color = "white") +
@@ -650,11 +642,9 @@ shovels <- tibble(shovel_size = c(25, 50, 100)) %>%
                                            shovel_size = .x, 
                                            reps = 1000))) %>% 
   
-  # Use map_dbl() to create a column that draws the 
-  # standard deviations of our prop_red values. We 
-  # can use pull after our ~ to isolate the prop_red
-  # values and use a pipe (as we normally do) here
-  # to draw the sd() of this column. 
+  # Use map_dbl() to create a column that draws the standard deviations of our
+  # prop_red values. We can use pull after our ~ to isolate the prop_red values
+  # and use a pipe (as we normally do) here to draw the sd() of this column.
   
   
   mutate(prop_red_sd = map_dbl(prop_red_results, 
@@ -856,6 +846,11 @@ If I know your estimate plus or minus *two* standard errors, I know your 95% con
 
 Recall that $\hat{p}$ is the estimated value of p which comes from taking a sample. There can be billions and billions of $\hat{p}$'s. We look at a large group of $\hat{p}$'s, create a distribution of results to represent the possible values of p based on our findings, and then we compute a standard error to account for our own uncertainty about our predictions. Our 95% confidence interval for our prediction == our estimate plus or minus **two** standard errors. 
 
+In regards to the fifth layer of the hierarchy, we may wonder: 
+
+> "I thought that MADs were the same thing as standard deviations. Now you say they are the same things as standard errors. Which is it?"  
+
+MADs and standard deviations are, more or less, the same thing. They are both measures of the **variability** of a distribution. In most cases, they have very similar values. A *standard error* is also a standard deviation. Specifically, it is the standard deviation of the distribution of the estimates, and that distribution of estimates is, more or less, your posterior. Therefore, we can use MAD, like standard error, to describe that distribution and the variability of that distribution. 
 
 
 ## Answering the questions
