@@ -4,7 +4,7 @@
 
 <!-- The distribution of the hat things is, more or less, your posterior. -->
 
-<!-- sqrt from hierarchy should be math symbol, not R function.  -->
+<!-- sqrt from hierarchy should be math symbol, not R function.  MF: Done.-->
 
 <!-- Add this Q&A below the hierarchy. And clean it up! MF: Done.-->
 
@@ -837,7 +837,7 @@ The standard error measures the accuracy of a sample distribution as compared to
 To really drive home our point: standard error is just a fancy term for your uncertainty about something you don't know. Standard error == our (uncertain) beliefs. 
 
 ```{r, echo = FALSE, fig.cap= "If you are wondering how much you need to know, follow this helpful guide of the information we have learned this chapter!", fig.align= 'center'}
-knitr::include_graphics("06-one-parameter/images/revised_preceptor.png")
+knitr::include_graphics("06-one-parameter/images/final_preceptor.png")
 ```
 
 This hierarchy represents the knowledge we need to understand standard error (SE). At the bottom, we have math. It's the foundation for our understanding, but it doesn't need to be what we take away from this lesson. As we go up, we simplify the topic. The top of the pyramid are the basic levels of understanding that will help you to remember in the future. 
@@ -1358,15 +1358,15 @@ The first scenario provides a more accurate estimate, since the students outside
 
 Key lesson:
 
-> There is a truth! There is a true value for p which we do not know! We want to create a posterior probability distribution which summarizes our knowledge. We care about the posterior probability distribution of p. The center of that distribution is around the mean or median of the proportion in your sample. The sd (or mad) of that posterior is the standard deviation divided by the square root of our sample size! Note that this is the same thing as the standard deviation of the repeated samples.
+There is a truth! There is a true value for $p$ which we do not know! We want to create a posterior probability distribution which summarizes our knowledge. We care about the posterior probability distribution of p. The center of that distribution is around the mean or median of the proportion in your sample. The sd (or mad) of that posterior is the standard deviation divided by the square root of our sample size! Note that this is the same thing as the standard deviation of the repeated samples.
 
 Key lesson: 
 
-> We have a journey from reality, to our predictions, to the standard error of our predictions, to the posterior probability distribution for p. This is our sequence:
+We have a journey from reality, to our predictions, to the standard error of our predictions, to the posterior probability distribution for p. This is our sequence:
 
 **p (the truth) -> to $\hat{p}$  (my estimate) -> to the standard error of $\hat{p}$ (black box of math mumbo jumbo and computer simulation magic) -> to our posterior probability distribution for p (our beliefs about the truth).**
 
-> This journey shows how our beliefs about the truth develop through our work. We begin with p; p is the truth, the true but unknown value we are estimating. $\hat{p}$ is our estimate for p. There can be millions and millions of $\hat{p}$'s. Next, we must take the standard error of our estimates (our $\hat{p}$'s) to account for our uncertainty with our predictions. Finally -- the thing we need most -- we create a posterior probability distribution for p. This distribution is used to answer key questions about p. 
+This journey shows how our beliefs about the truth develop through our work. We begin with p; p is the truth, the true but unknown value we are estimating. $\hat{p}$ is our estimate for p. There can be millions and millions of $\hat{p}$'s. Next, we must take the standard error of our estimates (our $\hat{p}$'s) to account for our uncertainty with our predictions. Finally -- the thing we need most -- we create a posterior probability distribution for p. This distribution is used to answer key questions about p. 
 
 
 
