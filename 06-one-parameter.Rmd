@@ -14,11 +14,11 @@
 
 <!-- default comment formating is fine. Mostly fixed. MF: Done.-->
 
-<!-- Show post_dist for n > 8 as whole dist with n > 8 colored red. Not >= 8. -->
+<!-- Show post_dist for n > 8 as whole dist with n > 8 colored red. Not >= 8. MF: Done.-->
 
 <!-- format of Summary section. Use better math symbols. -->
 
-<!-- Photo at the end of Evy or . .  -->
+<!-- Photo at the end of Evy or . . MF: Done. -->
 
 <!-- Purpose of two versions of Joint Distribution graphic. Maybe at least change color of key changes in second one in order to highlight why we are seeing this twice? Certainly add $p$ to the y-axis label, if not also to the tile. -->
 
@@ -1065,18 +1065,32 @@ sum(post_dist$new_reds > 8) /  length(post_dist$new_reds)
   
 ```
 
-The answer is about `r round(100 *sum(post_dist$new_reds > 8) /  length(post_dist$new_reds))`%. To observe this visually, take a look at the `post_dist` object when we filter for where the number of red beads is equal to and greater than 8. The answer above measures the area under *this* portion of the curve as compared to the *entire* area under the curve. *Each question requires looking at a new area under the curve.* When someones asks you a question, they are doing two things. First, they are providing instructions as to the posterior your should create. Here, the results with a shovel of 20 slots. Second, they are asking a question about the area under the curve in a specific region. Here, the region where the number of red beads is greater than 8. 
+The answer is about `r round(100 *sum(post_dist$new_reds > 8) /  length(post_dist$new_reds))`%. To observe this visually, take a look at the `post_dist` object when we filter for where the number of red beads is equal to and greater than 8. The answer above measures the area under *this* portion of the curve as compared to the *entire* area under the curve. *Each question requires looking at a new area under the curve.* When someones asks you a question, they are doing two things. First, they are providing instructions as to the posterior your should create. Here, the results with a shovel of 20 slots. Second, they are asking a question about the area under the curve in a specific region. Here, the region where the number of red beads is greater than 8 is highlighted in red. Therefore, the area below the curve that **is red** is how we get our estimate.
 
 ```{r}
 post_dist %>% 
-  filter(new_reds >= 8) %>% 
-  ggplot(aes(x = new_reds)) +
+  
+  # Create a column above_eight to identify True or False for new_reds being
+  # above eight.
+  
+  mutate(above_eight = ifelse(new_reds > 8, "True", "False")) %>% 
+  
+  # Set fill as above_eight.
+  
+  ggplot(aes(x = new_reds, fill = above_eight)) +
     geom_histogram(aes(y = after_stat(count/sum(count))),
-                   bins = 50) + 
+                   bins = 50) +
+  
+  # Scale_fill_manual() here is calling grey for the first color and red for the
+  # second color. This is going to highlight the portion of the curve that we
+  # need to isolate in red.
+  
+  scale_fill_manual(values = c('#595959', 'red'))+
     labs(title = "Posterior Probability Distribution",
          subtitle = "Number of red beads in new draw of 20",
          x = "Number of Red Beads",
-         y = "Probability") + 
+         y = "Probability",
+         fill = "Above Eight Beads?") + 
     scale_x_continuous(labels = scales::number_format(accuracy = 1)) +
     scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
     theme_classic()
@@ -1393,5 +1407,9 @@ Other highlights:
 
 In this chapter, we performed both tactile and virtual sampling exercises to infer about an unknown parameter We also presented a case study of sampling in real life with polls. In each case, we used the sample proportion $\hat{p}$ to estimate the population proportion $p$. However, we are not just limited to scenarios related to proportions. In other words, we can use sampling to estimate other population parameters using other point estimates as well.
 
-As we continue our journey, recall the case of Primrose Everdeen and what she represents: no matter how realistic is our model is, our predictions are **never certain**.  "May the posterior be ever in your favor!"
+As we continue our journey, recall the case of Primrose Everdeen and what she represents: no matter how realistic is our model is, our predictions are **never certain**.  
+
+```{r, echo = FALSE}
+knitr::include_graphics("06-one-parameter/images/posterior_effie.png")
+```
 
