@@ -1088,7 +1088,7 @@ post_dist %>%
   # second color. This is going to highlight the portion of the curve that we
   # need to isolate in red.
   
-  scale_fill_manual(values = c('#595959', 'red'))+
+  scale_fill_manual(values = c('grey50', 'red'))+
     labs(title = "Posterior Probability Distribution",
          subtitle = "Number of red beads in new draw of 20",
          x = "Number of Red Beads",
