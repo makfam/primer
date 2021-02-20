@@ -20,7 +20,7 @@
 
 <!-- Photo at the end of Evy or . . MF: Done. -->
 
-<!-- Purpose of two versions of Joint Distribution graphic. Maybe at least change color of key changes in second one in order to highlight why we are seeing this twice? Certainly add $p$ to the y-axis label, if not also to the tile. -->
+<!-- Purpose of two versions of Joint Distribution graphic. Maybe at least change color of key changes in second one in order to highlight why we are seeing this twice? Certainly add $p$ to the y-axis label, if not also to the tile. MF: Done.-->
 
 <!-- Hypothesis test section. More detail? More like Khan Academy? Reference Gelman? "Null hyppthesis test." -->
 
@@ -686,6 +686,29 @@ shovels_100 %>%
 
 The red line here represents an important statistical concept: standard error (SE). The mathematical definition of SE for our purposes is the standard deviation divided by the square root of the sample size. As the shovel size increases, and thus our sample size increases, we find that the standard error decreases.  If this is confusing right now, fear not! We will delve into this explanation in our next section. 
 
+```{r, echo = FALSE, fig.cap = "Comparing standard deviations of proportions red for 100 different shovels. The standard deviation decreases at the same rate as the square root of shovel size. The red line shows the standard error."}
+shovels_101 <- tibble(shovel_size = 1:100) %>%
+  mutate(prop_red_results = map(shovel_size,
+                                ~ make_prop_red(x = urn, 
+                                           shovel_size = .x, 
+                                           reps = 1000))) %>% 
+  mutate(prop_red_sd = map_dbl(prop_red_results, 
+                               ~ pull(., numb_red)))
+```
+
+```{r}
+shovels_101 %>% 
+ggplot(aes(x = shovel_size, y = numb_red)) +
+ geom_point() +
+ labs(x = "Shovel size",
+      y = "Standard deviation of the proportion red")
+```
+
+
+<!-- The variation in p-hat (when we do 1,000 reps) decreases as shovel size increases. For each shovel size, you plot 1,000 points. Small shovels have lots of overlap, so, use alpha. Even big shovels only have scores of possible p-hats. Then, say, can we measure the decrease in varition more precisely then just looking at this cloud of points? Yes! Plot the standard deviation of the cloud for each shovel size. -->
+
+
+
 ```{r, echo = FALSE, fig.cap = "To any poets and philosophers confused about this: don't worry! It won't be on a problem set."}
 knitr::include_graphics("06-one-parameter/images/meme_math.png")
 ```
@@ -928,15 +951,24 @@ joint_dist %>%
 
 ```
 
-It is easier to define our "model" in this joint distribution in terms of the unknown parameter $p$ rather than, as above, in terms of the unknown number of red beads in the urn. 
+It is easier to define our "model" in this joint distribution in terms of the unknown parameter $p$ rather than, as above, in terms of the unknown number of red beads in the urn. Showing our plot in terms of $p$ and using the term "proportion" rather than "number of red beads" is closer to what we are trying to model. The 
 
 ```{r, cache = TRUE}
 joint_dist %>%
   ggplot(aes(y = p, x = red_in_paddle)) +
     geom_point(alpha = 0.005) +
-    labs(title = "Joint Distribution of Red Beads in Paddle and Proportion Red Beads in Urn",
+    labs(title = expression(paste(
+      "Joint Distribution of Red Beads in Paddle and Proportion Red Beads in Urn", 
+      hat(p))), 
          x = "Number of Red Beads in Paddle",
-         y = "Proportion of Red Beads in Urn")
+         
+         # Add the symbol for p-hat. 
+         
+         y = expression(paste("Proportion of Red Beads in Urn ", hat(p)))) +
+  
+  # Highlight y-axis change in red to view change. 
+  
+  theme(axis.title.y = element_text(colour = "red"))
 
 ```
 
