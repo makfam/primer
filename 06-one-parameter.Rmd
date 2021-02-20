@@ -16,7 +16,7 @@
 
 <!-- Show post_dist for n > 8 as whole dist with n > 8 colored red. Not >= 8. MF: Done.-->
 
-<!-- format of Summary section. Use better math symbols. -->
+<!-- format of Summary section. Use better math symbols. MF: Done. -->
 
 <!-- Photo at the end of Evy or . . MF: Done. -->
 
@@ -24,13 +24,13 @@
 
 <!-- Hypothesis test section. More detail? More like Khan Academy? Reference Gelman? "Null hyppthesis test." -->
 
-<!-- Outlier discussion in Temperance not quite right. Model uncertainty generally does not cause us to change our the center of the posterior. It causes us to expand the MAD. Donald Rumsfeld (and Donal Rubin) say: "Get MAD!" Or maybe not. -->
+<!-- Outlier discussion in Temperance not quite right. Model uncertainty generally does not cause us to change our the center of the posterior. It causes us to expand the MAD. Donald Rumsfeld (and Donal Rubin) say: "Get MAD!" Or maybe not. MF: Done.-->
 
-<!-- Asserting a posterior distribution is, conceptually, the same as opening a casino and allowing people to place wagers on outcomes, with the odds consistent with your posterior. If your posterior is wrong, they will take all your money. That would be bad! -->
+<!-- Asserting a posterior distribution is, conceptually, the same as opening a casino and allowing people to place wagers on outcomes, with the odds consistent with your posterior. If your posterior is wrong, they will take all your money. That would be bad! MF: Done.-->
 
 <!-- Another paragraph or two of discussion about the final posterior. How do we use it? Within what range would you offer 50/50 odds that the true percentage lies? (use quantile(0.25, 0.75). Area under the curve? Explain clearly how that 26% is calculated. What is post_dist? What does it mean? How can I use it? Maybe show it sorted? Add some code comments. -->
 
-<!-- Rule of thumb: The world in the future is always more variable than our models would suggest. The entire point of the virtue of Temperance to be aware of that fact and take account of it. Courage --- that bold bastard --- comes along and says, "Here is the model! Let's calculate the posterior and open the casino!" Temperance --- quite the old woman from the point of view of that idiot Courage --- says, "Hold on, stupid! Yes, I can calculate the posterior, but we need to be cautious." Temerance is concerned with the tails, not the center. Limit the bets on the first few nights. Make sure our posterior is OK. Temperance is about the sensible management of the casino.  -->
+<!-- Rule of thumb: The world in the future is always more variable than our models would suggest. The entire point of the virtue of Temperance to be aware of that fact and take account of it. Courage --- that bold bastard --- comes along and says, "Here is the model! Let's calculate the posterior and open the casino!" Temperance --- quite the old woman from the point of view of that idiot Courage --- says, "Hold on, stupid! Yes, I can calculate the posterior, but we need to be cautious." Temerance is concerned with the tails, not the center. Limit the bets on the first few nights. Make sure our posterior is OK. Temperance is about the sensible management of the casino.  MF: Done. -->
 
 
 <!-- better rayshader? -->
@@ -1111,7 +1111,7 @@ The total number $T$ of red beads in experiment $i$ with 20 sampled beads, $T_i$
 
 Courage focuses on code -- the structure of our model. Code allows us to “fit” a model by estimating the values of the unknown parameters. Though we can never know the true values of these parameters, we can express our uncertain knowledge in the form of posterior probability distributions. With those distributions, we can compare the actual values of the outcome variable with the “fitted” or “predicted” results of the model. We can examine the “residuals,” the difference between the fitted and actual values. To answer our question, we have taken a slice of our posterior distribution to create a joint distribution. To find our final solution, we looked at the area under the curve that includes all values of 8 red beads or above. 
 
-When we think of Temperance, we should think of uncertainty. Our models are never as accurate as we believe them to be. Would we really like to bet on our finding? That  `r round(100 *sum(post_dist$new_reds > 8) /  length(post_dist$new_reds))`% of the time, we will get more than 8 red beads from our sample of size 20? The truth is, outliers are *much more common* than we might think. Unknown unknowns, prediction uncertainty, the ever changing world -- all of these factors should be a warning to us: always expect the unexpected.
+When we think of Temperance, we should think of uncertainty. Asserting a posterior distribution is, conceptually, the same as opening a casino and allowing people to place wagers on outcomes, with the odds consistent with your posterior. If your posterior is wrong, they will take all your money. That would be bad! So, what do we do? Rule of thumb: the future is always more variable than our models would suggest. The entire point of the virtue of Temperance to be aware of that fact and take account of it. Courage --- that bold bastard --- comes along and says, "Here is the model! Let's calculate the posterior and open the casino!" Temperance says, "Hold on! Yes, I can calculate the posterior, but we need to be cautious." Temperance is concerned with the tails of our predictions, not the center. What is the best strategy for opening our casino, then? Limit the bets on the first few nights to make sure our posterior is OK. *Temperance is concerned with the sensible management of the casino.*
 
 ## Discussion
 
@@ -1367,7 +1367,7 @@ Key lesson:
 
 We have a journey from reality, to our predictions, to the standard error of our predictions, to the posterior probability distribution for p. This is our sequence:
 
-**p (the truth) -> to $\hat{p}$  (my estimate) -> to the standard error of $\hat{p}$ (black box of math mumbo jumbo and computer simulation magic) -> to our posterior probability distribution for p (our beliefs about the truth).**
+**p (the truth) $\Rightarrow$ $\hat{p}$ (my estimate) $\Rightarrow$ the standard error of $\hat{p}$ (black box of math mumbo jumbo and computer simulation magic) $\Rightarrow$ our posterior probability distribution for p (our beliefs about the truth).**
 
 This journey shows how our beliefs about the truth develop through our work. We begin with p; p is the truth, the true but unknown value we are estimating. $\hat{p}$ is our estimate for p. There can be millions and millions of $\hat{p}$'s. Next, we must take the standard error of our estimates (our $\hat{p}$'s) to account for our uncertainty with our predictions. Finally -- the thing we need most -- we create a posterior probability distribution for p. This distribution is used to answer key questions about p. 
 
