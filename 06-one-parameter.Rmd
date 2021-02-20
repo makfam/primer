@@ -2,7 +2,7 @@
 
 <!-- Priorities:  --> 
 
-<!-- The distribution of the hat things is, more or less, your posterior. -->
+<!-- The distribution of the hat things is, more or less, your posterior. MF: Done. -->
 
 <!-- sqrt from hierarchy should be math symbol, not R function.  MF: Done.-->
 
@@ -686,25 +686,6 @@ shovels_100 %>%
 
 The red line here represents an important statistical concept: standard error (SE). The mathematical definition of SE for our purposes is the standard deviation divided by the square root of the sample size. As the shovel size increases, and thus our sample size increases, we find that the standard error decreases.  If this is confusing right now, fear not! We will delve into this explanation in our next section. 
 
-```{r, echo = FALSE, fig.cap = "Comparing standard deviations of proportions red for 100 different shovels. The standard deviation decreases at the same rate as the square root of shovel size. The red line shows the standard error."}
-shovels_101 <- tibble(shovel_size = 1:100) %>%
-  mutate(prop_red_results = map(shovel_size,
-                                ~ make_prop_red(x = urn, 
-                                           shovel_size = .x, 
-                                           reps = 1000))) %>% 
-  mutate(prop_red_sd = map_dbl(prop_red_results, 
-                               ~ pull(., numb_red)))
-```
-
-```{r}
-shovels_101 %>% 
-ggplot(aes(x = shovel_size, y = numb_red)) +
- geom_point() +
- labs(x = "Shovel size",
-      y = "Standard deviation of the proportion red")
-```
-
-
 <!-- The variation in p-hat (when we do 1,000 reps) decreases as shovel size increases. For each shovel size, you plot 1,000 points. Small shovels have lots of overlap, so, use alpha. Even big shovels only have scores of possible p-hats. Then, say, can we measure the decrease in varition more precisely then just looking at this cloud of points? Yes! Plot the standard deviation of the cloud for each shovel size. -->
 
 
@@ -1013,7 +994,7 @@ joint_dist %>%
 
 To visualize this in a 3D plot, see the slice in the figure below. There are a few things to note. First, the x-axis only extends to 600 (rather than the total 1000) due to the fact that, when the paddle only draws 17/50 = .34 = 34% red beads, it is almost impossible for the total number red beads in the total urn to exceed 600. The most likely number of red beads in the total urn, when the paddle draws 17/50 red beads, is somewhere in the 290-350 range. This is signified by the peak between these points. The probability is lower below 280 and above 350 because it is less likely that this is the number of red beads in the urn, conditional on the fact that the paddle drew 17/50 red beads. This is our posterior distribution. 
 
-For any value of red beads found in the paddle (from 0 to 50), there is a posterior distribution of possible values of red beads in the total urn. This distribution is meant to illustrate that, though our sample gives an estimate of the total proportion of red beads in the entire urn, there is much variation in what the actual proportion might be. 
+For any value of red beads found in the paddle (from 0 to 50), there is a posterior distribution of possible values of red beads in the total urn. This distribution is meant to illustrate that, though our sample gives an estimate of the total proportion of red beads in the entire urn, there is much variation in what the actual proportion might be. To summarize: the distribution of the hat things (the things we are predicting) is, more or less, your posterior.
 
 Recall the first question from the start of the Chapter: 
 
@@ -1031,9 +1012,14 @@ knitr::include_graphics("06-one-parameter/images/slice_rayshader.png")
 
 ### Hypothesis tests
 
-Recall our view on hypothesis tests: **Amateurs test. Professionals summarize.** Traditionally, most scientific papers are not so much interested in estimating p. They are interested in testing specific hypotheses. But, how useful is that method?
+Recall our view on hypothesis tests: **Amateurs test. Professionals summarize.** Traditionally, most scientific papers are not so much interested in estimating p. They are interested in testing specific hypotheses. What do we mean by that?
 
-Let's look at a possible hypothesis in our urn paradigm: there are equal number of red and white beads in the urn. Can we reject that hypothesis? Convention: if the 95% confidence interval excludes the null hypothesis, then we reject it. Otherwise, we don't reject it. However, this does not mean that we accept it. More to the point: rejecting or not rejecting hypotheses never helps us to answer real questions. A Yes/No question throws away too much information to (almost) ever be useful. There is no reason to test when you can summarize by providing the full posterior probability distribution, as we will do below.
+Let's look at a possible hypothesis in our urn paradigm: there are equal number of red and white beads in the urn. The null hypothesis is denoted by $H_0$, while the alternative hypothesis is denoted by $H_a$. Therefore, our hypothesis is designed as such:
+
+$H_0$: There are an equal number of red and white beads in the urn.
+$H_a$: There are *not* an equal number of red and white beads in the urn. 
+
+Can we reject that hypothesis? Convention: if the 95% confidence interval excludes the null hypothesis, then we reject it. Here, that would mean if our posterior estimate (plus or minus 2 standard errors) *excluded* the possibility of the red and white beads being equal, translating into a proportion red of 50%, we can reject the null hypothesis. Otherwise, we don't reject it. However, this does not mean that we accept it. More to the point: rejecting or not rejecting hypotheses doesn't helps us to answer real questions. There is no reason to **test** when you can summarize by providing the full posterior probability distribution, as we will do below.
 
 The same arguments apply in the case of “insignificant” results, with p > 0.5, when we can’t "reject" the null hypothesis. The fact that a difference is not “significant” has no relevance to how we use the posterior to make decisions. The same reasoning applies to every parameter we estimate, to every prediction we make. Never test — unless your boss demands a test. **Use your judgment, make your models, summarize your knowledge of the world, and use that summary to make decisions.** In the next section, we will create our posterior distribution and use this posterior to predict outcomes. 
 
