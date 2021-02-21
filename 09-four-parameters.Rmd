@@ -352,7 +352,7 @@ trains %>%
             as_sigma = sqrt(mean(as_err))) 
 ```
 
-There are many different measures of the error which we might calculate. The squared difference is most common for historical reasons: it was the mathemtically most tractable in the pre-computer age. Having calculated a squared difference for each observation, we can sum them or take their average or take the square root of their average. All produce the same relative ranking, but the last is most popular because it (more or less) corresponds to the estimated $\sigma$ for a linear model. Note how these measures are the same as the ones produced by the Bayesian models created above.
+There are many different measures of the error which we might calculate. The squared difference is most common for historical reasons: it was the mathematically most tractable in the pre-computer age. Having calculated a squared difference for each observation, we can sum them or take their average or take the square root of their average. All produce the same relative ranking, but the last is most popular because it (more or less) corresponds to the estimated $\sigma$ for a linear model. Note how these measures are the same as the ones produced by the Bayesian models created above.
 
 <!-- DK: Could make a movie where we get an X value, we calculate a prediction, we plot it, then we plot the truth, then we measure the distance, then we calculate a squared error. Then speed up the movie, doing it for all the points.  -->
 
