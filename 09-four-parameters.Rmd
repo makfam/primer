@@ -44,7 +44,7 @@ fit_1 <- stan_glm(formula = income ~ age,
 print(fit_1, detail = FALSE)
 ```
 
-There is nothing wrong with this model. Yet the interpretation of $\beta_0$, the intercept in the regression, is awkward. It means the average income for people of age zero. Yet that is useless! There are no people of zero age in our data. And, even if there were, it would be weird to think about such people taking the commuter trade into Boston and filling out our survey forms.
+There is nothing wrong with this model. Yet the interpretation of $\beta_0$, the intercept in the regression, is awkward. It means the average income for people of age zero. That is useless! There are no people of zero age in our data. And, even if there were, it would be weird to think about such people taking the commuter trade into Boston and filling out our survey forms.
 
 It is easy, however, to *transform* `age` into a variable which makes the intercept more meaningful. Consider a new variable, `c_age`, which is `age` minus the average age in the sample. Using this **c**entered version of age does not change the predictions or residuals in the model, but it does make the intercept easier to interpret.
 
@@ -144,7 +144,7 @@ Most experienced data scientists would use the log of `rv13` rather than the raw
 
 * Follow the conventions in your field. If everyone does X, then you should probably do X, unless you have a good reason not to. If you do have such a reason, explain it prominently.
 
-* Most professionals, when presented with data distributed like `rv13` would take the log. Professionals hate (irrationally?) outliers. Any transformation which makes a distribution look more normal is generally considered a good idea.
+* Most professionals, when presented with data distributed like `rv13`, would take the log. Professionals hate (irrationally?) outliers. Any transformation which makes a distribution look more normal is generally considered a good idea.
 
 Many of these suggestions apply to every aspect of the modeling process.
 
@@ -454,9 +454,21 @@ ovrftng %>%
 
 <!-- ### Selecting the rows -->
 
-<!-- ## Testing is nonsense -->
+## Testing is nonsense 
+
+As always, it is important to look at the practices of other professionals and the reasons we may choose not to follow those tactics. For instance, our continued problem with hypothesis testing. In hypothesis testing, we assert a null hypothesis $H_0$ about our data and an alternative hypothesis $H_a$. 
+
+When performing hypothesis testing, we either reject the hypothesis or we do not reject it. The qualifications for rejecting are met if the 95% confidence interval excludes the null hypothesis. If the hypothesis *is* included in our 95% confidence interval, we do not reject it. In the case of “insignificant” results, with p > 0.5, we also can’t "reject" the null hypothesis. However, this does not mean that we accept it.
+
+The premise of hypothesis testing is to answer a specific question -- one that may not even be particularly relevant to our understanding of the world -- about our data. So, what are our problems with hypothesis testing? 
+- Rejecting or not rejecting hypotheses doesn't helps us to answer real questions.
+- The fact that a difference is not “significant” has no relevance to how we use the posterior to make decisions.
+- Statistical significance is not equal to *practical* importance. 
+- There is no reason to **test** when you can summarize by providing the full posterior probability distribution.
 
 ## Parallel lines
+
+
 
 <!-- att_end ~ liberal + att_start. Same thing as chapters before. Show graphic of parallel lines. Cardinal virtues as always. And, extra, at the end we can use loo_compare to see if this model is better than simpler model of att_end ~ att_start. -->
 
