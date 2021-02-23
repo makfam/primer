@@ -10,6 +10,8 @@
 
 <!-- Going back to att_end models. Then loo() and loo_compare(). -->
 
+<!-- MF: The order of the chapter that seems most sensible to me is 1) selecting variables, 2) transforming variables, 3) comparing in theory, 4) comparing in practice, and 5) discussion items (including hypothesis tests.) -->
+
 *This chapter is still a DRAFT. Check back in a few weeks.*
 
 
@@ -24,15 +26,19 @@ How do we decide which variables to include in a model? There is no one right an
 
 * Underlying theory/observation suggests that X has a meaningfully connection to the outcome variable.
 
-* Use standard errors to understand uncertainty in our parameter estimates. If the standard error of a coefficient is large and we find no other reason to include it in our model, it may be a signal to remove the variable from your model. 
-
-* If the variable has a small standard error, it is general practice to include it in our model to improve predictions.
+* If the variable has a small standard error, it is general practice to include it in our model to improve predictions. If the standard error of a coefficient is large and we find no other reason to include it in our model, it may be a signal to remove the variable from your model. 
 
 * If a predictor isn't statistically significant, we would normally consider discarding it. The exception to this rule is if we wanted to compare two indicators (for instance, if we wanted to compare results from the variable `party` -- to look at Democrats versus Republicans -- in the `trains` dataset) in spite of that variable not appearing to be significant. 
 
 * It is standard in your field to include X in such regressions.
 
 * Your boss/client/reviewer/supervisor wants to include X.
+
+<!-- MF: Go through one of the datasets and explain whether we would include variables X, Y, and Z --> 
+
+### Variables in the `trains` dataset
+
+To look at our recommendations in practice, let's focus on the `trains` dataset. The variables in `trains` include `gender`, `liberal`, `party`, `age`, `income`, `att_start`, `treatment`, and `att_end`.Which variables would be best to include in a model? 
 
 
 ## Transforming variables
