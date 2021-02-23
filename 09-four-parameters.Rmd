@@ -43,7 +43,9 @@ To look at our recommendations in practice, let's focus on the `trains` dataset.
 
 ## Transforming variables
 
-It is often convenient to transform a predictor variable. 
+Another question for us data scientists: what happens when our assumptions break down? The first option is to extend our model, perhaps by addressing our concerns with validity by including error models. The second option, which we will focus on here, is to modify our data or model so that our assumptions are more reasonable. How do we accomplish this?
+
+It is often convenient to transform a predictor variable so that our model makes more sense. Let's explore exactly what that means. 
 
 ### Centering
 
