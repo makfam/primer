@@ -16,6 +16,25 @@
 In our haste to make progress --- to get all the way through the process of building, interpreting and using models --- we have given short shrift to some of the messy details of model building and evaluation. This chapter fills in those lacunae. We will also introduce models with four parameters. 
 
 
+## Selecting variables
+
+How do we decide which variables to include in a model? There is no one right answer to this question. Our advice is to keep a variable X if any of the following circumstances apply:
+
+* The variable has a large and well-estimated coefficient. This means, roughly, that the 95% confidence interval excludes zero.
+
+* Underlying theory/observation suggests that X has a meaningfully connection to the outcome variable.
+
+* Use standard errors to understand uncertainty in our parameter estimates. If the standard error of a coefficient is large and we find no other reason to include it in our model, it may be a signal to remove the variable from your model. 
+
+* If the variable has a small standard error, it is general practice to include it in our model to improve predictions.
+
+* If a predictor isn't statistically significant, we would normally consider discarding it. The exception to this rule is if we wanted to compare two indicators (for instance, if we wanted to compare results from the variable `party` -- to look at Democrats versus Republicans -- in the `trains` dataset) in spite of that variable not appearing to be significant. 
+
+* It is standard in your field to include X in such regressions.
+
+* Your boss/client/reviewer/supervisor wants to include X.
+
+
 ## Transforming variables
 
 It is often convenient to transform a predictor variable. 
@@ -140,11 +159,13 @@ Most experienced data scientists would use the log of `rv13` rather than the raw
 
 * We do not know the "true" model. Who is to say that a model using the raw value is right or wrong?
 
-* Check whether or not this choice meaningfully effects the answer to your question. Much of the time, it won't. That is, our inferences are often fairly "robust" to small changes in the model. If you get the same answer with `rv13` as from `log_rv13`, then no one cares which you use.
+* Check whether or not this choice meaningfully affects the answer to your question. Much of the time, it won't. That is, our inferences are often fairly "robust" to small changes in the model. If you get the same answer with `rv13` as from `log_rv13`, then no one cares which you use.
 
 * Follow the conventions in your field. If everyone does X, then you should probably do X, unless you have a good reason not to. If you do have such a reason, explain it prominently.
 
 * Most professionals, when presented with data distributed like `rv13`, would take the log. Professionals hate (irrationally?) outliers. Any transformation which makes a distribution look more normal is generally considered a good idea.
+
+
 
 Many of these suggestions apply to every aspect of the modeling process.
 
@@ -245,22 +266,6 @@ Transforming the outcome variable is a much more difficult question. Imagine tha
 See @roas
 
 
-## Selecting variables
-
-
-How do we decide which variables to include in a model? There is no one right answer to this question. Our advice is to keep a variable X if any of the following circumstances apply:
-
-
-* The variable has a large and well-estimated coefficient. This means, roughly, that the 95% confidence interval excludes zero.
-
-* Underlying theory/observation suggests that X has a meaningfully connection to the outcome variable.
-
-* It is standard in your field to include X in such regressions.
-
-* Your boss/client/reviewer/supervisor wants to include X.
-
-
-
 <!-- * Creating new variables, especially by combining different ones into one combined variable. -->
 
 
@@ -292,6 +297,8 @@ print(fit_att_start, detail = FALSE)
 They both seem like good models! The results make sense. People who are liberal have more liberal attitudes about immigration, so we would expect their `att_end` scores to be lower. We would also expect people to provide similar answers in two surveys administered a week or two apart. It makes sense that those with higher (more conservative) values for `att_start` would also have higher values for `att_end`.
 
 How do we choose between these models?
+
+
 
 ### Better models make better predictions
 
@@ -465,6 +472,7 @@ The premise of hypothesis testing is to answer a specific question -- one that m
 - The fact that a difference is not “significant” has no relevance to how we use the posterior to make decisions.
 - Statistical significance is not equal to *practical* importance. 
 - There is no reason to **test** when you can summarize by providing the full posterior probability distribution.
+
 
 ## Parallel lines
 
