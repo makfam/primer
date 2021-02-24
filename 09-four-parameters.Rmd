@@ -12,6 +12,8 @@
 
 <!-- MF: The order of the chapter that seems most sensible to me is 1) selecting variables, 2) transforming variables, 3) comparing in theory, 4) comparing in practice, and 5) discussion items (including hypothesis tests.) -->
 
+<!-- MF: Where should we cover external validation? At the end of the chapter? Discussion is on pages 171-180 in RAOS. --> 
+
 *This chapter is still a DRAFT. Check back in a few weeks.*
 
 
@@ -19,6 +21,8 @@ In our haste to make progress --- to get all the way through the process of buil
 
 
 ## Selecting variables
+
+<!-- MF: Discuss indicator & index variables prior to explaining guidelines? -->
 
 How do we decide which variables to include in a model? There is no one right answer to this question. Our advice is to keep a variable X if any of the following circumstances apply:
 
@@ -42,6 +46,10 @@ To look at our recommendations in practice, let's focus on the `trains` dataset.
 
 
 ## Transforming variables
+
+<!-- MF: Look at "Scaling of predictors and regression coefficients" in RAOS (pg. 183) 
+
+Do we discuss anything in the "Other transformations section" (pg. 195)? This includes square root transformations, idiosyncratic transformations, & using discrete vs continuous predictors. -->
 
 Another question for us data scientists: what happens when our assumptions break down? The first option is to extend our model, perhaps by addressing our concerns with validity by including error models. The second option, which we will focus on here, is to modify our data or model so that our assumptions are more reasonable. How do we accomplish this?
 
