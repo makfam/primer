@@ -2,6 +2,7 @@
 
 <!-- Priorities:  --> 
 
+
 <!-- Another paragraph or two of discussion about the final posterior. How do we use it? Within what range would you offer 50/50 odds that the true percentage lies? (use quantile(0.25, 0.75). Area under the curve? Explain clearly how that 26% is calculated. What is post_dist? What does it mean? How can I use it? Maybe show it sorted? Add some code comments. -->
 
 <!-- better rayshader? -->
