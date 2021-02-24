@@ -2,10 +2,6 @@
 
 <!-- Priorities:  --> 
 
-<!-- Asserting a posterior distribution is, conceptually, the same as opening a casino and allowing people to place wagers on outcomes, with the odds consistent with your posterior. If your posterior is wrong, they will take all your money. That would be bad! MF: Done.-->
-
-<!-- Rule of thumb: The world in the future is always more variable than our models would suggest. The entire point of the virtue of Temperance to be aware of that fact and take account of it. Courage --- that bold bastard --- comes along and says, "Here is the model! Let's calculate the posterior and open the casino!" Temperance --- quite the old woman from the point of view of that idiot Courage --- says, "Hold on, stupid! Yes, I can calculate the posterior, but we need to be cautious." Temerance is concerned with the tails, not the center. Limit the bets on the first few nights. Make sure our posterior is OK. Temperance is about the sensible management of the casino.  MF: Done. -->
-
 <!-- Another paragraph or two of discussion about the final posterior. How do we use it? Within what range would you offer 50/50 odds that the true percentage lies? (use quantile(0.25, 0.75). Area under the curve? Explain clearly how that 26% is calculated. What is post_dist? What does it mean? How can I use it? Maybe show it sorted? Add some code comments. -->
 
 <!-- better rayshader? -->
