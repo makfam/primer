@@ -315,7 +315,62 @@ They both seem like good models! The results make sense. People who are liberal 
 
 How do we choose between these models?
 
+### Cross validation using `loo()`
 
+To compare models without waiting for new data, we evaluate predictions on the observed data. However, due to the fact that the data has been used to fit the model parameters, our predictions are often optimistic when assessing generalization. 
+
+In cross validation, part of the data is used to fit the model, while the rest of the data is used as a proxy for future data. We can think of cross validation as a way to assess generalization from one part of the data to another part. How do we do this? 
+
+We can hold out individual observations, called leave-one-out (LOO) cross validation; or groups of observations, called leave-one-group-out cross validation; or use past data to predict future observations, called leave-future-out cross validation. **When we perform cross validation, the model is re-fit leaving out one part of the data and then the prediction for the held-out part is evaluated.** 
+
+We have built an R package, `loo`, containing a function, `loo`, with a computational shortcut that uses probability calculations to approximate the leave-one-out evaluation, while only fitting the model once, and also accounting for posterior uncertainty in the fit. This is how we will determine which model is superior for our purposes. 
+
+To begin, let's perform `loo()` on our first model, `fit_att_start`. 
+
+
+```{r}
+loo_att_start <- fit_att_start %>% 
+  loo()
+
+loo_att_start
+```
+What does any of this mean? 
+
+- `elpd_loo` is the estimated log score along with a standard error representing uncertainty due to
+using only [INSERT] data points.
+- `p_loo` is the estimated “effective number of parameters” in the model. 
+- `looic` is the LOO information criterion, −2 elpd_loo, which we compute for comparability to deviance.
+
+```{r}
+loo_liberal <- fit_liberal %>% 
+  loo()
+
+loo_liberal
+```
+To compare the two models directly, we can use the function `loo_compare` with our two `loo` objects created above:
+
+```{r}
+loo_compare(loo_liberal, loo_att_start)
+```
+
+<!-- MF: Breakdown from book:
+
+elpd_loo is the estimated log score along with a standard error representing uncertainty due to
+using only 434 data points.
+
+p_loo is the estimated “effective number of parameters” in the model. The above model has 4 parameters, so it makes sense that p_loo is close to 4 here, but in the case of models with stronger prior information, weaker data, or model misspecification, this direct identification will not always work.
+
+looic is the LOO information criterion, −2 elpd_loo, which we compute for comparability to deviance. -->
+
+<!-- MF: LOO discussion on pg 174: 
+
+Often we would like to evaluate and compare models without waiting for new data. One can simply evaluate predictions on the observed data. But since these data have already been used to fit the model parameters, these predictions are optimistic for assessing generalization.
+In cross validation, part of the data is used to fit the model and the rest of the data—the hold-out set—is used as a proxy for future data. When there is no natural prediction task for future data, we can think of cross validation as a way to assess generalization from one part of the data to another part.
+Different data partitions can be used, depending on the modeling task. We can hold out individual observations (leave-one-out (LOO) cross validation) or groups of observations (leave-one-group-out), or use past data to predict future observations (leave-future-out). Leave-one-group-out and leave- future-out cross validation can be useful in multilevel and time series settings, which are beyond the scope of this book. In any form of cross validation, the model is re-fit leaving out one part of the data and then the prediction for the held-out part is evaluated. Cross validation removes the overfitting problem arising from using the same data for estimation and evaluation, but at the cost of requiring the model to be fit as many times as the number of partitions.
+
+The naive implementation of LOO would require the model to be fit n times, once for each held-out data point. The good news is that we have built an R package, loo, containing a function, loo, with a computational shortcut that uses probability calculations to approximate the leave-one-out evaluation, while only fitting the model once, and also accounting for posterior uncertainty in the fit.
+We first illustrate LOO cross validation with a small simulated dataset:
+-->
 
 ### Better models make better predictions
 
