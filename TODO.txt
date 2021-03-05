@@ -12,11 +12,29 @@ See vignette('programming') for more help
 This warning is displayed once every 8 hours.
 Call `lifecycle::last_warnings()` to see where this warning was generated. 
 
-* Use ragg? ragg can be used when knitting Rmarkdown files by setting dev="ragg_png" in the code chunk options.
+* Use ragg? ragg can be used when knitting Rmarkdown files by setting dev="ragg_png" in the code chunk options
 
 https://www.tidyverse.org/blog/2021/02/modern-text-features/
 
+* Prevent the rayshader images from popping up when Chapter 5 is knitted.
+
 * Add something about searching Github to help.
+
+* Stop spending time interpreting coefficients. Make fun of the practice. Instead, just ask a question and then answer it.
+
+* $ git reset --soft HEAD~1
+
+* fmt_markdown() would allow us to have vertical elipses in the Preceptor Tables.
+
+* Discuss ps_2 to PS_2 problem on Github. 
+
+* Discuss relative paths and home directories more in Tools.
+
+* Discuss col_types in read_cvs().
+
+* Add grouping for line plots.
+
+* Get rid of joins except left joins, and mention the others.
 
 * Think about the difference between the *posterior distribution* of average height and the *posterior probability distribution*. Right now, we only use the latter. But the draws which are produced from epred() and predict() are really more examples of the former. Aren't they? That is, 4,000 height values is a *distribution*, as are all vectors, and it is *posterior* since we created it with a function that starts with "posterior". But nor is it a probability distribution since we have not normalized it yet. Shouldn't we weave this connection throughout the book. 
 
@@ -25,6 +43,10 @@ https://www.tidyverse.org/blog/2021/02/modern-text-features/
 * Standardize use of "tidyverse". Only two choices: Either Tidyverse, when referring to the concept and/or to the collection of packages, or **tidyverse**, when referring to the package itself. Never use "tidyverse."
 
 * Add ModernDive common problems isssues: https://moderndive.com/C-appendixC.html#data-wrangling
+
+* https://leanpub.com/markua/
+
+* https://education.rstudio.com/blog/2021/02/cbds/
 
 * Start using "When comparing" everywhere.
 
