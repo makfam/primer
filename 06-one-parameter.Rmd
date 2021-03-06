@@ -5,6 +5,7 @@
 
 <!-- Expand the use of rayshader. For each 3-D graphic, we need to add a movie with five frames. First frame is the current graphic. Second frame is with the conditional distribution set as a different color, probably red. We want to see this slice in the context of the joint distribution. Third frame shows the joint distribution with all non-red points going to zero. Ideally, this would be in motion, with the points just decreasing down. The meaning is that taking a conditional distribution means that everything outside that slice goes to zero. They are impossible. Fourth frame shows us rotate around so that we are looking at the cross-section from the side. -->
 
+
 <!-- You must understand what the standard error of $\hat{p}$ means. You do not need to understand why. -->
 
 <!-- In the Functions are your friend! section -->
