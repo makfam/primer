@@ -475,6 +475,18 @@ ovrftng %>%
 
 ### Better models make better predictions on new data
 
+The most sensible way to test a model is to use the model to make predictions and compare those predictions to new data. After fitting the model using `stan_glm`, we would use `posterior_predict` to obtain simulations representing the predictive distribution for new cases. For instance, if we were to predict how someone's attitude changes toward immigration among Boston commuters based on political affiliation, we would want to go out and test our theories on new Boston commuters.
+
+When thinking of generalization to new data, it is important to consider what is relevant new data in the context of the modeling problem. Some models are used to predict the future and, in those cases, we can wait and eventually observe the future and check how good our model is for making predictions. Often models are used to obtain insight to some phenomenon without immediate plan for predictions. This is the case with our Boston commuters example. In such cases, we are also interested whether learned insights from on part of the data generalizes to other parts of the data. For example, if we  know how political attitudes informed future immigration stances in *Boston commuters*, we may want to know if those same conclusions could generalize to train commuters in different locations. 
+
+Even if we had detected clear problems with our predictions, this would not necessarily mean that there is anything wrong with the model as fit to the original dataset. However, we would need to understand it further before generalizing to other commuters. 
+
+Often, we would like to evaluate and compare models without waiting for new data. One can simply evaluate predictions on the observed data. But since these data have already been used to fit the model parameters, these predictions are optimistic for assessing generalization.
+
+In cross validation, part of the data is used to fit the model and the rest of the data—the hold-out set—is used as a proxy for future data. When there is no natural prediction task for future data, we can think of cross validation as a way to assess generalization from one part of the data to another part.
+
+In any form of cross validation, the model is re-fit leaving out one part of the data and then the prediction for the held-out part is evaluated. Cross validation removes the overfitting problem arising from using the same data for estimation and evaluation, but at the cost of requiring the model to be fit as many times as the number of partitions.
+
 <!-- DK: Gelman makes the relevant points. Ideal is totally new data after we submit our model. No cheating! Or, we can try to be disciplined and keep an out of sample. Discuss cross validation. Ultimate logic is leave one out validation. -->
 
 ## Comparing models in practice
