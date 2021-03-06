@@ -485,9 +485,9 @@ Often, we would like to evaluate and compare models without waiting for new data
 
 In cross validation, part of the data is used to fit the model and the rest of the data—the hold-out set—is used as a proxy for future data. When there is no natural prediction task for future data, we can think of cross validation as a way to assess generalization from one part of the data to another part.
 
-In any form of cross validation, the model is re-fit leaving out one part of the data and then the prediction for the held-out part is evaluated. Cross validation removes the overfitting problem arising from using the same data for estimation and evaluation, but at the cost of requiring the model to be fit as many times as the number of partitions.
+In any form of cross validation, the model is re-fit leaving out one part of the data and then the prediction for the held-out part is evaluated. Cross validation removes the overfitting problem arising from using the same data for estimation and evaluation, but at the cost of requiring the model to be fit as many times as the number of partitions. In the next section, we will look at a type of cross validation called leave-one-out (LOO) cross validation.
 
-<!-- DK: Gelman makes the relevant points. Ideal is totally new data after we submit our model. No cheating! Or, we can try to be disciplined and keep an out of sample. Discuss cross validation. Ultimate logic is leave one out validation. -->
+<!-- DK: Gelman makes the relevant points. Ideal is totally new data after we submit our model. No cheating! Or, we can try to be disciplined and keep an out of sample. Discuss cross validation. Ultimate logic is leave one out validation. MF: Done.-->
 
 ## Comparing models in practice
 
