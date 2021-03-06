@@ -8,11 +8,11 @@
 
 <!-- Write out better models make better predictions on new data. Concepts! Cross validation. Leave one out. Blah, blah, blah. -->
 
-<!-- Going back to att_end models. Then loo() and loo_compare(). -->
+<!-- Going back to att_end models. Then loo() and loo_compare(). MF: Done.-->
 
 <!-- In Better models make better predictions, add red dots (to first) and red line (to second) to indicate where all the data points would be if your model were perfect. Should we change the aspect on these plots so that they are "square"? Maybe add y and y_hat to the x-axis labels for these two plots. At least discuss in the text. These plots are weird! Not seen before! -->
 
-<!-- Transform variables goes first, then select variables. -->
+<!-- Transform variables goes first, then select variables. MF: DONE. -->
 
 *This chapter is still a DRAFT. Check back in a few weeks.*
 
@@ -20,35 +20,9 @@
 In our haste to make progress --- to get all the way through the process of building, interpreting and using models --- we have given short shrift to some of the messy details of model building and evaluation. This chapter fills in those lacunae. We will also introduce models with four parameters. 
 
 
-## Selecting variables
-
-<!-- MF: Discuss indicator & index variables prior to explaining guidelines? Not this week! -->
-
-How do we decide which variables to include in a model? There is no one right answer to this question. Our advice is to keep a variable X if any of the following circumstances apply:
-
-* The variable has a large and well-estimated coefficient. This means, roughly, that the 95% confidence interval excludes zero.
-
-* Underlying theory/observation suggests that X has a meaningfully connection to the outcome variable.
-
-* If the variable has a small standard error, it is general practice to include it in our model to improve predictions. If the standard error of a coefficient is large and we find no other reason to include it in our model, it may be a signal to remove the variable from your model. 
-
-* If a predictor isn't statistically significant, we would normally consider discarding it. The exception to this rule is if we wanted to compare two indicators (for instance, if we wanted to compare results from the variable `party` -- to look at Democrats versus Republicans -- in the `trains` dataset) in spite of that variable not appearing to be significant. 
-
-* It is standard in your field to include X in such regressions.
-
-* Your boss/client/reviewer/supervisor wants to include X.
-
-
-<!-- MF: Go through one of the datasets and explain whether we would include variables X, Y, and Z. Not this week.  --> 
-
-### Variables in the `trains` dataset
-
-To look at our recommendations in practice, let's focus on the `trains` dataset. The variables in `trains` include `gender`, `liberal`, `party`, `age`, `income`, `att_start`, `treatment`, and `att_end`.Which variables would be best to include in a model? 
-
-
 ## Transforming variables
 
-<!-- MF: Look at "Scaling of predictors and regression coefficients" in RAOS (pg. 183) 
+<!-- Look at "Scaling of predictors and regression coefficients" in RAOS (pg. 183) 
 
 Do we discuss anything in the "Other transformations section" (pg. 195)? This includes square root transformations, idiosyncratic transformations, & using discrete vs continuous predictors. DK: Not square root. Other stuff? Maybe at the end? -->
 
@@ -285,6 +259,33 @@ See @roas
 
 <!-- * Creating new variables, especially by combining different ones into one combined variable. -->
 
+## Selecting variables
+
+<!-- Discuss indicator & index variables prior to explaining guidelines? Not this week! -->
+
+How do we decide which variables to include in a model? There is no one right answer to this question. Our advice is to keep a variable X if any of the following circumstances apply:
+
+* The variable has a large and well-estimated coefficient. This means, roughly, that the 95% confidence interval excludes zero.
+
+* Underlying theory/observation suggests that X has a meaningfully connection to the outcome variable.
+
+* If the variable has a small standard error, it is general practice to include it in our model to improve predictions. If the standard error of a coefficient is large and we find no other reason to include it in our model, it may be a signal to remove the variable from your model. 
+
+* If a predictor isn't statistically significant, we would normally consider discarding it. The exception to this rule is if we wanted to compare two indicators (for instance, if we wanted to compare results from the variable `party` -- to look at Democrats versus Republicans -- in the `trains` dataset) in spite of that variable not appearing to be significant. 
+
+* It is standard in your field to include X in such regressions.
+
+* Your boss/client/reviewer/supervisor wants to include X.
+
+
+<!-- Go through one of the datasets and explain whether we would include variables X, Y, and Z. Not this week.  --> 
+
+### Variables in the `trains` dataset
+
+To look at our recommendations in practice, let's focus on the `trains` dataset. The variables in `trains` include `gender`, `liberal`, `party`, `age`, `income`, `att_start`, `treatment`, and `att_end`.Which variables would be best to include in a model? 
+
+
+
 
 ## Comparing models in theory
 
@@ -489,6 +490,8 @@ To compare models without waiting for new data, we evaluate predictions on the o
 
 In cross validation, part of the data is used to fit the model, while the rest of the data is used as a proxy for future data. We can think of cross validation as a way to assess generalization from one part of the data to another part. How do we do this? 
 
+<!-- In leave-one-out cross validation, we want to perform inferences excluding each data point i, one at a time. In the above expression, excluding that one data point is equivalent to multiplying the posterior distribution by the factor 1/p(yi |θ). The LOO posterior excluding point i is written as p(θ|y−i) = p(θ|y)/p(yi|θ),andtheLOOdistributioniscomputedbytakingtheposteriorsimulations for θ obtained from stan_glm and giving each simulation a weight of 1/p(yi |θ). This set of weighted simulations is used to approximate the predictive distribution of yi , the held-out data point. -->
+
 We can hold out individual observations, called leave-one-out (LOO) cross validation; or groups of observations, called leave-one-group-out cross validation; or use past data to predict future observations, called leave-future-out cross validation. **When we perform cross validation, the model is re-fit leaving out one part of the data and then the prediction for the held-out part is evaluated.** 
 
 We have built an R package, `loo`, containing a function, `loo`, with a computational shortcut that uses probability calculations to approximate the leave-one-out evaluation, while only fitting the model once, and also accounting for posterior uncertainty in the fit. This is how we will determine which model is superior for our purposes. 
@@ -548,15 +551,6 @@ As we have seen,`loo_compare` is a shortcut for comparing two models. When you a
 
 <!-- MF: Need to include the following details:
 - When the difference (elpd_diff) is larger than 4, the number of observations is larger than 100, and the model is not badly misspecified then the standard error (se_diff) is a reliable measure of the uncertainty in the difference. Differences smaller than 4 are hard to distinguish from noise. BASICALLY: When elpd_diff < 4, there is no advantage to one model over the other --> 
-
-<!-- Breakdown from book:
-
-elpd_loo is the estimated log score along with a standard error representing uncertainty due to
-using only 434 data points.
-
-p_loo is the estimated “effective number of parameters” in the model. The above model has 4 parameters, so it makes sense that p_loo is close to 4 here, but in the case of models with stronger prior information, weaker data, or model misspecification, this direct identification will not always work.
-
-looic is the LOO information criterion, −2 elpd_loo, which we compute for comparability to deviance. -->
 
 <!--  LOO discussion on pg 174: 
 The naive implementation of LOO would require the model to be fit n times, once for each held-out data point. The good news is that we have built an R package, loo, containing a function, loo, with a computational shortcut that uses probability calculations to approximate the leave-one-out evaluation, while only fitting the model once, and also accounting for posterior uncertainty in the fit.
