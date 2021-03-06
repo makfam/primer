@@ -478,10 +478,12 @@ ovrftng %>%
 
 ## Comparing models in practice
 
-<!-- Run loo (on both models from above). Explain each part. Don't use math they don't know. Focus on elpd_loo, since that is what compare_loo does. Then, run compare_loo, explain what it shows. Then, we choose the att_start model. It does much better! -->
+<!-- Run loo (on both models from above). Explain each part. Don't use math they don't know. Focus on elpd_loo, since that is what compare_loo does. Then, run compare_loo, explain what it shows. Then, we choose the att_start model. It does much better! MF: Done.-->
 
 
 ### Cross validation using `loo()`
+
+<!-- MF: This is a rough draft. Everything needs to be expanded, but the basics are here. --> 
 
 To compare models without waiting for new data, we evaluate predictions on the observed data. However, due to the fact that the data has been used to fit the model parameters, our predictions are often optimistic when assessing generalization. 
 
@@ -491,21 +493,13 @@ We can hold out individual observations, called leave-one-out (LOO) cross valida
 
 We have built an R package, `loo`, containing a function, `loo`, with a computational shortcut that uses probability calculations to approximate the leave-one-out evaluation, while only fitting the model once, and also accounting for posterior uncertainty in the fit. This is how we will determine which model is superior for our purposes. 
 
-To begin, let's perform `loo()` on our first model, `fit_att_start`. 
-
+First, we will refamiliarize ourselves with our first model, `fit_liberal`. 
 
 ```{r}
-loo_att_start <- fit_att_start %>% 
-  loo()
-
-loo_att_start
+fit_liberal
 ```
-What does any of this mean? 
 
-- `elpd_loo` is the estimated log score along with a standard error representing uncertainty due to
-using only [INSERT] data points.
-- `p_loo` is the estimated “effective number of parameters” in the model. 
-- `looic` is the LOO information criterion, −2 elpd_loo, which we compute for comparability to deviance.
+Now, we will perform `loo()` on our model and look at the results. 
 
 ```{r}
 loo_liberal <- fit_liberal %>% 
@@ -513,13 +507,49 @@ loo_liberal <- fit_liberal %>%
 
 loo_liberal
 ```
-To compare the two models directly, we can use the function `loo_compare` with our two `loo` objects created above:
+What does any of this mean? 
+
+- `elpd_loo` is the estimated log score along with a standard error representing uncertainty due to using only 115 data points.
+- `p_loo` is the estimated “effective number of parameters” in the model. 
+- `looic` is the LOO information criterion, −2 elpd_loo, which we compute for comparability to deviance.
+
+For our purposes, we mostly need to focus on `elpd_loo`. Let's explain, in more depth, what this information means. 
+
+Conclusion: **the higher our value for `elpd_loo`, the better our model performs.** This means that, when comparing models, we want to select the model with the higher value for `elpd_loo`. 
+
+Let's turn our attention to our second model. To begin, let's observe the qualities of `fit_att_start` once again. 
 
 ```{r}
-loo_compare(loo_liberal, loo_att_start)
+fit_att_start
 ```
 
-<!-- MF: Breakdown from book:
+Great! Now, let's perform `loo()` on this model. 
+
+```{r}
+loo_att_start <- fit_att_start %>% 
+  loo()
+
+loo_att_start
+```
+
+The `elpd_loo` value for this model is -201.7. This is higher than the `elpd_loo` for `att_liberal`, implying that **this** model is superior. However, we can't see our estimates together. Is there a simpler way to calculate which model is better? 
+
+Actually, yes! To compare the two models directly, we can use the function `loo_compare` with our two `loo` objects created above. This will calculate the difference in `elpd_loo()` between our models for us, making our job easier:
+
+```{r}
+loo_compare(loo_att_start, loo_liberal)
+```
+
+<!-- MF: loo_compare should be yielding a result that includes model comparison with a note on which model is favored. I am figuring out why that isn't happening here. --> 
+
+The value for `elpd_diff` is equal to the difference in `elpd_loo` between our two models: elpd_loo for loo_att_start - elpd_loo for loo_liberal = -279.4 - (-201.7) = -77.7. The `se_diff` shows that the difference has a standard error of 12.0. This shows that, even when accounting for standard error, the better model is clear: `fit_att_start_`. Therefore, the attitude at the start of the `trains` study is more significant to predicting final attitude when compared with the variable `liberal`, which is an analog for political affiliation. 
+
+As we have seen,`loo_compare` is a shortcut for comparing two models. When you are deciding between two models, `loo_compare()` is a great way to simplify your decision. 
+
+<!-- MF: Need to include the following details:
+- When the difference (elpd_diff) is larger than 4, the number of observations is larger than 100, and the model is not badly misspecified then the standard error (se_diff) is a reliable measure of the uncertainty in the difference. Differences smaller than 4 are hard to distinguish from noise. BASICALLY: When elpd_diff < 4, there is no advantage to one model over the other --> 
+
+<!-- Breakdown from book:
 
 elpd_loo is the estimated log score along with a standard error representing uncertainty due to
 using only 434 data points.
@@ -528,12 +558,7 @@ p_loo is the estimated “effective number of parameters” in the model. The ab
 
 looic is the LOO information criterion, −2 elpd_loo, which we compute for comparability to deviance. -->
 
-<!-- MF: LOO discussion on pg 174: 
-
-Often we would like to evaluate and compare models without waiting for new data. One can simply evaluate predictions on the observed data. But since these data have already been used to fit the model parameters, these predictions are optimistic for assessing generalization.
-In cross validation, part of the data is used to fit the model and the rest of the data—the hold-out set—is used as a proxy for future data. When there is no natural prediction task for future data, we can think of cross validation as a way to assess generalization from one part of the data to another part.
-Different data partitions can be used, depending on the modeling task. We can hold out individual observations (leave-one-out (LOO) cross validation) or groups of observations (leave-one-group-out), or use past data to predict future observations (leave-future-out). Leave-one-group-out and leave- future-out cross validation can be useful in multilevel and time series settings, which are beyond the scope of this book. In any form of cross validation, the model is re-fit leaving out one part of the data and then the prediction for the held-out part is evaluated. Cross validation removes the overfitting problem arising from using the same data for estimation and evaluation, but at the cost of requiring the model to be fit as many times as the number of partitions.
-
+<!--  LOO discussion on pg 174: 
 The naive implementation of LOO would require the model to be fit n times, once for each held-out data point. The good news is that we have built an R package, loo, containing a function, loo, with a computational shortcut that uses probability calculations to approximate the leave-one-out evaluation, while only fitting the model once, and also accounting for posterior uncertainty in the fit.
 We first illustrate LOO cross validation with a small simulated dataset:
 -->
