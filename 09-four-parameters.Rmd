@@ -7,7 +7,7 @@
 <!-- Write out better models make better predictions on new data. Concepts! Cross validation. Leave one out. Blah, blah, blah. MF: Done. -->
 
 
-<!-- In Better models make better predictions, add red dots (to first) and red line (to second) to indicate where all the data points would be if your model were perfect. Should we change the aspect on these plots so that they are "square"? Maybe add y and y_hat to the x-axis labels for these two plots. At least discuss in the text. These plots are weird! Not seen before! -->
+<!-- In Better models make better predictions, add red dots (to first) and red line (to second) to indicate where all the data points would be if your model were perfect. Should we change the aspect on these plots so that they are "square"? Maybe add y and y_hat to the x-axis labels for these two plots. At least discuss in the text. These plots are weird! Not seen before! MF: Done. -->
 
 
 *This chapter is still a DRAFT. Check back in a few weeks.*
@@ -366,6 +366,18 @@ trains %>%
   mutate(pred_liberal = fitted(fit_liberal)) %>% 
   ggplot(aes(x = pred_liberal, y = att_end)) +
     geom_jitter(width = 0.05, height = 0.2, alpha = 0.5) +
+  
+  # Add a red circle where our predictions are most accurate (where the x and y
+  # values are the same, which is where our predictions = the true attitudes).
+  # pch = 1 makes the inside of the point translucent to show the number of
+  # correct predictions.
+  
+  geom_point(aes(x = 8, y = 8), 
+             size = 20, pch = 1, 
+             color = "red") +
+  geom_point(aes(x = 10, y = 10), 
+             size = 20, pch = 1, 
+             color = "red") +
     labs(title = "Modeling Attitude Toward Immigration",
          subtitle = "Liberals are less conservative",
          x = "Predicted Attitude",
@@ -374,7 +386,7 @@ trains %>%
 
 <!-- DK: Could put this discussion in fig.cap. Could add some details to the plots to indicate the points that I am talking about. Should create an animation, which brings in new point, forecasts it, and then measures how wrong the model was. -->
 
-Because there are only two possible values for `liberal` --- TRUE and FALSE --- there are only two predictions which this model will make: about 10 for `liberal == FALSE` and about 8 for `liberal == TRUE`. (The points in the above plot are jittered.)  For some individuals, these are perfect predictions. For others, they are poor predictions. (Note the two individuals who are `liberal == TRUE`, and who the model thinks will have `att_end == 8`, but who have `att_end == 15`. The model got them both very, very wrong.)
+Because there are only two possible values for `liberal` --- TRUE and FALSE --- there are only two predictions which this model will make: about 10 for `liberal == FALSE` and about 8 for `liberal == TRUE`. (The points in the above plot are jittered.)  For some individuals, these are perfect predictions. For others, they are poor predictions. the red circles on our plot illustrate the areas where our predictions are equal to true values. As we can see, the model isn't great at predicting attitude end. (Note the two individuals who are `liberal == TRUE`, and who the model thinks will have `att_end == 8`, but who have `att_end == 15`. The model got them both very, very wrong.)
 
 Consider our second model, using `att_start` to forecast `att_end`.
 
@@ -383,6 +395,11 @@ trains %>%
   mutate(pred_liberal = fitted(fit_att_start)) %>% 
   ggplot(aes(x = pred_liberal, y = att_end)) +
     geom_jitter(width = 0.05, height = 0.2, alpha = 0.5) +
+  
+  # Insert red line where our predictions = the truth using geom_abline with an
+  # intercept, slope, and color.
+  
+  geom_abline(intercept = 0, slope = 1, color = "red") +
     labs(title = "Modeling Attitude Toward Immigration",
          subtitle = "Survey responses are somewhat consistent",
          x = "Predicted Attitude",
@@ -390,8 +407,7 @@ trains %>%
 ```
 
 
-Because `att_end` takes on `r length(unique(trains$att_end))` unique values, the model makes `r length(unique(trains$att_end))` unique predictions. Some of those predictions are perfect! But others are very wrong. Note the individual with a predicted `att_end` of around 9 but with an actual value of `15`. That is a big miss!
-
+Because `att_end` takes on `r length(unique(trains$att_end))` unique values, the model makes `r length(unique(trains$att_end))` unique predictions. Some of those predictions are perfect! But others are very wrong. The red line shows the points where our predictions match the truth. Note the individual with a predicted `att_end` of around 9 but with an actual value of `15`. That is a big miss!
 
 Rather than looking at individual cases, we need to look at the errors for all the predictions. Fortunately, a prediction error is the same thing as a residual, which is easy enough to calculate.
 
