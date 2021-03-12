@@ -2,9 +2,9 @@
 
 <!-- Explore causal effects of models following chapter 18/19 in ROAS. Regress ending att on starting attitude and treatment effect. Show parallel lines. That is four parameters! Can also do the same thing with income and treatment. That will be a much worse model. Save interaction for five parameter chapter. -->
 
-<!-- Add page 217 to selecting variables. Simple version. Can't talk about everything. Can't talk about interactions, for example. Talk about testing and how stupid it is! -->
+<!-- Add page 217 to selecting variables. Simple version. Can't talk about everything. Can't talk about interactions, for example. Talk about testing and how stupid it is! MF: Done.-->
 
-<!-- Write out better models make better predictions on new data. Concepts! Cross validation. Leave one out. Blah, blah, blah. -->
+<!-- Write out better models make better predictions on new data. Concepts! Cross validation. Leave one out. Blah, blah, blah. MF: Done. -->
 
 
 <!-- In Better models make better predictions, add red dots (to first) and red line (to second) to indicate where all the data points would be if your model were perfect. Should we change the aspect on these plots so that they are "square"? Maybe add y and y_hat to the x-axis labels for these two plots. At least discuss in the text. These plots are weird! Not seen before! -->
@@ -22,7 +22,7 @@ In our haste to make progress --- to get all the way through the process of buil
 
 Do we discuss anything in the "Other transformations section" (pg. 195)? This includes square root transformations, idiosyncratic transformations, & using discrete vs continuous predictors. DK: Not square root. Other stuff? Maybe at the end? -->
 
-Another question for us data scientists: what happens when our assumptions break down? The first option is to extend our model, perhaps by addressing our concerns with validity by including error models. The second option, which we will focus on here, is to modify our data or model so that our assumptions are more reasonable. How do we accomplish this?
+An important question for us data scientists: what happens when our assumptions break down? The first option is to extend our model, perhaps by addressing our concerns with validity by including error models. The second option, which we will focus on here, is to modify our data or model so that our assumptions are more reasonable. How do we accomplish this?
 
 It is often convenient to transform a predictor variable so that our model makes more sense. Let's explore exactly what that means. 
 
@@ -50,7 +50,7 @@ fit_1 <- stan_glm(formula = income ~ age,
 print(fit_1, detail = FALSE)
 ```
 
-There is nothing wrong with this model. Yet the interpretation of $\beta_0$, the intercept in the regression, is awkward. It means the average income for people of age zero. That is useless! There are no people of zero age in our data. And, even if there were, it would be weird to think about such people taking the commuter trade into Boston and filling out our survey forms.
+There is nothing wrong with this model. Yet the interpretation of $\beta_0$, the intercept in the regression, is awkward. It represents the average income for people of age zero. That is useless! There are no people of zero age in our data. And, even if there were, it would be weird to think about such people taking the commuter train into Boston and filling out our survey forms.
 
 It is easy, however, to *transform* `age` into a variable which makes the intercept more meaningful. Consider a new variable, `c_age`, which is `age` minus the average age in the sample. Using this **c**entered version of age does not change the predictions or residuals in the model, but it does make the intercept easier to interpret.
 
@@ -255,7 +255,25 @@ See @roas
 
 ## Selecting variables
 
-How do we decide which variables to include in a model? There is no one right answer to this question. To focus on one example, let's use the `trains` dataset to evaluate how helpful certain variables are to creating an effective model. 
+How do we decide which variables to include in a model? There is no one right answer to this question. 
+
+### General guidelines for selecting variables 
+
+When deciding which variables to keep or discard in our models, our advice is to keep a variable X if any of the following circumstances apply:
+
+* The variable has a large and well-estimated coefficient. This means, roughly, that the 95% confidence interval excludes zero.
+
+* Underlying theory/observation suggests that X has a meaningfully connection to the outcome variable.
+
+* If the variable has a small standard error, it is general practice to include it in our model to improve predictions. If the standard error of a coefficient is large and we find no other reason to include it in our model, it may be a signal to remove the variable from your model. 
+
+* If a predictor isn't statistically significant, we would normally consider discarding it. The exception to this rule is if we wanted to compare two indicators (for instance, if we wanted to compare results from the variable `party` -- to look at Democrats versus Republicans -- in the `trains` dataset) in spite of that variable not appearing to be significant. 
+
+* It is standard in your field to include X in such regressions.
+
+* Your boss/client/reviewer/supervisor wants to include X.
+
+Let's use the `trains` dataset to evaluate how helpful certain variables are to creating an effective model, based on the guidelines above.
 
 ### Variables in the `trains` dataset
 
@@ -271,7 +289,7 @@ fit_1 <- stan_glm(att_end ~ treatment + att_start,
 fit_1
 ```
 
-
+Conclusion: keep both variables! `Treatment` and `att_start` are both significant. 
 
 ### income ~ age + liberal
 
@@ -282,6 +300,8 @@ fit_2 <- stan_glm(income ~ age + liberal,
 
 fit_2
 ```
+
+`liberal` is particularly meaningful; definitely keep. Age is less clear. 
 
 ### liberal ~ I(income/1e+05) + party
 
@@ -297,22 +317,6 @@ fit_3
 <!-- Introduce 4 parameter models. Use the exact same models as in chapter 8, but add a second right hand side variable. At the start, only use one categorical and one numeric. -->
 
 <!-- Discuss indicator & index variables prior to explaining guidelines? Not this week! -->
-
-### General guidelines for selecting variables 
-
-How do we decide which variables to include in a model? There is no one right answer to this question. Our advice is to keep a variable X if any of the following circumstances apply:
-
-* The variable has a large and well-estimated coefficient. This means, roughly, that the 95% confidence interval excludes zero.
-
-* Underlying theory/observation suggests that X has a meaningfully connection to the outcome variable.
-
-* If the variable has a small standard error, it is general practice to include it in our model to improve predictions. If the standard error of a coefficient is large and we find no other reason to include it in our model, it may be a signal to remove the variable from your model. 
-
-* If a predictor isn't statistically significant, we would normally consider discarding it. The exception to this rule is if we wanted to compare two indicators (for instance, if we wanted to compare results from the variable `party` -- to look at Democrats versus Republicans -- in the `trains` dataset) in spite of that variable not appearing to be significant. 
-
-* It is standard in your field to include X in such regressions.
-
-* Your boss/client/reviewer/supervisor wants to include X.
 
 
 <!-- Go through one of the datasets and explain whether we would include variables X, Y, and Z. Not this week.  Try out several different left-hand side variables, like age and att_end, which were teh dependent variables that we used in Chapter 8. In this chapter, we will allow for two right-hand side variables. (Perhaps these should always be one numeric and one categorical, except for the last one.) Connect to examples from chapter 8. Introduce four parameter models. --> 
@@ -605,11 +609,7 @@ The value for `elpd_diff` is equal to the difference in `elpd_loo` between our t
 
 As we have seen,`loo_compare` is a shortcut for comparing two models. When you are deciding between two models, `loo_compare()` is a great way to simplify your decision. 
 
-What do we do when the value of `loo_compare()` is small? As a general practice, differences smaller than four are hard to distiguish from noise. In other words: when `elpd_diff` is less than 4, there is no advantage to one model over the other. 
-
-
-<!-- MF: Need to include the following details:
-
+What do we do when the value of `loo_compare()` is small? As a general practice, differences smaller than four are hard to distinguish from noise. In other words: when `elpd_diff` is less than 4, there is no advantage to one model over the other. 
 
 <!-- ### Selecting the rows -->
 
