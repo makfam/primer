@@ -152,8 +152,6 @@ Most experienced data scientists would use the log of `rv13` rather than the raw
 
 * Most professionals, when presented with data distributed like `rv13`, would take the log. Professionals hate (irrationally?) outliers. Any transformation which makes a distribution look more normal is generally considered a good idea.
 
-
-
 Many of these suggestions apply to every aspect of the modeling process.
 
 <!-- Split out general advice to elsewhere. -->
@@ -263,6 +261,37 @@ How do we decide which variables to include in a model? There is no one right an
 
 To look at our recommendations in practice, let's focus on the `trains` dataset. The variables in `trains` include `gender`, `liberal`, `party`, `age`, `income`, `att_start`, `treatment`, and `att_end`. Which variables would be best to include in a model? 
 
+### att_end ~ treatment + att_start
+
+```{r}
+fit_1 <- stan_glm(att_end ~ treatment + att_start, 
+                    data = trains, 
+                    refresh = 0)
+
+fit_1
+```
+
+
+
+### income ~ age + liberal
+
+```{r}
+fit_2 <- stan_glm(income ~ age + liberal, 
+                    data = trains, 
+                    refresh = 0)
+
+fit_2
+```
+
+### liberal ~ I(income/1e+05) + party
+
+```{r}
+fit_3 <- stan_glm(liberal ~ I(income/1e+05) + party, 
+                    data = trains, 
+                    refresh = 0)
+
+fit_3
+```
 
 
 <!-- Introduce 4 parameter models. Use the exact same models as in chapter 8, but add a second right hand side variable. At the start, only use one categorical and one numeric. -->
