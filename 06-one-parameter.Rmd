@@ -48,6 +48,12 @@ Use the **tidyverse** package.
 library(tidyverse)
 ```
 
+```{r, message = FALSE}
+# Needed for the one 3-D plot below.
+
+library(rayshader)
+library(rgl)
+```
 
 ## Real sampling activity {#sampling-activity}
 
@@ -675,13 +681,13 @@ This is the power of running many analyses at once using map functions and list 
 knitr::include_graphics("06-one-parameter/images/old_man_SE.png")
 ```
 
-Standard errors quantify the effect of sampling variation induced on our estimates. In other words, they quantify how much we can expect different proportions of a shovel's beads that are red *to vary* from one sample to another sample to another sample, and so on. As a general rule, as sample size increases, the standard error decreases.
+*Standard errors (SE) quantify the effect of sampling variation on our estimates.* In other words, they quantify how much we can expect the calculated proportions of a shovel's beads that are red *to vary* from one sample to another sample to another sample, and so on. As a general rule, as sample size increases, the standard error decreases.
 
-*SE refers to the standard deviation of a sample statistic (aka point estimate), such as the mean or median.* For example, the "standard error of the mean" refers to the standard deviation of the distribution of sample means taken from a population. 
+*The standard error is the standard deviation of a sample statistic (aka point estimate), such as the proportion.* For example, the *standard error of the mean* refers to the standard deviation of the distribution of sample means taken from a population. 
 
-The relationship between the standard error and the standard deviation is such that, for a given sample size, the standard error equals the standard deviation divided by the square root of the sample size. Accordingly, the standard error is inversely proportional to the sample size; the larger the sample size, the smaller the standard error because the statistic will approach the actual value. 
+The relationship between the standard error and the standard deviation is that, for a given sample size, *the standard error equals the standard deviation divided by the square root of the sample size*. Accordingly, the standard error is inversely proportional to the sample size. The larger the sample size, the smaller the standard error. 
 
-If this sounds confusing, don't worry! It should. Before we can explain this in more depth, it is important to understand some terminology pertaining to standard error. 
+If this sounds confusing, don't worry! It is. Before we can explain this in more depth, it is important to understand some terminology. 
 
 
 
@@ -691,31 +697,30 @@ If this sounds confusing, don't worry! It should. Before we can explain this in 
 knitr::include_graphics("06-one-parameter/images/yoda.png")
 ```
 
-Let's now introduce some terminology and notation as well as statistical definitions related to sampling. You will likely want to read this section a few times. Keep in mind, however, that all of the concepts underlying these terminology, notation, and definitions tie directly to the concepts underlying our tactile and virtual sampling activities. It will simply take time and practice to master them. 
+All of the concepts underlying this terminology, notation, and definitions tie directly to the concepts underlying our tactile and virtual sampling activities. It will simply take time and practice to master them. 
 
-First, a **population** is a collection of individuals or observations we are interested in. This is also commonly denoted as a **study population**. We mathematically denote the population's size using upper-case $N$.  In our sampling activities, the (study) population is the collection of $N$ = 1000 identically sized red and white beads contained in the urn.
+First, a **population** is the set of relevant units. The population's size is upper-case $N$.  In our sampling activities, the population is the collection of $N$ = 1,000 identically sized red and white beads in the urn. This is about the simplest possible population. Other examples are all the adult men in the US, all the classrooms in a school, all the wheelbarrows in Massachusetts, all the values of your blood pressure, read at five minute intervals, for your entire life. Often, the population is extends over time, as with your blood pressure readings and is, therefore, more amorphous. Consider all the people who have run for governor of a US state since 1900, or all the people who will run for governor through 2050. Those are also populations.
 
-Second, a **population parameter** is a numerical summary quantity about the population that is unknown, but you wish you knew. For example, when this quantity is a mean, the population parameter of interest is the *population mean*. This is mathematically denoted with the Greek letter $\mu$ pronounced "mu." In our earlier sampling from the urn activity, however, since we were interested in the *proportion* of the urn's beads that were red, the population parameter is the *population proportion*. This is mathematically denoted with the letter $p$. 
+Second, a **population parameter** is a numerical summary quantity about the population that is unknown, but you wish you knew. For example, when this quantity is the mean, the population parameter of interest is the *population mean*. This is mathematically denoted with the Greek letter $\mu$ pronounced "mu." In our earlier sampling from the urn activity, however, since we were interested in the *proportion* of the urn's beads that were red, the population parameter is the *population proportion*, denoted with $p$. 
 
-Third, a **census** is an exhaustive enumeration or counting of all $N$ individuals or observations in the population in order to compute the population parameter's value *exactly*. In our sampling activity, this would correspond to counting the number of beads out of $N$ = 1000 that are red and computing the *population proportion* $p$ that are red *exactly*. When the number $N$ of individuals or observations in our population is large as was the case with our urn, a census can be quite expensive in terms of time, energy, and money. 
+Third, a **census** is an exhaustive enumeration or counting of all $N$ units in the population in order to compute the population parameter's value *exactly*. In our sampling activity, this would correspond to counting the number of beads out of $N$ = 1000 that are red and computing the *population proportion* $p$ that are red *exactly*. When the number $N$ of individuals or observations in our population is large as was the case with our urn, a census can be quite expensive in terms of time, energy, and money. A census is impossible for any populations which includes the future, like our blood pressure next year or candidates for governor in 2040. There is a *truth* but we could not, even in theory, calculate it.
 
-Fourth, **sampling** is the act of collecting a sample from the population when we don't have the means to perform a census. We mathematically denote the sample's size using lower case $n$, as opposed to upper case $N$ which denotes the population's size. Typically the sample size $n$ is much smaller than the population size $N$. Thus sampling is a cheaper alternative to performing a census. In our sampling activities, we used shovels with varying slots to extract samples of size $n$ = 1 through $n$ = 100. 
+Fourth, **sampling** is the act of collecting a sample from the population when we can not, or do not want to, perform a census. The sample size is lower case $n$, as opposed to upper case $N$ for the population's size. Typically the sample size $n$ is much smaller than the population size $N$. In our sampling activities, we used shovels with varying slots to extract samples of size $n$ = 1 through $n$ = 100. 
 
-Fifth, a **point estimate (AKA sample statistic)** is a summary statistic computed from a sample that *estimates* an unknown population parameter. In our sampling activities, recall that the unknown population parameter was the population proportion and that this is mathematically denoted with $p$. Our point estimate is the *sample proportion*: the proportion of the shovel's beads that are red. In other words, it is our guess of the proportion of the urn's beads that are red. We mathematically denote the sample proportion using $\hat{p}$. The "hat" on top of the $p$ indicates that it is an estimate of the unknown population proportion $p$. 
+Fifth, a **point estimate**, also known as a **sample statistic**, is a measure computed from a sample that *estimates* an unknown population parameter. In our sampling activities, recall that the unknown population parameter was the proportion of red beads and that this is mathematically denoted with $p$. Our point estimate is the *sample proportion*: the proportion of the shovel's beads that are red. In other words, it is our guess at the proportion of the urn's beads that are red. The point estimate of the parameter $p$ is $\hat{p}$. The "hat" on top of the $p$ indicates that it is an estimate of the unknown population proportion $p$. 
 
-Sixth is the idea of **representative sampling**. A sample is said to be a *representative sample* if it roughly *looks like* the population. In other words, are the sample's characteristics a good representation of the population's characteristics? In our sampling activity, are the samples of $n$ beads extracted using our shovels representative of the urn's $N$ = 1000 beads?
+Sixth, a sample is said to be **representative** if it roughly *looks like* the population. In other words, are the sample's characteristics a good representation of the population's characteristics? In our sampling activity, are the samples of $n$ beads extracted using our shovels representative of the urn's $N$ = 1000 beads?
 
-Seventh is the idea of **generalizability**. We say a sample is generalizable if any results based on the sample can generalize to the population. In our sampling activity, can we generalize the sample proportion from our shovels to the entire urn? Using our mathematical notation, this is akin to asking if $\hat{p}$ is a "good guess" of $p$?
+Seventh, a sample is **generalizable** if any results based on the sample can generalize to the population. In our sampling activity, can we generalize the sample proportion from our shovels to the entire urn? Using our mathematical notation, this is akin to asking if $\hat{p}$ is a "good guess" of $p$?
 
-Eighth, we say **biased sampling** occurs if certain individuals or observations in a population have a higher chance of being included in a sample than others. We say a sampling procedure is *unbiased* if every observation in a population had an equal chance of being sampled. Had the red beads been much smaller than the white beads, and therefore more prone to falling through the shovel, our sample would have been *biased*. In our sampling activities, since we mixed all $N = 1000$ beads prior to each group's sampling and since each of the equally sized beads had an equal chance of being sampled, our samples were *unbiased*.
+Eighth, **biased sampling** occurs if certain individuals or observations in a population have a higher chance of being included in a sample than others. We say a sampling procedure is **unbiased** if every observation in a population had an equal chance of being sampled. Had the red beads been much smaller than the white beads, and therefore more prone to falling out of the shovel, our sample would have been **biased**. In our sampling activities, since we mixed all $N = 1000$ beads prior to each group's sampling and since each of the equally sized beads had an equal chance of being sampled, our samples were unbiased.
 
-Ninth and lastly, the idea of **random sampling**. We say a sampling procedure is *random* if we sample randomly from the population in an unbiased fashion. In our sampling activities, this would correspond to sufficiently mixing the urn before each use of the shovel. 
+Ninth, a sampling procedure is *random* if we sample randomly from the population in an unbiased fashion. In our sampling activities, this would correspond to sufficiently mixing the urn before each use of the shovel. 
 
 ```{r, echo = FALSE, fig.align='center', fig.cap = "Fear not if you look like Spongebob after reading this section. We will re-cap right now!"}
 knitr::include_graphics("06-one-parameter/images/cant_breathe_sponge.png")
 ```
 
-Phew, that's a lot of new terminology and notation to learn! Let's put them all together to describe the paradigm of sampling.
 
 **In general:**
 
@@ -732,8 +737,6 @@ Phew, that's a lot of new terminology and notation to learn! Let's put them all 
 * any result based on the shovel's beads can **generalize** to the urn, thus
 * the sample proportion $\hat{p}$ of the $n=50$ beads in the shovel that are red is a **"good guess"** of the population proportion $p$ of the $N=1000$ beads that are red, thus
 * instead of manually going over all 1,000 beads in the urn, we can make **inferences** about the urn by using the results from the shovel. 
-
-The act of "inferring" means to deduce or conclude information from evidence and reasoning. In our sampling activities, we wanted to infer about the proportion of the urn's beads that are red. [*Statistical inference*](https://en.wikipedia.org/wiki/Statistical_inference) is the "theory, methods, and practice of forming judgments about the parameters of a population and the reliability of statistical relationships, typically on the basis of random sampling." In other words, statistical inference is the act of inference via sampling.
 
 
 ### Statistical definitions {#sampling-definitions}
@@ -857,7 +860,7 @@ $$\text{Prob}(\text{models} | \text{data} = \text{results of experiment})$$
 
 The rest is just details.
 
-We can do the same thing with our sampling problem. Assume that we know that there are 1,000 beads in the urn, and that all of them are either red or white. Our experiment involves the one-time use of a paddle with 50 slots. We have 1,001 models under consideration. There might be zero red beads or one red bead or ... 999 red beads or 1000 red beads. With a paddle of size 50, there are 51 possible results from our experiment: zero red beads or one red bead or . . . or 49 red beads or 50 red beads. With this information we can calculate *the joint distribution of models which we are considering and the experiment results we might observe.* Once we have that joint distribution, we can calculate the conditional distribution of the total number of red beads, given however many we observed in our sample. 
+We can do the same thing with our sampling problem. Assume that we know that there are 1,000 beads in the urn, and that all of them are either red or white. Our experiment involves the one-time use of a shovel with 50 slots. We have 1,001 models under consideration. There might be zero red beads or one red bead or ... 999 red beads or 1000 red beads. With a shovel of size 50, there are 51 possible results from our experiment: zero red beads or one red bead or . . . or 49 red beads or 50 red beads. With this information we can calculate *the joint distribution of models which we are considering and the experiment results we might observe.* Once we have that joint distribution, we can calculate the conditional distribution of the total number of red beads, given however many we observed in our sample. 
 
 It is useful to define a parameter, $p$, which is the proportion of red beads in the urn. This also takes on exactly 1,001 possible values: $0, 1/1000, 2/1000, ..., 999/1000, 1$. With these assumptions, we can create an unnormalized joint distribution:
 
@@ -867,25 +870,25 @@ It is useful to define a parameter, $p$, which is the proportion of red beads in
 ```{r, cache = TRUE}
 set.seed(10)
 
-# Set values for the urn, paddle, and reps as this helps with creating our joint
-# distribution later.
+# Set values for the urn, shovel, and reps as this helps with creating our joint
+# distribution later. Using more than reps = 100 causes the 3-D plot to blow up.
 
 urn_size <- 1000
-paddle_size <- 50
+shovel_size <- 50
 reps <- 100
 
 # Create a tibble where red_in_urn creates a sequence from 0 to urn_size(1000)
 # by a value of 1. Create p as red_in_urn divided by the total urn_size. Column
-# red_in_paddle will map p using rbinom(). Call n = reps (where reps is defined
-# as 100) and size as paddle_size (defined as 50). Finally, unnest!
+# red_in_shovel will map p using rbinom(). Call n = reps (where reps is defined
+# as 100) and size as shovel_size (defined as 50). Finally, unnest!
 
 joint_dist <- 
   tibble(red_in_urn = seq(from = 0, to = urn_size, by = 1)) %>% 
     mutate(p = red_in_urn / urn_size) %>% 
-    mutate(red_in_paddle = map(p, ~ rbinom(n = reps, 
-                                               size = paddle_size, 
+    mutate(red_in_shovel = map(p, ~ rbinom(n = reps, 
+                                               size = shovel_size, 
                                                prob = .))) %>%
-    unnest(red_in_paddle) 
+    unnest(red_in_shovel) 
 
 # After making our joint distribution, take a sample of size 10.
 
@@ -893,28 +896,27 @@ joint_dist %>%
   slice_sample(n = 10)
 ```
 
-After looking at our joint distribution, let's plot it. Call the `red_in_urn` for our y-axis, to indicate the number of red beads in the urn. Call `red_in_paddle` for our x-axis, to indicate the number of red beads in each paddle. This allows us to see which possible values of red beads in our samples correspond with $p$, the proportion of red beads in the urn.
+After looking at our joint distribution, let's plot it. Call the `red_in_urn` for our y-axis, to indicate the number of red beads in the urn. Call `red_in_shovel` for our x-axis, to indicate the number of red beads in each shovel. This allows us to see which possible values of red beads in our samples are most associated with certain values for the number of red beads in the urn.
 
 ```{r, cache = TRUE}
 joint_dist %>%
-  ggplot(aes(y = red_in_urn, x = red_in_paddle)) +
+  ggplot(aes(y = red_in_urn, x = red_in_shovel)) +
     geom_point(alpha = 0.005) +
-    labs(title = "Joint Distribution of Red Beads in Paddle and in Urn",
-         x = "Number of Red Beads in Paddle",
+    labs(title = "Joint Distribution of Red Beads in Shovel and in Urn",
+         x = "Number of Red Beads in Shovel",
          y = "Number of Red Beads in Urn")
-
 ```
 
-It is easier to define our "model" in this joint distribution in terms of the unknown parameter $p$ rather than, as above, in terms of the unknown number of red beads in the urn. Showing our plot in terms of $p$ and using the term "proportion" rather than "number of red beads" is closer to what we are trying to model. The 
+It is easier to define our "model" in this joint distribution in terms of the unknown parameter $p$ rather than, as above, in terms of the unknown number of red beads in the urn. Showing our plot in terms of $p$ and using the term "proportion" rather than "number of red beads" is closer to what we are trying to model.
 
 ```{r, cache = TRUE}
 joint_dist %>%
-  ggplot(aes(y = p, x = red_in_paddle)) +
+  ggplot(aes(y = p, x = red_in_shovel)) +
     geom_point(alpha = 0.005) +
     labs(title = expression(paste(
-      "Joint Distribution of Red Beads in Paddle and Proportion Red Beads in Urn", 
+      "Joint Distribution of Red Beads in Shovel and Proportion Red Beads in Urn ", 
       hat(p))), 
-         x = "Number of Red Beads in Paddle",
+         x = "Number of Red Beads in Shovel",
          
          # Add the symbol for p-hat. 
          
@@ -926,13 +928,47 @@ joint_dist %>%
 
 ```
 
-To better visualize this distribution, take a look at the 3D version of this plot. Note the U shape of the graph. By this, we mean to note the peaks at the areas where the number of red beads in the paddle is 0 out of 50 and 50 out of 50. This is due to the fact that, when we draw 0 red beads in a sample of 50 beads, the possibilities for the number of red beads in the urn is consistently close to 0. Similarly, when our sample of 50 beads comes out with 50 red beads, the possibilities for the number of red beads in the urn is consistently closer to 1000. 
+<!-- DK: Why doesn't this work! The below code should be fine, right? Maybe are too many items on the x and y axis. Maybe if we set them with scale_x/y, we could get this to work. For now, knitting this just hangs in the middle of creating the html. -->
 
-```{r, echo = FALSE, cache=TRUE, fig.cap = "A 3D image of our joint distribution created with Rayshader."}
-knitr::include_graphics("06-one-parameter/images/rayshader_full.png")
-```
+<!-- DK: Should also explain how this example, while still discrete, points us toward the continuous case. The mathematics of going from discrete to continuous is hard. The intuition is easy: just increase the number of models and number of possible results from the experiment. Then, squint and wave your arms. Ignore the mathematics, here and elsewhere. -->
 
-Now, we have explored the most likely possibilities according to all possible models of this scenario. Let's pivot to a posterior distribution, which will take a *slice* of our joint distribution that is more specific to our question. 
+<!-- To better visualize this distribution, take a look at the 3D version of this plot. Note the saddle shape of the graphic. By this, we mean to note the peaks at the areas where the number of red beads in the shovel is 0 out of 50 and 50 out of 50. This is due to the fact that, when we draw 0 red beads in a sample of 50 beads, the possibilities for the number of red beads in the urn is consistently close to 0. Similarly, when our sample of 50 beads comes out with 50 red beads, the possibilities for the number of red beads in the urn is consistently closer to 1000.  -->
+
+
+<!-- ```{r, cache = TRUE, echo = FALSE} -->
+<!-- joint_dist_p <- joint_dist %>%  -->
+<!--   group_by(p, red_in_shovel) %>% -->
+<!--   summarize(total = n(), .groups = "drop") %>%  -->
+<!--   mutate(p = as.factor(p)) %>%  -->
+<!--   mutate(red_in_shovel = as.factor(red_in_shovel)) %>%  -->
+<!--   ggplot() + -->
+<!--     geom_point(aes(x = red_in_shovel, y = p, color = total)) + -->
+<!--     theme(legend.position = "none") + -->
+<!--     labs(x = "Number of Reds in the Shovel", -->
+<!--          y = expression(p), -->
+<!--          title = "Empirical Distribution of Number of Reds", -->
+<!--          subtitle = expression(paste("Based on simulations with various values of ",  -->
+<!--                                      p))) + -->
+<!--     theme(title = element_text(size = 9), -->
+<!--           axis.text.x = element_text(size = 7), -->
+<!--           axis.title.y = element_text(size = 7), -->
+<!--           legend.position = "none") -->
+
+<!-- plot_gg(joint_dist_p, -->
+<!--         width = 3.5, -->
+<!--         zoom = 0.65, -->
+<!--         theta = 25, -->
+<!--         phi = 30, -->
+<!--         sunangle = 225, -->
+<!--         soliddepth = -50, -->
+<!--         windowsize = c(2048,1536)) -->
+
+<!-- rglwidget() -->
+
+<!-- rgl.close() -->
+<!-- ``` -->
+
+Now, we have explored the most likely possibilities according to all possible models of this scenario. Let's create a posterior distribution by taking a *slice* of our joint distribution based on the number of red beads in the shovel. 
 
 ### Posterior distribution
 
@@ -940,15 +976,15 @@ When we look at our question -- we are asking for the posterior probability of a
 
 $$\text{Prob}(\text{models} | \text{data} = 17)$$
 
-The same approach works again. We take a "slice" of the joint distribution where the number of red beads in the paddle is equal to 17. After normalization, that gives us the posterior probability for $p$, or for the number of red beads in the urn. Recall that there is a one-to-one mapping between $p$ and the number of red beads. 
+The same approach works again. We take a "slice" of the joint distribution where the number of red beads in the shovel is equal to 17. After normalization, that gives us the posterior probability for $p$, or for the number of red beads in the urn. Recall that there is a one-to-one mapping between $p$ and the number of red beads. 
 
 ```{r}
 joint_dist %>% 
   
-  # Filtering for where the red_in_paddle equals 17 allows us to isolate the
+  # Filtering for where the red_in_shovel equals 17 allows us to isolate the
   # data that pertains to our question.
   
-  filter(red_in_paddle == 17) %>% 
+  filter(red_in_shovel == 17) %>% 
   ggplot(aes(x = p)) +
     geom_histogram(aes(y = after_stat(count/sum(count))),
                    bins = 50) + 
@@ -965,9 +1001,9 @@ joint_dist %>%
     theme_classic()
 ```
 
-To visualize this in a 3D plot, see the slice in the figure below. There are a few things to note. First, the x-axis only extends to 600 (rather than the total 1000) due to the fact that, when the paddle only draws 17/50 = .34 = 34% red beads, it is almost impossible for the total number red beads in the total urn to exceed 600. The most likely number of red beads in the total urn, when the paddle draws 17/50 red beads, is somewhere in the 290-350 range. This is signified by the peak between these points. The probability is lower below 280 and above 350 because it is less likely that this is the number of red beads in the urn, conditional on the fact that the paddle drew 17/50 red beads. This is our posterior distribution. 
+To visualize this in a 3D plot, see the slice in the figure below. There are a few things to note. First, the x-axis only extends to 600 (rather than the total 1000) due to the fact that, when the shovel only draws 17/50 = .34 = 34% red beads, it is almost impossible for the total number red beads in the total urn to exceed 600. The most likely number of red beads in the total urn, when the shovel draws 17/50 red beads, is somewhere in the 290-350 range. This is signified by the peak between these points. The probability is lower below 280 and above 350 because it is less likely that this is the number of red beads in the urn, conditional on the fact that the shovel drew 17/50 red beads. This is our posterior distribution. 
 
-For any value of red beads found in the paddle (from 0 to 50), there is a posterior distribution of possible values of red beads in the total urn. This distribution is meant to illustrate that, though our sample gives an estimate of the total proportion of red beads in the entire urn, there is much variation in what the actual proportion might be. To summarize: the distribution of the hat things (the things we are predicting) is, more or less, your posterior.
+For any value of red beads found in the shovel (from 0 to 50), there is a posterior distribution of possible values of red beads in the total urn. This distribution is meant to illustrate that, though our sample gives an estimate of the total proportion of red beads in the entire urn, there is much variation in what the actual proportion might be. To summarize: the distribution of the hat things (the things we are predicting) is, more or less, your posterior.
 
 Recall the first question from the start of the Chapter: 
 
@@ -977,11 +1013,9 @@ The answer is not a single number. Our posterior distribution is just that: a di
 
 This means that, while we can provide a range of possibilities (and we can estimate which of those possibilities occur most frequently), we can never say that we know the total number of red beads with certainty. 
 
-The key issue with the urn paradigm is that, unlike real world data science, we *can* technically find the true proportion. We just have to perform that exhaustive count that we've been so desperately avoiding. In the real world, the "true" solution can never be known. This is why we require inference, and why tools like sampling are so helpful for making assumptions about the world around us. 
+The key issue with the urn paradigm is that, unlike real world data science, we *can* technically find the true proportion. We just have to perform that exhaustive count that we've been so desperately avoiding. In the real world, the "true" solution can never be known. This is why we require inference, and why tools like sampling are so helpful for drawing conclusions about the world around us. 
 
-```{r, echo = FALSE, cache=TRUE, fig.cap = "A 3D image of our joint distribution created with Rayshader."}
-knitr::include_graphics("06-one-parameter/images/slice_rayshader.png")
-```
+<!-- DK: Could use rayshader to make the posterior, or even to do a movie, as we hope to do in Chapter 5 someday. Also, should note that we are approaching the continuous case as the number of models and number of possible data results become ever larger.  -->
 
 ### Hypothesis tests
 
@@ -1003,30 +1037,30 @@ Now that we have our posterior distribution for the proportion $p$ of red beads 
 *Conditional on our answer to Question 1, what is the probability, using the same urn, that we will draw more than 8 red beads if we use a shovel of size 20?*
 
 
-We need to create an (unnormalized) posterior distribution for the number of red beads in a new draw with a 20-slot paddle.
+We need to create an (unnormalized) posterior distribution for the number of red beads in a new draw with a 20-slot shovel.
 
 ```{r}
 set.seed(17)
 
-# Define a paddle size for our joint distributions
+# Define a shovel size for our joint distributions
 
-paddle_size <- 20
+shovel_size <- 20
 
-# To create our posterior distribution, filter for where the red in paddle is
+# To create our posterior distribution, filter for where the red in shovel is
 # equal to 17. This takes our slice.
 
 post_dist <- joint_dist %>% 
-  filter(red_in_paddle == 17) %>% 
+  filter(red_in_shovel == 17) %>% 
   
-  # Remove the columns of red_in_urn and red_in_paddle so we are left with p.
+  # Remove the columns of red_in_urn and red_in_shovel so we are left with p.
   
-  select(-red_in_urn, -red_in_paddle) %>% 
+  select(-red_in_urn, -red_in_shovel) %>% 
   
   # Create object new_reds which maps p using rbinom with size defined as our
-  # previously created paddle_size of 20.
+  # previously created shovel_size of 20.
   
   mutate(new_reds = map_int(p, ~ rbinom(n = 1,
-                                        size = paddle_size,
+                                        size = shovel_size,
                                         prob = .)))
 
 # Look at our created posterior distribution.
@@ -1034,7 +1068,7 @@ post_dist <- joint_dist %>%
 post_dist 
 ```
 
-Note that we have two columns to focus on after removing the columns `red_in_urn` and `red_in_paddle`. The column `p` represents our probability for the number of red beads we draw with our paddle size of 20 (conditional upon a previous draw of 17 red beads). The column `new_reds` represents the number of red beads found in our draw of twenty beads with the corresponding value for `p`. Scroll through our object to look at the probabilities for various results of `new_reds`. 
+Note that we have two columns to focus on after removing the columns `red_in_urn` and `red_in_shovel`. The column `p` represents our probability for the number of red beads we draw with our shovel size of 20 (conditional upon a previous draw of 17 red beads). The column `new_reds` represents the number of red beads found in our draw of twenty beads with the corresponding value for `p`. Scroll through our object to look at the probabilities for various results of `new_reds`. 
 
 With this unnormalized distribution, it is easy to create the normalized posterior probability distribution.
 
@@ -1125,7 +1159,30 @@ fit_1 <- stan_glm(formula = red ~ 1,
                   seed = 2021)
 ```
 
-This single function call has done all the work which we did on our own previously: created the joint distribution and then estimated the posterior probability distribution, conditional on the data which was passed in to the `data` argument. Once we have the `fit_1` object, it is just a few lines of code to create the posterior probability distribution for the number of red beads drawn with a shovel of size 20.
+This single function call has done all the work which we did on our own previously: created the joint distribution and then estimated the posterior probability distribution, conditional on the data which was passed in to the `data` argument. Once we have the `fit_1` object, it is easy to answer two sorts of questions: the posterior probability distribution for $p$ and predictions for new draws from the urn. The key new functions are `posterior_epred()` for the former and `posterior_predict()` for the latter.
+
+For the posterior probability distribution:
+
+```{r, cache = TRUE}
+posterior_epred(fit_1, 
+                newdata = tibble(constant = 1)) %>% 
+  as_tibble() %>% 
+  ggplot(aes(x = `1`)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   bins = 50) + 
+    labs(title = "Posterior Probability Distribution",
+         subtitle = "Proportion of red beads in urn is centered around 0.34",
+         x = "Proportion p of Red Beads in Urn",
+         y = "Probability") + 
+  
+    scale_x_continuous(labels = scales::number_format()) +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme_classic()
+```
+
+
+
+For the posterior probability distribution for the number of red beads drawn with a shovel of size 20:
 
 
 ```{r, cache = TRUE}
@@ -1146,7 +1203,7 @@ posterior_predict(fit_1,
     theme_classic()
 ```
 
-This posterior is similar to the one we created, much more laboriously, above. 
+These two posteriors are very similar to the ones we created, much more laboriously, above. See Chapter \@ref(two-parameters) for a thorough discussion of the use of **rstanarm**. This package will be our main tool for the rest of the *Primer*.
 
 <!-- DK: But they are still different! Why is that? -->
 
