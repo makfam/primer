@@ -257,9 +257,19 @@ See @roas
 
 ## Selecting variables
 
+How do we decide which variables to include in a model? There is no one right answer to this question. To focus on one example, let's use the `trains` dataset to evaluate how helpful certain variables are to creating an effective model. 
+
+### Variables in the `trains` dataset
+
+To look at our recommendations in practice, let's focus on the `trains` dataset. The variables in `trains` include `gender`, `liberal`, `party`, `age`, `income`, `att_start`, `treatment`, and `att_end`. Which variables would be best to include in a model? 
+
+
+
 <!-- Introduce 4 parameter models. Use the exact same models as in chapter 8, but add a second right hand side variable. At the start, only use one categorical and one numeric. -->
 
 <!-- Discuss indicator & index variables prior to explaining guidelines? Not this week! -->
+
+### General guidelines for selecting variables 
 
 How do we decide which variables to include in a model? There is no one right answer to this question. Our advice is to keep a variable X if any of the following circumstances apply:
 
@@ -280,9 +290,6 @@ How do we decide which variables to include in a model? There is no one right an
 
 <!-- First case att_end ~ treatment + att_start. Keep both! Second case income ~ age + liberal. Strong keep for liberal. age is trickier. It is small. (Not really! Depends on whether or not you are looking at one year or 10. Don't let arbitrary scalings confuse you. Measured in decades it is 10 times bigger. Discuss z scaling?)  Not quite significant. No right answer! Third and last case is logistic, liberal ~ I(income/1e+05) + party. Tricky! Maybe keep both? But stronger case for party. Maybe discuss interpretation of coefficients of logistic regressions? Divide by 4 rule? -->
 
-### Variables in the `trains` dataset
-
-To look at our recommendations in practice, let's focus on the `trains` dataset. The variables in `trains` include `gender`, `liberal`, `party`, `age`, `income`, `att_start`, `treatment`, and `att_end`. Which variables would be best to include in a model? 
 
 
 
@@ -485,7 +492,7 @@ Often, we would like to evaluate and compare models without waiting for new data
 
 In cross validation, part of the data is used to fit the model and the rest of the data—the hold-out set—is used as a proxy for future data. When there is no natural prediction task for future data, we can think of cross validation as a way to assess generalization from one part of the data to another part.
 
-In any form of cross validation, the model is re-fit leaving out one part of the data and then the prediction for the held-out part is evaluated. Cross validation removes the overfitting problem arising from using the same data for estimation and evaluation, but at the cost of requiring the model to be fit as many times as the number of partitions. In the next section, we will look at a type of cross validation called leave-one-out (LOO) cross validation.
+In any form of cross validation, the model is re-fit leaving out one part of the data and then the prediction for the held-out part is evaluated. In the next section, we will look at a type of cross validation called leave-one-out (LOO) cross validation.
 
 
 ## Comparing models in practice
@@ -527,6 +534,8 @@ What does any of this mean?
 
 For our purposes, we mostly need to focus on `elpd_loo`. Let's explain, in more depth, what this information means. 
 
+Basically, when we run `loo()`, we are telling R to take a piece of data out of our dataset, re-estimate all parameters, and then predict the value for the missing piece of data. The value for `elpd_loo()` is based off of how *close* our estimate was to the truth. Therefore, `elpd_loo()` values inform us of the effectiveness of our model in predicting data it has not seen before. The ideal value for `elpd_loo()` is 0, meaning that our predictions are perfect. This is, of course, not going to be the case. We say this to point out that, the closer our value of `elpd_loo` is to 0, the more effective our model performs.
+
 Conclusion: **the higher our value for `elpd_loo`, the better our model performs.** This means that, when comparing models, we want to select the model with the higher value for `elpd_loo`. 
 
 Let's turn our attention to our second model. To begin, let's observe the qualities of `fit_att_start` once again. 
@@ -551,8 +560,6 @@ Actually, yes! To compare the two models directly, we can use the function `loo_
 ```{r}
 loo_compare(loo_att_start, loo_liberal)
 ```
-
-<!-- MF: loo_compare should be yielding a result that includes model comparison with a note on which model is favored. I am figuring out why that isn't happening here. --> 
 
 
 The value for `elpd_diff` is equal to the difference in `elpd_loo` between our two models: elpd_loo for loo_att_start - elpd_loo for loo_liberal = -279.4 - (-201.7) = -77.7. The `se_diff` shows that the difference has a standard error of 12.0. This shows that, even when accounting for standard error, the better model is clear: `fit_att_start`. Therefore, the attitude at the start of the `trains` study is more significant to predicting final attitude when compared with the variable `liberal`, which is an analog for political affiliation. 
