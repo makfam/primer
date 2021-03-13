@@ -295,9 +295,9 @@ fit_1
 
 How do we decide which variables are useful? First, let's look at our intercept. The 95% confidence interval for  `att_end` is equal to the coefficient plus or minus 2 standard errors = 2.3 +/- 0.8 = 1.5 to 3.1. When we divide this by four, we get .375 to .775. Therefore, any variable that exceeds these values is likely to be significant enough to include in our model. 
 
-As `treatmentControl`, a value which impacts our (Intercept) by a factor of -1.0, not only exceeds the minimum requirement of .375, but also exceeds the upper boundry of significance of .775, we definitely want to keep the variable `treatment`. In addition to being significant, it satisfies a number of other requirements:
+As `treatmentControl`, a value which impacts our (Intercept) by a factor of -1.0, not only exceeds the minimum requirement of .375, but also exceeds the upper boundary of significance of .775, we definitely want to keep the variable `treatment`. In addition to being significant, it satisfies a number of other requirements:
 - The variable has a small standard error.
-- The variable is considered an indictator variable, which separates two groups of significance (treatment and control) that we would like to study. 
+- The variable is considered an indicator variable, which separates two groups of significance (treatment and control) that we would like to study. 
 
 The variable `att_start`, with a coefficient of 0.8, is also significant. In addition, the standard error is small, the impact on our prediction for `att_end` is meaningful, and it is standard practice to include a "before" comparison to our "after" values. 
 
@@ -321,7 +321,7 @@ As we can see, `liberalTRUE` falls within the boundaries for significance. It is
 
 The variable `age`, however, does not seem to be significant. The value of `age` is very low. It does not seem to make a meaningful difference. This being said, we just learned about a bunch of helpful transformations! We also know that the variable `age`, unmodified, is calculating starting at age 0, an impossibility in our data. 
 
-Recall the work above that z-scaled the variable `age` to be more signficant. This is pasted below for reference. 
+Recall the work above that z-scaled the variable `age` to be more significant. This is pasted below for reference. 
 
 ```{r}
 trains_age <- trains %>% 
