@@ -700,6 +700,37 @@ The premise of hypothesis testing is to answer a specific question -- one that m
 
 <!-- att_end ~ liberal + att_start. Same thing as chapters before. Show graphic of parallel lines. Cardinal virtues as always. And, extra, at the end we can use loo_compare to see if this model is better than simpler model of att_end ~ att_start. -->
 
+
+### Comparing complex and simple models 
+
+Complex: 
+```{r}
+fit_first <- stan_glm(formula = att_end ~ liberal + att_start,
+                  data = trains,
+                  refresh = 0)
+```
+
+Simple: 
+```{r}
+fit_simple<- stan_glm(formula = att_end ~ att_start,
+                  data = trains,
+                  refresh = 0)
+```
+
+Make loo() regression for both:
+```{r}
+loo_first <- fit_first %>% 
+  loo()
+
+loo_simple <- fit_simple %>% 
+  loo()
+```
+
+Perform loo_compare:
+```{r}
+loo_compare(loo_first, loo_simple)
+```
+
 ## Summary
 
 
