@@ -273,6 +273,8 @@ When deciding which variables to keep or discard in our models, our advice is to
 
 * Your boss/client/reviewer/supervisor wants to include X.
 
+Another trick to consider is the Divide-by-Four rule: As a rule of convenience, we can take logistic regression coefficients (other than the constant term) and divide them by 4 to get an upper bound of the predictive difference corresponding to a unit difference in x. All this means is that, when evaluating if a predictor is helpful, divide the coefficient by four. If the predictor exceeds this value, it is likely to be significant. 
+
 Let's use the `trains` dataset to evaluate how helpful certain variables are to creating an effective model, based on the guidelines above.
 
 ### Variables in the `trains` dataset
@@ -280,6 +282,8 @@ Let's use the `trains` dataset to evaluate how helpful certain variables are to 
 To look at our recommendations in practice, let's focus on the `trains` dataset. The variables in `trains` include `gender`, `liberal`, `party`, `age`, `income`, `att_start`, `treatment`, and `att_end`. Which variables would be best to include in a model? 
 
 ### att_end ~ treatment + att_start
+
+First, let's look at a model with a left hand variable, `att_end`, and two right side variables, `treatment` and `att_start`.
 
 ```{r}
 fit_1 <- stan_glm(att_end ~ treatment + att_start, 
@@ -289,9 +293,19 @@ fit_1 <- stan_glm(att_end ~ treatment + att_start,
 fit_1
 ```
 
-Conclusion: keep both variables! `Treatment` and `att_start` are both significant. 
+How do we decide which variables are useful? First, let's look at our intercept. The 95% confidence interval for  `att_end` is equal to the coefficient plus or minus 2 standard errors = 2.3 +/- 0.8 = 1.5 to 3.1. When we divide this by four, we get .375 to .775. Therefore, any variable that exceeds these values is likely to be significant enough to include in our model. 
+
+As `treatmentControl`, a value which impacts our (Intercept) by a factor of -1.0, not only exceeds the minimum requirement of .375, but also exceeds the upper boundry of significance of .775, we definitely want to keep the variable `treatment`. In addition to being significant, it satisfies a number of other requirements:
+- The variable has a small standard error.
+- The variable is considered an indictator variable, which separates two groups of significance (treatment and control) that we would like to study. 
+
+The variable `att_start`, with a coefficient of 0.8, is also significant. In addition, the standard error is small, the impact on our prediction for `att_end` is meaningful, and it is standard practice to include a "before" comparison to our "after" values. 
+
+**Conclusion**: keep both variables! `Treatment` and `att_start` are both significant, as well as satisfying other requirements in our guidelines. They are *more* than worthy of inclusion in our model.  
 
 ### income ~ age + liberal
+
+Now, we will look at `income` as a function of `age` and `liberal`, a proxy for political party. 
 
 ```{r}
 fit_2 <- stan_glm(income ~ age + liberal, 
@@ -301,9 +315,36 @@ fit_2 <- stan_glm(income ~ age + liberal,
 fit_2
 ```
 
-`liberal` is particularly meaningful; definitely keep. Age is less clear. 
+Great! We have an estimate for income of those who fall into the category of `liberalFALSE`, as well as data on our right hand side variables of `age` and `liberalTRUE`. Recall the divide-by-four rule. The range for (Intercept), our 95% confidence interval, is calculated by taking our coefficient plus or minus 2 standard errors (MAD_SD). The lower range is $58703.7$ and the upper range is $162834.9$. Dividing both of these values by 4, we get $14675.93$ and $40708.725$. 
+
+As we can see, `liberalTRUE` falls within the boundaries for significance. It is, therefore, a great addition to our model! 
+
+The variable `age`, however, does not seem to be significant. The value of `age` is very low. It does not seem to make a meaningful difference. This being said, we just learned about a bunch of helpful transformations! We also know that the variable `age`, unmodified, is calculating starting at age 0, an impossibility in our data. 
+
+Recall the work above that z-scaled the variable `age` to be more signficant. This is pasted below for reference. 
+
+```{r}
+trains_age <- trains %>% 
+  mutate(z_age = scale(age))
+```
+
+Let's run our regression again, this time using `z_age`, to see if the resulting value is more significant. 
+
+```{r}
+fit_scaled <- stan_glm(income ~ z_age + liberal, 
+                    data = trains_age, 
+                    refresh = 0)
+
+fit_scaled
+```
+
+This looks better! Even with our transformation, `z_age` is still on the lower bounds of our significance. Whether we include it in our model is not clear, especially when compared with the variable `liberal`, which shows clear significance. 
+
+**Conclusion**: definitely keep `liberal`! Age is less clear. Age when z-scaled is *just* significant enough to consider including. It is really a matter of preference at this point. If age is important to our model in some way, we would keep it. If it wasn't revelant to our conclusions, we may discard it. 
 
 ### liberal ~ I(income/1e+05) + party
+
+We will now look at liberal as a function of a transformed `income` and `party`. 
 
 ```{r}
 fit_3 <- stan_glm(liberal ~ I(income/1e+05) + party, 
