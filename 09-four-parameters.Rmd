@@ -311,22 +311,22 @@ set.seed(78)
 
 
 ```{r}
-fit_1 <- stan_glm(att_end ~ treatment + att_start, 
+fit_1_model <- stan_glm(att_end ~ treatment + att_start, 
                     data = trains, 
                     refresh = 0)
 
-fit_1
+fit_1_model
 ```
 
-How do we decide which variables are useful? First, let's look at our intercept. The 95% confidence interval for  `att_end` is equal to the coefficient-- `r scales::comma(round(coef(fit_1)["(Intercept)"], 1))`-- plus or minus two standard errors.
+How do we decide which variables are useful? First, let's look at our intercept. The 95% confidence interval for  `att_end` is equal to the coefficient-- `r scales::comma(round(coef(fit_1_model)["(Intercept)"], 1))`-- plus or minus two standard errors.
 
-The causal effect of the variable `treatmentControl` is `r scales::comma(round(coef(fit_1)["treatmentControl"], 0))`. This means that, compared with the predicted `att_end` for groups under treatment, those in the control group have a predicted attitude that is one entire point lower. As we can see, this is a large and well estimated coefficient. Recall that this means, roughly, that the 95% confidence interval excludes zero. To calculate the 95% confidence interval, we take the coefficient plus or minus two standard errors: `r round(((coef(fit_1)["treatmentControl"]) - (2 * .2)), 1)` and `r round(((coef(fit_1)["treatmentControl"]) + (2 * .2)), 1)`. As we can see, the 95% confidence interval *does* exclude zero, suggesting that `treatment` is a worthy variable. 
+The causal effect of the variable `treatmentControl` is `r scales::comma(round(coef(fit_1_model)["treatmentControl"], 0))`. This means that, compared with the predicted `att_end` for groups under treatment, those in the control group have a predicted attitude that is one entire point lower. As we can see, this is a large and well estimated coefficient. Recall that this means, roughly, that the 95% confidence interval excludes zero. To calculate the 95% confidence interval, we take the coefficient plus or minus two standard errors: `r round(((coef(fit_1_model)["treatmentControl"]) - (2 * .2)), 1)` and `r round(((coef(fit_1_model)["treatmentControl"]) + (2 * .2)), 1)`. As we can see, the 95% confidence interval *does* exclude zero, suggesting that `treatment` is a worthy variable. 
 
 In addition to being meaningful, which is enough to justify inclusion in our model, this variable satisfies a number of other qualifications:
 - The variable has a small standard error.
 - The variable is considered an indicator variable, which separates two groups of significance (treatment and control) that we would like to study. 
 
-The variable `att_start`, with a coefficient of `r scales::comma(round(coef(fit_1)["att_start"], 1))`, is also meaningful. Due to the fact that the `MAD_SD` value here is 0, we do not need to find the 95% confidence interval to know --intuitively-- that this variable has a large and well estimated coefficient. 
+The variable `att_start`, with a coefficient of `r scales::comma(round(coef(fit_1_model)["att_start"], 1))`, is also meaningful. Due to the fact that the `MAD_SD` value here is 0, we do not need to find the 95% confidence interval to know --intuitively-- that this variable has a large and well estimated coefficient. 
 
 **Conclusion**: keep both variables! `Treatment` and `att_start` are both significant, as well as satisfying other requirements in our guidelines. They are *more* than worthy of inclusion in our model.  
 
