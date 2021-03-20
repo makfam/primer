@@ -344,9 +344,9 @@ fit_2
 
 Great! We have an estimate for income of those who fall into the category of `liberalFALSE`, as well as data on our right hand side variables of `age` and `liberalTRUE`. 
 
-When comparing `liberalTRUE` with our `(Intercept)`, recall that the `(Intercept)` is calculating income for the case where `liberal == FALSE`. As we can see, then, the coefficient for `liberalTRUE`, `r scales::comma(round(coef(fit_2)["liberalTRUE"], 1))`, shows that the  liberals in our dataset make less on average than non-liberals in our dataset. 
+When comparing `liberalTRUE` with our `(Intercept)`, recall that the `(Intercept)` is calculating income for the case where `liberal == FALSE`. As we can see, then, the coefficient for `liberalTRUE`, `r scales::comma(round(coef(fit_2)["liberalTRUE"], 1))`, shows that the  liberals in our dataset make less on average than non-liberals in our dataset. The coefficient is large relative to the `(Intercept)` and, with rough mental math, we see that the 95% confidence interval excludes 0. Therefore, `liberal` is a helpful variable!
 
-The variable `age`, however, does not seem to be significant. The value of `age` is very low. It does not seem to make a meaningful difference. This being said, we just learned about a bunch of helpful transformations! We also know that the variable `age`, unmodified, is calculating starting at age 0, an impossibility in our data. 
+The variable `age`, however, does not appear to have a meaningful impact on our `(Intercept)`. The coefficient of `age` is low and the 95% confidence interval *does not* exclude 0. This being said, we just learned about a bunch of helpful transformations! We also know that the variable `age`, unmodified, is calculating starting at age 0, an impossibility in our data. 
 
 Recall the work above that z-scaled the variable `age` to be more significant. This is pasted below for reference. 
 
@@ -365,9 +365,9 @@ fit_scaled <- stan_glm(income ~ z_age + liberal,
 fit_scaled
 ```
 
-This looks better! Even with our transformation, `z_age` is still on the lower bounds of our significance. Whether we include it in our model is not clear, especially when compared with the variable `liberal`, which shows clear significance. 
+Even with our transformation, `z_age` is not looking like a great addition. The 95% confidence interval, done with rough mental math, includes 0. Whether we include `age` or `z_age`  in our model is not clear, especially when compared with the variable `liberal`, which is more obviously meaningful.
 
-**Conclusion**: definitely keep `liberal`! Age is less clear. Age when z-scaled is *just* significant enough to consider including. It is really a matter of preference at this point. If age is important to our model in some way, we keep it. If it isn't relevant to our conclusions, we consider discarding it. 
+**Conclusion**: definitely keep `liberal`! Age is less clear. Age when z-scaled is *just* significant enough to consider including. It is really a matter of preference at this point. If age is important to our model in some way, we keep it. If it isn't relevant to our conclusions, we discard it. 
 
 ### liberal ~ I(income/1e+05) + party
 
