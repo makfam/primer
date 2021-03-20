@@ -47,6 +47,8 @@ We fit this using the `trains` data from **primer.data**.
 library(tidyverse)
 library(primer.data)
 library(rstanarm)
+library(moderndive)
+library(broom.mixed)
 ```
 
 
@@ -717,6 +719,102 @@ The premise of hypothesis testing is to answer a specific question -- one that m
 
 
 ## Parallel lines
+
+To conclude this chapter, we will look at a four parameter model. The model we will use will measure `att_end` as a function of `liberal` and `att_start`. 
+
+```{r}
+fitted_1 <- stan_glm(formula = att_end ~ liberal + att_start,
+                  data = trains,
+                  refresh = 0,
+                  seed = 42)
+
+fitted_1
+```
+
+```{r}
+
+# First, we will tidy the data from our model and select the term and estimate.
+# This allows us to create our regression lines more easily.
+
+tidy <- fitted_1 %>% 
+  tidy() %>% 
+  select(term, estimate)
+
+tidy
+
+# Extract and name the columns of our tidy object. By calling tidy$estimate[1],
+# we are telling R to extract the first value from the estimate column in our
+# tidy object.
+
+intercept <- tidy$estimate[1]
+liberal_true <- tidy$estimate[2]
+att_start <- tidy$estimate[3]
+
+# Recall that the (Intercept) shows us the estimate for the case where liberal =
+# FALSE. We want to extract the liberal_false_intercept to indictate where the
+# intercept in our visualization should be. The slope for this case, and for the
+# liberal = TRUE case, is att_start.
+
+liberal_false_intercept <- intercept
+liberal_false_att_slope <- att_start
+
+#  When wanting the intercept for liberal = TRUE, recall that the estimate for
+#  liberalTRUE is the offset from our (Intercept). Therefore, to know the true
+#  intercept, we must add liberal_true to our intercept.
+
+liberal_true_intercept <- intercept + liberal_true
+liberal_true_att_slope <- att_start
+```
+
+```{r}
+
+# From the dataset trains, call attitude start for the x-axis and att_end for
+# the y-axis with color as liberal. This will split our data into two color
+# coordinates (one for liberal = TRUE and one for liberal = FALSE)
+
+ggplot(trains, aes(x = att_start, y = att_end, color = liberal)) +
+  
+  # Use geom_point to show the datapoints. 
+  
+  geom_point() +
+  
+  # Create a geom_abline object for the liberal false values. Set the intercept
+  # equal to our previously created liberal_false_intercept, while setting slope
+  # equal to our previously created liberal_false_att_slope. The color call is
+  # for coral, to match the colors used by tidyverse for geom_point().
+  geom_abline(intercept = liberal_false_intercept,
+              slope = liberal_false_att_slope, 
+              color = "#F8766D", 
+              size = 1) +
+  
+    # Create a geom_abline object for the liberal TRUE values. Set the
+    # intercept equal to our previously created liberal_true_intercept, while
+    # setting slope equal to our previously created liberal_true_att_slope. The
+    # color call is for teal, to match the colors used by tidyverse for
+    # geom_point().
+  geom_abline(intercept = liberal_true_intercept,
+              slope = liberal_true_att_slope,
+              color = "#00BFC4", 
+              size = 1) +
+  
+  # Add the appropriate titles and axis labels. 
+  
+  labs(title = "Parallel Slopes Model",
+       x = "Attitude at Start", 
+       y = "Attitude at End", 
+       color = "Liberal?") 
+```
+
+```{r}
+trains %>% 
+ggplot(aes(x = att_start, y = att_end, color = liberal)) +
+  geom_point() +
+  geom_parallel_slopes(se = FALSE) +
+  labs(title = "Parallel Slopes Model",
+       x = "Attitude at Start", 
+       y = "Attitude at End", 
+       color = "Liberal?") 
+```
 
 <!-- att_end ~ liberal + att_start. Same thing as chapters before. Show graphic of parallel lines. Cardinal virtues as always. And, extra, at the end we can use loo_compare to see if this model is better than simpler model of att_end ~ att_start. -->
 
