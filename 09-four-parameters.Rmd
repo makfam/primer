@@ -2,7 +2,7 @@
 
 <!-- Explore causal effects of models following chapter 18/19 in ROAS. Regress ending att on starting attitude and treatment effect. Show parallel lines. That is four parameters! Can also do the same thing with income and treatment. That will be a much worse model. Save interaction for five parameter chapter. MF: Done.-->
 
-<!-- When interpreting a causal coefficient, start with: "The causal effect of ..." For other coefficients, start with "When comparing . . ." -->
+<!-- When interpreting a causal coefficient, start with: "The causal effect of ..." For other coefficients, start with "When comparing . . ." MF: Done. -->
 
 <!-- Transforming the outcome variable. Give some more thoughts or advice. -->
 
