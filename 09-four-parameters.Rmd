@@ -342,7 +342,7 @@ fit_2 <- stan_glm(income ~ age + liberal,
 fit_2
 ```
 
-Great! We have an estimate for income of those who fall into the category of `liberalFALSE`, as well as data on our right hand side variables of `age` and `liberalTRUE`. Recall the divide-by-four rule. The range for (Intercept), our 95% confidence interval, is calculated by taking our coefficient plus or minus 2 standard errors (MAD_SD). The lower range is $58703.7$ and the upper range is $162834.9$. Dividing both of these values by 4, we get $14675.93$ and $40708.725$. 
+Great! We have an estimate for income of those who fall into the category of `liberalFALSE`, as well as data on our right hand side variables of `age` and `liberalTRUE`. 
 
 As we can see, `liberalTRUE` falls within the boundaries for significance. It is, therefore, a great addition to our model! 
 
