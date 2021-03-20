@@ -720,7 +720,7 @@ The premise of hypothesis testing is to answer a specific question -- one that m
 
 ## Parallel lines
 
-To conclude this chapter, we will look at a four parameter model. The model we will use will measure `att_end` as a function of `liberal` and `att_start`. 
+To conclude this chapter, we will look at a four parameter model. The model we will use will measure `att_end` as a function of `liberal` and `att_start`. First, we will create the object `fitted_1`, which will be our model. 
 
 ```{r}
 fitted_1 <- stan_glm(formula = att_end ~ liberal + att_start,
@@ -730,6 +730,10 @@ fitted_1 <- stan_glm(formula = att_end ~ liberal + att_start,
 
 fitted_1
 ```
+
+To remind ourselves, recall that the `(Intercept)` here is representing the `att_end` value for cases where `liberal = FALSE`. The next row, `liberalTRUE` gives a median value which represents the *offset* in the prediction compared with the `(Intercept)`. In other words, the true intercept for cases where `liberal = TRUE` is represented by $(Intercept) + liberalTRUE$. The value of `att_start` is the slope for our two cases. For each one unit increase of `att_start`, we see an increase of `att_end` by the median value. 
+
+Now that we know what our data is showing us, we will need to tidy our data and extract values to create a parallel slopes model. 
 
 ```{r}
 
@@ -765,6 +769,8 @@ liberal_false_att_slope <- att_start
 liberal_true_intercept <- intercept + liberal_true
 liberal_true_att_slope <- att_start
 ```
+
+All we've done here is extracted the values for our intercepts and slopes, and named them to be separated into two groups. This allows us to create a `geom_abline` object that takes a unique slope and intercept value, so we can separate the `liberalTRUE` and `liberalFALSE` observations. 
 
 ```{r}
 
@@ -804,6 +810,11 @@ ggplot(trains, aes(x = att_start, y = att_end, color = liberal)) +
        y = "Attitude at End", 
        color = "Liberal?") 
 ```
+This is our parallel slopes model. What we have done, essentially, is created a unique line for `liberalTRUE` and `liberalFALSE` to observe the differences in the groups as related to attitude start and attitude end. 
+
+As we can see, commuters who are *not* liberal tend to start with slightly higher values for `att_start`. Commuters who *are* liberal tend to have lower starting values for `att_start`. 
+
+<!-- MF: The method above was taken from this article on your page: https://www.davidkane.info/files/modern-dive-6.4. Should we show the geom_parallel_slopes method as well? (BELOW) --> 
 
 ```{r}
 trains %>% 
