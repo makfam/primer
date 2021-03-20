@@ -47,7 +47,6 @@ We fit this using the `trains` data from **primer.data**.
 library(tidyverse)
 library(primer.data)
 library(rstanarm)
-library(moderndive)
 library(broom.mixed)
 ```
 
@@ -879,19 +878,6 @@ As we can see, commuters who are *not* liberal tend to start with slightly highe
 
 <!-- MF: The method above was taken from this article on your page: https://www.davidkane.info/files/modern-dive-6.4. Should we show the geom_parallel_slopes method as well? (BELOW) --> 
 
-We can also use a shortcut function `geom_parallel_slopes` from the `moderndive` package to accomplish a similar plot. This plot, however, is Frequentist, not Bayesian.
-
-```{r}
-trains %>% 
-ggplot(aes(x = att_start, y = att_end, color = liberal)) +
-  geom_point() +
-  geom_parallel_slopes(se = FALSE) +
-  labs(title = "Parallel Slopes Model",
-       x = "Attitude at Start", 
-       y = "Attitude at End", 
-       color = "Liberal?") 
-```
-Visualizing Bayesian multi-variate regression models is certainly a more involved process, as we do not automatically get singular point estimates for our intercepts and slopes with Bayes, and as we do not have a special method = "lm" argument or `gg_parallel_slopes()` function with Bayes. And, as we have seen, all of our work in visualizing Bayesian models results in very similar graphs to the above Frequentist ones. However, it is still very, very useful to know how to visualize Bayesian models, as only Bayesian models allow us to make probabilistic inferences about those models’ parameters.
 
 ### Temperance
 
