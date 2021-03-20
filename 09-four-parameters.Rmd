@@ -344,7 +344,7 @@ fit_2
 
 Great! We have an estimate for income of those who fall into the category of `liberalFALSE`, as well as data on our right hand side variables of `age` and `liberalTRUE`. 
 
-As we can see, `liberalTRUE` falls within the boundaries for significance. It is, therefore, a great addition to our model! 
+When comparing `liberalTRUE` with our `(Intercept)`, recall that the `(Intercept)` is calculating income for the case where `liberal == FALSE`. As we can see, then, the coefficient for `liberalTRUE`, `r scales::comma(round(coef(fit_2)["liberalTRUE"], 1))`, shows that the  liberals in our dataset make less on average than non-liberals in our dataset. 
 
 The variable `age`, however, does not seem to be significant. The value of `age` is very low. It does not seem to make a meaningful difference. This being said, we just learned about a bunch of helpful transformations! We also know that the variable `age`, unmodified, is calculating starting at age 0, an impossibility in our data. 
 
@@ -398,18 +398,7 @@ The variables we decided to keep and discard are *not necessarily the variables 
 
 The process of selecting variables -- though we have guidelines -- is complicated. There are many reasons to include a variable in a model. The main reasons to exclude a variable are if the variable isn't significant or if the variable has a large standard error. 
 
-<<<<<<< HEAD
-<!-- Introduce 4 parameter models. Use the exact same models as in chapter 8, but add a second right hand side variable. At the start, only use one categorical and one numeric. MF: Done.-->
-
 <!-- Discuss indicator & index variables prior to explaining guidelines? Not this week! -->
-
-
-<!-- Go through one of the datasets and explain whether we would include variables X, Y, and Z. Not this week.  Try out several different left-hand side variables, like age and att_end, which were teh dependent variables that we used in Chapter 8. In this chapter, we will allow for two right-hand side variables. (Perhaps these should always be one numeric and one categorical, except for the last one.) Connect to examples from chapter 8. Introduce four parameter models. MF: Done. --> 
-
-<!-- First case att_end ~ treatment + att_start. Keep both! Second case income ~ age + liberal. Strong keep for liberal. age is trickier. It is small. (Not really! Depends on whether or not you are looking at one year or 10. Don't let arbitrary scalings confuse you. Measured in decades it is 10 times bigger. Discuss z scaling?)  Not quite significant. No right answer! Third and last case is logistic, liberal ~ I(income/1e+05) + party. Tricky! Maybe keep both? But stronger case for party. Maybe discuss interpretation of coefficients of logistic regressions? Divide by 4 rule? MF: Done.-->
-=======
-<!-- Discuss indicator & index variables prior to explaining guidelines? Not this week! -->
->>>>>>> f0e01b48c368efcb83a0d4d55fddbe13f2825a6d
 
 
 ## Comparing models in theory
