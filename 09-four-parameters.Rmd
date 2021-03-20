@@ -817,7 +817,7 @@ Thus, we can define the following terms—- `liberal_false_intercept` and `liber
 
 ```{r}
 # Recall that the (Intercept) shows us the estimate for the case where liberal =
-# FALSE. We want to extract the liberal_false_intercept to indictate where the
+# FALSE. We want to extract the liberal_false_intercept to indicate where the
 # intercept in our visualization should be. The slope for this case, and for the
 # liberal = TRUE case, is att_start.
 
