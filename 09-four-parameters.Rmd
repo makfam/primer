@@ -1,12 +1,12 @@
 # Four Parameters {#four-parameters}
 
-<!-- Explore causal effects of models following chapter 18/19 in ROAS. Regress ending att on starting attitude and treatment effect. Show parallel lines. That is four parameters! Can also do the same thing with income and treatment. That will be a much worse model. Save interaction for five parameter chapter. -->
+<!-- Explore causal effects of models following chapter 18/19 in ROAS. Regress ending att on starting attitude and treatment effect. Show parallel lines. That is four parameters! Can also do the same thing with income and treatment. That will be a much worse model. Save interaction for five parameter chapter. MF: Done.-->
 
 <!-- When interpreting a causal coefficient, start with: "The causal effect of ..." For other coefficients, start with "When comparing . . ." -->
 
 <!-- Transforming the outcome variable. Give some more thoughts or advice. -->
 
-<!-- No hard-coding numbers! r scales::comma(round(coef(fit_1_c)["(Intercept)"], 0)) -->
+<!-- No hard-coding numbers! r scales::comma(round(coef(fit_1_c)["(Intercept)"], 0)) MF: Done.-->
 
 <!-- In all the examples, provide some clear interpretation sentences. Set them off with skipped lines, and maybe in italics. -->
 
@@ -384,11 +384,11 @@ fit_3 <- stan_glm(liberal ~ I(income/1e+05) + party,
 fit_3
 ```
 
-Let's start by looking at our (Intercept). The 95% confidence interval is $0.7$ plus or minus 2 standard errors ($0.2$). Therefore, the confidence interval is $0.5$ to $0.9$. Divided by four, we get $0.125$ to $0.225$.
+Recall that, for logistic models, the `(Intercept)` is nearly impossible to interpret. To evaluate the impact of variables, we will need to use the Divide-by-Four rule. This instructs us to take a logistic regression coefficient (other than the constant term) and divide it by 4 to get an upper bound on the predictive difference corresponding to a unit difference in that variable. All this means is that, when evaluating if a predictor is helpful *in a logistic regression only*, divide the coefficient by four.
 
-As we can see instantly, `partyRepublican` is very meaningful. We will want this variable in our model. 
+For `partyRepublican`, we take our coefficient, `r scales::comma(round(coef(fit_3)["partyRepublican"], 1))`, and divide it by 4: `r round(((coef(fit_3)["partyRepublican"])/4), 3)`. This is the upper bound on the predictive difference corresponding to a unit difference in this variable. Therefore, we see that `partyRepublican` is meaningful. We will want this variable in our model. 
 
-The variable `income`, however, is still not very significant. The `MAD_SD` for income is also equal to the median itself, suggesting a large standard error. Though we may choose to include `income` for reasons unrelated to significance, it does not appear to be worthy of inclusion on the basis of significance alone. 
+The variable `income`, however, seems less promising. In addition to the resulting value from the Divide-by-Four rule being low (`r round(((coef(fit_3)["I(income/1e+05)"])/4), 3)`), the `MAD_SD` for income is also equal to the median itself, indicating a large standard error. Though we may choose to include `income` for reasons unrelated to its impact in our model, it does not appear to be worthy of inclusion on the basis of predictive value alone. 
 
 **Conclusion**: the variable `party` is significant; we will include it in our model. Unless we have a strong reason to include `income`, it may not be helpful in creating our models. 
 
