@@ -291,15 +291,10 @@ When deciding which variables to keep or discard in our models, our advice is to
 
 * Your boss/client/reviewer/supervisor wants to include X.
 
-<<<<<<< HEAD
-Another trick to consider is the Divide-by-Four rule: As a rule of convenience, we can take logistic regression coefficients (other than the constant term) and divide them by 4 to get an upper bound of the predictive difference corresponding to a unit difference in x. All this means is that, when evaluating if a predictor is helpful, divide the coefficient by four. If the predictor exceeds this value, it is likely to be significant. 
-
-=======
 <!-- DK: This is not great. Need an example. Does it really belong here. If not, then where? -->
 
 
 
->>>>>>> f0e01b48c368efcb83a0d4d55fddbe13f2825a6d
 Let's use the `trains` dataset to evaluate how helpful certain variables are to creating an effective model, based on the guidelines above.
 
 ### Variables in the `trains` dataset
@@ -323,13 +318,15 @@ fit_1 <- stan_glm(att_end ~ treatment + att_start,
 fit_1
 ```
 
-How do we decide which variables are useful? First, let's look at our intercept. The 95% confidence interval for  `att_end` is equal to the coefficient plus or minus 2 standard errors = 2.3 +/- 0.8 = 1.5 to 3.1. When we divide this by four, we get .375 to .775. Therefore, any variable that exceeds these values is likely to be significant enough to include in our model. 
+How do we decide which variables are useful? First, let's look at our intercept. The 95% confidence interval for  `att_end` is equal to the coefficient-- `r scales::comma(round(coef(fit_1)["(Intercept)"], 1))`-- plus or minus two standard errors.
 
-As `treatmentControl`, a value which impacts our (Intercept) by a factor of -1.0, not only exceeds the minimum requirement of .375, but also exceeds the upper boundary of significance of .775, we definitely want to keep the variable `treatment`. In addition to being significant, it satisfies a number of other requirements:
+The causal effect of the variable `treatmentControl` is `r scales::comma(round(coef(fit_1)["treatmentControl"], 0))`. This means that, compared with the predicted `att_end` for groups under treatment, those in the control group have a predicted attitude that is one entire point lower. As we can see, this is a large and well estimated coefficient. Recall that this means, roughly, that the 95% confidence interval excludes zero. To calculate the 95% confidence interval, we take the coefficient plus or minus two standard errors: `r round(((coef(fit_1)["treatmentControl"]) - (2 * .2)), 1)` and `r round(((coef(fit_1)["treatmentControl"]) + (2 * .2)), 1)`. As we can see, the 95% confidence interval *does* exclude zero, suggesting that `treatment` is a worthy variable. 
+
+In addition to being meaningful, which is enough to justify inclusion in our model, this variable satisfies a number of other qualifications:
 - The variable has a small standard error.
 - The variable is considered an indicator variable, which separates two groups of significance (treatment and control) that we would like to study. 
 
-The variable `att_start`, with a coefficient of 0.8, is also significant. In addition, the standard error is small, the impact on our prediction for `att_end` is meaningful, and it is standard practice to include a "before" comparison to our "after" values. 
+The variable `att_start`, with a coefficient of `r scales::comma(round(coef(fit_1)["att_start"], 1))`, is also meaningful. Due to the fact that the `MAD_SD` value here is 0, we do not need to find the 95% confidence interval to know --intuitively-- that this variable has a large and well estimated coefficient. 
 
 **Conclusion**: keep both variables! `Treatment` and `att_start` are both significant, as well as satisfying other requirements in our guidelines. They are *more* than worthy of inclusion in our model.  
 
