@@ -4,9 +4,9 @@
 
 <!-- Transforming the outcome variable. Give some more thoughts or advice. -->
 
-<!-- In all the examples, provide some clear interpretation sentences. Set them off with skipped lines, and maybe in italics. -->
+<!-- In all the examples, provide some clear interpretation sentences. Set them off with skipped lines, and maybe in italics. MF: DOne.-->
 
-<!-- Expand "interpreting coefficients" section. Difference between across-unit and within-unit. Causal versus predictive. Unless you have a set up with two or more potential outcomes, you can't do causal. You can't do intra-unit. Or is it inter-unit? I get confused!
+<!-- Expand "interpreting coefficients" section. Difference between across-unit and within-unit. Causal versus predictive. Unless you have a set up with two or more potential outcomes, you can't do causal. You can't do intra-unit. Or is it inter-unit? I get confused! 
 
 Whenever the setting is predictive --- that is, whenever it is not causal --- you are always comparing two different units (or groups of units). You are never considering a single unit. 
 
@@ -257,7 +257,13 @@ See @roas
 
 <!-- Give example of logistic regression. Intercept of logistic regression is impossible to interpret. -->
 
+When we interpret coefficients, it is important to know the difference between *across unit* and *within unit* comparisons. When we compare *across unit*, meaning comparing Joe and George, we are not looking at a causal relationship. *Within unit* discussions, where we are comparing Joe under treatment versus Joe under control, are causal. This means that within unit interpretation is only possible in causal models, where we are studying **one unit** under **two conditions**. When we talk about two potential outcomes, we are discussing the same person or unit under two conditions. 
+
+To put this in terms of the Preceptor tables, a *within unit* comparison is looking at one **row** of data: the data for Joe under control and the data for Joe under treatment. We are comparing **one unit**, or (in this case) one person, to itself under two conditions. An *across unit* comparison is looking at multiple rows of data, with a focus on differences across columns. We are comparing differences *without making any causal claims*. 
+
 The magnitude of the coefficients in linear models are relatively easy to understand. That is not true for logistic regressions. In that case, use the Divide-by-Four rule: Take a logistic regression coefficient (other than the constant term) and divide it by 4 to get an upper bound on the predictive difference corresponding to a unit difference in that variable. All this means is that, when evaluating if a predictor is helpful *in a logistic regression only*, divide the coefficient by four. 
+
+
 
 <!-- * Creating new variables, especially by combining different ones into one combined variable. -->
 
