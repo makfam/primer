@@ -869,10 +869,13 @@ This is our parallel slopes model. What we have done, essentially, is created a 
 
 As we can see, commuters who are *not* liberal tend to start with slightly higher values for `att_start`. Commuters who *are* liberal tend to have lower starting values for `att_start`. 
 
-Visualizing Bayesian multi-variate regression models is certainly a more involved process, as we do not automatically get singular point estimates for our intercepts and slopes with Bayes, and as we do not have a special method = "lm" argument or `gg_parallel_slopes()` function with Bayes. And, as we have seen, all of our work in visualizing Bayesian models results in very similar graphs to the above Frequentist ones. However, it is still very, very useful to know how to visualize Bayesian models, as only Bayesian models allow us to make probabilistic inferences about those models’ parameters.
-
 ### Temperance
 
+Having created (and checked) a model, we now use the model to answer questions. Models are made for use, not for beauty. The world confronts us. Make decisions we must. Our decisions will be better ones if we use high quality models to help make them.
+
+What we really care about is data we haven't seen yet, mostly data from tomorrow. But what if the world changes, as it always does? If it doesn't change much, maybe we are OK. If it changes a lot, then what good will our model be? In general, the world changes some. That means that are forecasts are more uncertain that a naive use of our model might suggest. 
+
+Though we cannot predict the future, we can use `loo()` to test our model's predictions on data it has not seen yet -- specifically, data we have excluded and then reintroduced. To cross validate our model, we will use `loo()`, or leave-one-out cross validation. 
 
 <!-- att_end ~ liberal + att_start. Same thing as chapters before. Show graphic of parallel lines. Cardinal virtues as always. And, extra, at the end we can use loo_compare to see if this model is better than simpler model of att_end ~ att_start. -->
 
@@ -881,37 +884,48 @@ Visualizing Bayesian multi-variate regression models is certainly a more involve
 
 ### Comparing complex and simple models 
 
-Complex: 
+When creating a model, it can often be temping to create something more "complex". Take, for instance, the model below. It looks at the left side variable, `att_end` as a function of the right side variables `liberal` and `att_start`. 
 
 ```{r}
 fit_first <- stan_glm(formula = att_end ~ liberal + att_start,
                   data = trains,
                   refresh = 0)
+
+fit_first
 ```
 
-Simple: 
+Now, let's look at a more simple model with one right hand side variable, `att_start`. 
 
 ```{r}
 fit_simple<- stan_glm(formula = att_end ~ att_start,
                   data = trains,
                   refresh = 0)
+
+fit_simple
 ```
 
-Make loo() regression for both:
+After inspecting our models, we will use `loo()` to measure how good our model is at making predictions on data it has not yet seen. First, look at the leave-one-out cross validation for our more complex model. 
 
 ```{r}
 loo_first <- fit_first %>% 
   loo()
 
+loo_first
+```
+Perform `loo()` on our simple model. 
+```{r}
 loo_simple <- fit_simple %>% 
   loo()
-```
 
-Perform loo_compare:
+loo_simple
+```
+Recall that the data that is relevant is the data from `elpd_loo`. The estimates for `elpd_loo` for our models are fairly similar. The standard error (SE) for this row is also very similar. However, it appears that the simple model performs slightly better, as the estimate is closer to zero and the SE is slightly less. To compare these directly, we will use `loo_compare`. 
 
 ```{r}
 loo_compare(loo_first, loo_simple)
 ```
+
+We see that the simple model is superior at predicting the future. The difference is small, but it is an important takeaway: *complex models are not necessarily superior models.*
 
 ## Summary
 
