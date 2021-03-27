@@ -58,7 +58,7 @@ set.seed(14)
 slice_sample(ch10, n = 5)
 ```
 
-As we might expect, `sex` is most often "Male". To be more precise in insepcting our data, let's `skim()` the dataset. 
+As we might expect, `sex` is most often "Male". To be more precise in inspecting our data, let's `skim()` the dataset. 
 
 ```{r}
 skim(ch10)
@@ -480,7 +480,7 @@ Looking at our results, you can see that our intercept value is around `r round(
 Note that `sexMale` is around `r round(coef(fit_gov_3)["sexMale"], 0)`. This is our coefficient, $\beta_1$. We need to connect this value to our intercept value to get something meaningful. Using the formula $\beta_0 + \beta_1$, we find out that the number of years the average male candidate ---  who, on the day of election, is the average age of all candidates --- would live is around `r round(coef(fit_gov_3)["(Intercept)"] + coef(fit_gov_3)["sexMale"], 0)` years.  
 
 
-Now take a look at the coefficient for $election\_age\_c_i$, $\beta_2$. The median of the posterior, `r round(coef(fit_gov_3)["c_election_age"], 1)`, represents the slope of the model. When comparing two candates who differ by one year in `c_election_age`, we expect that they will differ by `r round(coef(fit_gov_3)["c_election_age"], 1)` years in `lived_after`. It makes sense that this value is negative. The more years a candidate has lived, the fewer years the candidate has left to live. So, for every extra year a candidate is alive before an election, their lifespan after the election will be `r abs(round(coef(fit_gov_3)["c_election_age"], 1))` years lower, on average.
+Now take a look at the coefficient for $election\_age\_c_i$, $\beta_2$. The median of the posterior, `r round(coef(fit_gov_3)["c_election_age"], 1)`, represents the slope of the model. When comparing two candidates who differ by one year in `c_election_age`, we expect that they will differ by `r round(coef(fit_gov_3)["c_election_age"], 1)` years in `lived_after`. It makes sense that this value is negative. The more years a candidate has lived, the fewer years the candidate has left to live. So, for every extra year a candidate is alive before an election, their lifespan after the election will be `r abs(round(coef(fit_gov_3)["c_election_age"], 1))` years lower, on average.
 
 
 Let’s now look at some posteriors.
@@ -948,7 +948,7 @@ Expected values vary much less than predictions. The above chart makes that easy
 
 ### Testing
 
-In a normal statistics book, we would have already discussed the concept of "testing" extensively. The terminology varies by field. "Tests," "testing," "hypothesis tests," "tests of significance," and "null hypothesis significance testing" all refer to the same concept. We will refer to this collection of approaches as NHST, a common abbreviation derived from the initials of the last phrase. Wikpedia provides an [overview](https://en.wikipedia.org/wiki/Statistical_hypothesis_testing). 
+In a normal statistics book, we would have already discussed the concept of "testing" extensively. The terminology varies by field. "Tests," "testing," "hypothesis tests," "tests of significance," and "null hypothesis significance testing" all refer to the same concept. We will refer to this collection of approaches as NHST, a common abbreviation derived from the initials of the last phrase. Wikipedia provides an [overview](https://en.wikipedia.org/wiki/Statistical_hypothesis_testing). 
 
 *Our view: Amateurs test. Professionals summarize.*
 
