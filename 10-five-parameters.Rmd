@@ -4,6 +4,8 @@
 
 <!-- Is fit_gov_* a good naming scheme for the models? -->
 
+<!-- MF: Where does the main interaction plot belong in the chapter? At the end of 10.3.4? --> 
+
 *This chapter is still a DRAFT. Check back in a few weeks.*
 
 Last chapter, we studied four parameters: models in which we studied multiple right-hand side variables at once. The next step in our model building education is to learn about *interactions*. 
