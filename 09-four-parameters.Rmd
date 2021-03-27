@@ -914,8 +914,11 @@ loo_compare(loo_first, loo_simple)
 ```
 
 ## Summary
-
-
+- We can transform variables -- through centering, scaling, taking logs, etc. -- to make them more sensible. Consider using a transformation if the intercept is awkward. For instance, if the intercept for `age` represents the estimate for people of age zero, we might consider transforming `age` to be easier to interpret. 
+- When selecting variables to include in our model, follow this rule: keep it if the variable has a large and well-estimated coefficient. This means that the 95% confidence interval excludes zero. Speaking roughly, removing a variable with a large coefficient meaningfully changes the predictions of the model.
+- When we compare *across unit*, meaning comparing Joe and George, we are not looking at a causal relationship. *Within unit* discussions, where we are comparing Joe under treatment versus Joe under control, are causal. This means that within unit interpretation is only possible in causal models, where we are studying **one unit** under **two conditions**. 
+- When we talk about two potential outcomes, we are discussing the same person or unit under two conditions. 
+- To compare two models, take a `loo()` regression and perform `loo_compare()`. This method of cross validation assesses how well our model performs on data it has not yet seen. 
 
 
 
