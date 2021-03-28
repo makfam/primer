@@ -10,7 +10,7 @@
 
 Whenever the setting is predictive --- that is, whenever it is not causal --- you are always comparing two different units (or groups of units). You are never considering a single unit. MF: Done.
 
-Comparing within rows of the Preceptor Table versus across rows, which is all you can do without two potential outcomes.
+Comparing within rows of the Preceptor Table versus across rows, which is all you can do without two potential outcomes. MF: Done.
 
 Also, does not work in logistic. But divide by four rule. -->
 
@@ -669,8 +669,7 @@ fit_liberal
 Now, we will perform `loo()` on our model and look at the results. 
 
 ```{r}
-loo_liberal <- fit_liberal %>% 
-  loo()
+loo_liberal <- loo(fit_liberal)
 
 loo_liberal
 ```
@@ -696,8 +695,7 @@ fit_att_start
 Great! Now, let's perform `loo()` on this model. 
 
 ```{r}
-loo_att_start <- fit_att_start %>% 
-  loo()
+loo_att_start <- loo(fit_att_start) 
 
 loo_att_start
 ```
