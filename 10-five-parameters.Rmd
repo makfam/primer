@@ -6,22 +6,11 @@
 
 <!-- Is fit_gov_* a good naming scheme for the models? -->
 
-<<<<<<< HEAD
-<!-- MF: Where does the main interaction plot belong in the chapter? At the end of 10.3.4? --> 
-
-*This chapter is still a DRAFT. Check back in a few weeks.*
-
-Last chapter, we studied four parameters: models in which we studied multiple right-hand side variables at once. The next step in our model building education is to learn about *interactions*. 
-
-The effect of a treatment relative to a control is almost never uniform. The effect might be bigger in women than in men, smaller in the rich relative to the poor. The technical term for such effects is "heterogeneous," which is just Ph.D.'ese for "different." With enough data, all effects are heterogeneous. Causal effects, at least in the social science, always vary across units. To model this reality, we rely on "interactions," on allowing the effect size to differ. To so so, we need models with at least 5 parameters. 
-=======
-
 
 <!-- Get rid of duplicate names? Add more discussion below? Perhaps use as a good example of how the estimated posterior is not the true posterior because of the assumptions we are making about the structure of the error term. -->
 
 
 Last chapter, we studied four parameters: models in which we studied multiple right-hand side variables at once. The next step in our model building education is to learn about *interactions*. The effect of a treatment relative to a control is almost never uniform. The effect might be bigger in women than in men, smaller in the rich relative to the poor. The technical term for such effects is "heterogeneous," which is just Ph.D.'ese for "different." With enough data, all effects are heterogeneous. Causal effects, at least in the social science, always vary across units. To model this reality, we rely on interactions, on allowing the effect size to differ. The same applies for predictive models. The relationship between our outcome variable $y$ and a predictor variable $x$ is rarely constant. The relationship varies based on the values of other variables. To take account of interactions, we need models with at least 5 parameters. 
->>>>>>> 30b3155690c068c274728c43b615c2ab1f8ac9e7
 
 <!-- DK: Add some more. What are the key lessons? What do we carry over from previous chapters? What is new? Hit the data science research cycle. -->
 
@@ -62,15 +51,9 @@ glimpse(governors)
 
 <!-- DK: Should restrict the data to one observation per person. A subtle issue. Think about the infinite Preceptor Table. -->
 
-<<<<<<< HEAD
-<!-- MF: My version of governors does not have `lived_after` or `election_age`... looking for an explanation --> 
-
-There are `r ncol(governors)` variables and `r scales::comma(nrow(governors))` observations. In this Chapter, we will only be looking at the variables `last_name`, `year`, `state`, `sex`, `lived_after`, and `election_age`. 
-=======
 
 There are `r ncol(governors)` variables and `r scales::comma(nrow(governors))` observations. In this Chapter, we will only be looking at the variables `last_name`, `year`, `state`, `sex`, `lived_after`, `election_age`, `won`, and `close_race`. 
 
->>>>>>> 30b3155690c068c274728c43b615c2ab1f8ac9e7
 
 ```{r}
 ch10 <- governors %>% 
@@ -79,11 +62,6 @@ ch10 <- governors %>%
   select(last_name, year, state, sex, lived_after, election_age, won, close_race)
 ```
 
-<<<<<<< HEAD
-The variables `election_age` and `lived_after` represent how many years a candidate lived before and after the election, respectively. As a consequence, only politicians who are already deceased are included in this dataset. This means that there are only a handful of observations from elections in the last 20 years. Most candidates from that time period are still alive and are, therefore, excluded.
-
-First, let's sample from our dataset. 
-=======
 `election_age` and `lived_after` are how many years a candidate lived before and after the election, respectively. As a consequence, only politicians who are already deceased are included in this data set. This means that there are only a handful of observations from elections in the last 20 years. Most candidates from that time period are still alive and are, therefore, excluded. We created the `won` variable to indicate whether or not the candidate won the election. We define `close_race` to be true if the winning margin was less than 5%.
 
 One subtle issue: Should the same candidate be included multiple times? For example:
@@ -97,7 +75,6 @@ For now, we leave in multiple observations for a single person.
 
 First, let's sample from our dataset. 
 
->>>>>>> 30b3155690c068c274728c43b615c2ab1f8ac9e7
 
 ```{r, echo = FALSE}
 # Bit of a cheat to ensure that one of the sampled candidates is female.
@@ -156,13 +133,9 @@ ch10 %>%
   theme_classic() 
 ```
 
-<<<<<<< HEAD
-This plot shows that men live much longer, on average, than women after the election. Does that make sense to you? Is there an intuitive explanation for why this might be? 
-=======
 
 This plot shows that men live much longer, on average, than women after the election. Does that make sense to you? Is there an intuitive explanation for why this might be? 
 
->>>>>>> 30b3155690c068c274728c43b615c2ab1f8ac9e7
 
 ### Population
 
@@ -510,13 +483,8 @@ The answer is that `male` is an *indicator* variable, meaning a 0/1 variable. `m
 * The outcome variable is $lived\_after_i$, the number of years a person is alive after the election. $male_i$ is one of our explanatory variables. If we are predicting the number of years a male candidate lives after the election, this value will be 1. When we are making this prediction for female candidates, this value will be 0. $c\_election\_age_i$ is our other explanatory variable. It is the number of years a candidate has lived before the election. 
 
 
-
-<<<<<<< HEAD
-* $\beta_0$ is the average number of years lived after the election for women, who on the day of election, have been alive the average number of years of all candidates (i.e. both male and female). $\beta_0$ is also the intercept of the equation. In other words, $\beta_0$ is the expected value of $lived\_after_i$, if $male_i = 0$ and $election\_age\_c_i = 0$. 
-=======
 * $\beta_0$ is the average number of years lived after the election for women, who on the day of election, have been alive the average number of years of all candidates (i.e. both male and female). $\beta_0$ is also the intercept of the equation. In other words, $\beta_0$ is the expected value of $lived\_after_i$, if $male_i = 0$ and $c\_election\_age_i = 0$. 
 
->>>>>>> 30b3155690c068c274728c43b615c2ab1f8ac9e7
 
 * $\beta_1$ is almost meaningless by itself. The only time it has meaning is when its value is connected to our intercept (i.e. $\beta_0 + \beta_1$). When the two are added together, you get the average number of years lived after the election for men, who on the day of election, have been alive the average number of years for all candidates.
 
@@ -543,14 +511,7 @@ Looking at our results, you can see that our intercept value is around `r round(
 
 Note that `sexMale` is around `r round(coef(fit_gov_3)["sexMale"], 0)`. This is our coefficient, $\beta_1$. We need to connect this value to our intercept value to get something meaningful. Using the formula $\beta_0 + \beta_1$, we find out that the number of years the average male candidate ---  who, on the day of election, is the average age of all candidates --- would live is around `r round(coef(fit_gov_3)["(Intercept)"] + coef(fit_gov_3)["sexMale"], 0)` years.  
 
-
-<<<<<<< HEAD
-Now take a look at the coefficient for $election\_age\_c_i$, $\beta_2$. The median of the posterior, `r round(coef(fit_gov_3)["c_election_age"], 1)`, represents the slope of the model. When comparing two candidates who differ by one year in `c_election_age`, we expect that they will differ by `r round(coef(fit_gov_3)["c_election_age"], 1)` years in `lived_after`. It makes sense that this value is negative. The more years a candidate has lived, the fewer years the candidate has left to live. So, for every extra year a candidate is alive before an election, their lifespan after the election will be `r abs(round(coef(fit_gov_3)["c_election_age"], 1))` years lower, on average.
-=======
-
 Now take a look at the coefficient for $c\_election\_age_i$, $\beta_2$. The median of the posterior, `r round(coef(fit_gov_3)["c_election_age"], 1)`, represents the slope of the model. When comparing two candates who differ by one year in `c_election_age`, we expect that they will differ by `r round(coef(fit_gov_3)["c_election_age"], 1)` years in `lived_after`. It makes sense that this value is negative. The more years a candidate has lived, the fewer years the candidate has left to live. So, for every extra year a candidate is alive before an election, their lifespan after the election will be `r abs(round(coef(fit_gov_3)["c_election_age"], 1))` years lower, on average.
-
->>>>>>> 30b3155690c068c274728c43b615c2ab1f8ac9e7
 
 
 Let’s now look at some posteriors.
