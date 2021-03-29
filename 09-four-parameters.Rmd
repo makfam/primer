@@ -1,12 +1,12 @@
 # Four Parameters {#four-parameters}
 
-<!-- MAKE SURE WE CAN SEE MODEL PRINTOUT with loo_compare(). If not, then hard code its value in the book directly. -->
+<!-- MAKE SURE WE CAN SEE MODEL PRINTOUT with loo_compare(). If not, then hard code its value in the book directly. MF: Done. -->
 
 <!-- Discuss the difference in our estimated treatment effect for this chapter and the model in chapter 8 and in the model we did not use here. There is no truth! Which is why we need to be humble and cautious when using our posterior. Be Temperate! -->
 
 <!-- Preceptor's Posterior is the posterior you would calculate if all the assumptions you made under Wisdom and Justice were correct. Sadly, they never are! So, you can never know Preceptor's Posterior. Your posterior will, you hope, be a closish approximation of Preceptor's Posterior. -->
 
-<!-- Some discussion of population in parallel lines example at end. -->
+<!-- Some discussion of population in parallel lines example at end. MF: Done. -->
 
 <!-- Edit Justice section to make sense, given it now comes before courage. -->
 
@@ -769,7 +769,6 @@ ggplot(trains, aes(x = att_start, y = att_end, color = liberal)) +
        color = "Liberal?")
 ```
 
-
 Is that data believable? Maybe? One could imagine that `att_end` would be predicted fairly well by `att_start`. This makes sense for most of our data points, which show not much difference between the attitudes. But what about the great disparities in attitude shown for the individual with a starting attitude of 9 and an ending attitude around 15? In a real data science project, this would require further investigation. For now, we ignore the issue and blithely press on.
 
 Another component of Wisdom is the population. The concept of the "population" is subtle and important. *The population is not the set of commuters for which we have data.* That is the dataset. The population is the larger --- potentially much larger --- set of individuals about whom we want to make inferences. *The parameters in our models refer to the population, not to the dataset.*
@@ -792,9 +791,34 @@ All of these populations are different, so each has a different $\mu$. Which $\m
 knitr::include_graphics("other/images/Justice.jpg")
 ```
 
-Now that we know what our data is showing us, we will need to tidy our data and extract values to create a parallel slopes model. The parallel slopes model allows us to visualize multi-variate Bayesian modeling (i.e. modeling with more than one explanatory variable). That is a complicated way of saying that we will visualize the fitted model created above in a way that allows us to see the intercepts and slopes for two different groups, `liberalTRUE` and `liberalFALSE`. 
+Now that we have considered the connection between our data and the predictions we seek to make, we will need to consider our model. 
 
-The mathematics for this model will be explained after tidying our data and extracting it. 
+First: is our model causal or predictive? Recall that our model measures `att_end` as a function of `liberal` and `att_start`. The variables `liberal` and `att_start` do not involve a control or treatment dynamic. There is no manipulation with these variables. Given that **there is no causation without manipulation**, this is a predictive model. 
+
+We are making inferences about groups of people according to their political affiliation and starting attitude. We are not measuring causality, but we *are* predicting outcomes. 
+
+When creating a parallel slops model, we use the basic equation of a line: 
+
+$$y_i = \beta_0  + \beta_1 x_1 + \beta_2 x_2$$
+
+If $y = att_end$, $x_1 = `att_start`$, $x_2 = `liberal`$, then the equations are as follows:
+
+If liberal = FALSE:
+
+$$y = \beta_0  + \beta_1 x_1 $$
+Which equates to, in `y = b + mx` form:
+
+y = intercept + $$\beta_1$$(att_start)
+
+If liberal = TRUE: 
+
+$$y = (\beta_0  + \beta_2) + \beta_1 x_1$$
+
+Which equates to, in `y = b + mx` form:
+
+y = (intercept + liberal_true) + $$\beta_1$$(att_start)
+
+To find our intercepts, we will need to tidy our regression using the `tidy()` function from the **broom.mixed** package. We tidy our data and extract values to create a parallel slopes model. The parallel slopes model allows us to visualize multi-variate Bayesian modeling (i.e. modeling with more than one explanatory variable). That is a complicated way of saying that we will visualize the fitted model created above in a way that allows us to see the intercepts and slopes for two different groups, `liberalTRUE` and `liberalFALSE`: 
 
 ```{r}
 
@@ -817,28 +841,7 @@ att_start <- tidy$estimate[3]
 
 ```
 
-Now that we have extracted the estimated values of each coefficient, we can plug them into the following equation in order to find the equation of the line if liberal = TRUE and the equation of the line if liberal = FALSE:
-
-$$y_i = \beta_0  + \beta_1 x_1 + \beta_2 x_2$$
-
-If $y = att_end$, $x_1 = `att_start`$, $x_2 = `liberal`$, then the equations are as follows:
-
-If liberal = FALSE:
-
-$$y = \beta_0  + \beta_1 x_1 $$
-Which equates to, in `y = b + mx` form:
-
-**y = intercept + att_start(att_start)**
-
-If liberal = TRUE: 
-
-$$y = (\beta_0  + \beta_2) + \beta_1 x_1$$
-
-Which equates to, in `y = b + mx` form:
-
-**y = (intercept + liberal_true) + att_start(att_start)**
-
-Thus, we can define the following terms—- `liberal_false_intercept` and `liberal_false_att_slope`; and `liberal_true_intercept` and `liberal_true_att_slope`:
+Now, we can define the following terms—- `liberal_false_intercept` and `liberal_false_att_slope`; and `liberal_true_intercept` and `liberal_true_att_slope`:
 
 
 ```{r}
