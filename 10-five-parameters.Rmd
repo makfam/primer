@@ -7,6 +7,10 @@
 <!-- Is fit_gov_* a good naming scheme for the models? -->
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0444fc7cb9745084bc5bac0c0be2626bc7d655ba
 <!-- Get rid of duplicate names? Add more discussion below? Perhaps use as a good example of how the estimated posterior is not the true posterior because of the assumptions we are making about the structure of the error term. -->
 
 
@@ -482,6 +486,10 @@ The answer is that `male` is an *indicator* variable, meaning a 0/1 variable. `m
 
 * The outcome variable is $lived\_after_i$, the number of years a person is alive after the election. $male_i$ is one of our explanatory variables. If we are predicting the number of years a male candidate lives after the election, this value will be 1. When we are making this prediction for female candidates, this value will be 0. $c\_election\_age_i$ is our other explanatory variable. It is the number of years a candidate has lived before the election. 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0444fc7cb9745084bc5bac0c0be2626bc7d655ba
 
 * $\beta_0$ is the average number of years lived after the election for women, who on the day of election, have been alive the average number of years of all candidates (i.e. both male and female). $\beta_0$ is also the intercept of the equation. In other words, $\beta_0$ is the expected value of $lived\_after_i$, if $male_i = 0$ and $c\_election\_age_i = 0$. 
 
@@ -511,7 +519,14 @@ Looking at our results, you can see that our intercept value is around `r round(
 
 Note that `sexMale` is around `r round(coef(fit_gov_3)["sexMale"], 0)`. This is our coefficient, $\beta_1$. We need to connect this value to our intercept value to get something meaningful. Using the formula $\beta_0 + \beta_1$, we find out that the number of years the average male candidate ---  who, on the day of election, is the average age of all candidates --- would live is around `r round(coef(fit_gov_3)["(Intercept)"] + coef(fit_gov_3)["sexMale"], 0)` years.  
 
+<<<<<<< HEAD
 Now take a look at the coefficient for $c\_election\_age_i$, $\beta_2$. The median of the posterior, `r round(coef(fit_gov_3)["c_election_age"], 1)`, represents the slope of the model. When comparing two candates who differ by one year in `c_election_age`, we expect that they will differ by `r round(coef(fit_gov_3)["c_election_age"], 1)` years in `lived_after`. It makes sense that this value is negative. The more years a candidate has lived, the fewer years the candidate has left to live. So, for every extra year a candidate is alive before an election, their lifespan after the election will be `r abs(round(coef(fit_gov_3)["c_election_age"], 1))` years lower, on average.
+=======
+
+
+Now take a look at the coefficient for $c\_election\_age_i$, $\beta_2$. The median of the posterior, `r round(coef(fit_gov_3)["c_election_age"], 1)`, represents the slope of the model. When comparing two candates who differ by one year in `c_election_age`, we expect that they will differ by `r round(coef(fit_gov_3)["c_election_age"], 1)` years in `lived_after`. It makes sense that this value is negative. The more years a candidate has lived, the fewer years the candidate has left to live. So, for every extra year a candidate is alive before an election, their lifespan after the election will be `r abs(round(coef(fit_gov_3)["c_election_age"], 1))` years lower, on average.
+
+>>>>>>> 0444fc7cb9745084bc5bac0c0be2626bc7d655ba
 
 
 Let’s now look at some posteriors.
