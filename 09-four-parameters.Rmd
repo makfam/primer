@@ -4,7 +4,7 @@
 
 <!-- Discuss the difference in our estimated treatment effect for this chapter and the model in chapter 8 and in the model we did not use here. There is no truth! Which is why we need to be humble and cautious when using our posterior. Be Temperate! -->
 
-<!-- Preceptor's Posterior is the posterior you would calculate if all the assumptions you made under Wisdom and Justice were correct. Sadly, they never are! So, you can never know Preceptor's Posterior. Your posterior will, you hope, be a closish approximation of Preceptor's Posterior. -->
+<!-- Preceptor's Posterior is the posterior you would calculate if all the assumptions you made under Wisdom and Justice were correct. Sadly, they never are! So, you can never know Preceptor's Posterior. Your posterior will, you hope, be a closish approximation of Preceptor's Posterior. MF: This is included. -->
 
 <!-- Some discussion of population in parallel lines example at end. MF: Done. -->
 
@@ -14,9 +14,9 @@
 
 <!-- Change Justice section to discuss the math of three possible models you are considering. Predictive or am I doing causal? What is the treatment effect is my question? So, must be causal.  -->
 
-<!-- Add a third model, att_end = treatment + att_start. Pick that one. -->
+<!-- Add a third model, att_end = treatment + att_start. Pick that one. MF: DONE. -->
 
-<!-- Add a question to Temperance and answer it. Probably posterior_epred(). Probably a causation question. Meaning the expected causal effect for a certain sort of person. Which is also a parameter in the regression, which is a good connection to make. -->
+<!-- Add a question to Temperance and answer it. Probably posterior_epred(). Probably a causation question. Meaning the expected causal effect for a certain sort of person. Which is also a parameter in the regression, which is a good connection to make. MF: Did not have time for this, but I can complete it this week. -->
 
 <!-- One sentence explaining what broom.mixed is for at start of chapter. MF: Done. -->
 
@@ -979,7 +979,7 @@ Recall that, with `loo_compare()`, the resulting data shows the superior model f
 What we really care about is data we haven't seen yet, mostly data from tomorrow. But what if the world changes, as it always does? If it doesn't change much, maybe we are OK. If it changes a lot, then what good will our model be? In general, the world changes some. That means that are forecasts are more uncertain that a naive use of our model might suggest. 
 Having created (and checked) a model, we now use the model to answer questions. Models are made for use, not for beauty. The world confronts us. Make decisions we must. Our decisions will be better ones if we use high quality models to help make them.
 
-Though we cannot predict the future, we can use `loo()` to test our model's predictions on data it has not seen yet -- specifically, data we have excluded and then reintroduced. To cross validate our model, we will use `loo()`, or leave-one-out cross validation. 
+Preceptor's Posterior is the posterior you would calculate if all the assumptions you made under Wisdom and Justice were correct. Sadly, they never are! So, you can never know Preceptor's Posterior. Our posterior will, we hope, be a close-ish approximation of Preceptor's Posterior.
 
 <!-- att_end ~ liberal + att_start. Same thing as chapters before. Show graphic of parallel lines. Cardinal virtues as always. And, extra, at the end we can use loo_compare to see if this model is better than simpler model of att_end ~ att_start. -->
 
