@@ -755,7 +755,6 @@ There are many different populations, each with its own $\mu$, in which we might
 
 * The population of commuters in the United States. 
 
-
 All of these populations are different, so each has a different $\mu$. Which $\mu$ we are interested in depends on the problem we are trying to solve. It is a judgment call, a matter of Wisdom, as to whether or not that data we have is "close enough" to the population we are interested in to justify making a model. 
 
 **The major part of Wisdom is deciding what questions you can't answer because of the data you don't have.**
@@ -811,6 +810,7 @@ fit_1 <- stan_glm(formula = att_end ~ liberal + att_start,
 
 fit_1
 ```
+
 
 To remind ourselves, recall that the `(Intercept)` here is representing the `att_end` value for cases where `liberal = FALSE` and `treatment does not equal Control`. The next row, `liberalTRUE` gives a median value which represents the *offset* in the prediction compared with the `(Intercept)`. In other words, the true intercept for cases where `liberal = TRUE` is represented by $(Intercept) + liberalTRUE$. The value of `treatmentControl` is the offset in `att_end` for those in the Control group. 
 
@@ -913,7 +913,6 @@ fit_2 <- stan_glm(formula = att_end ~ treatment + att_start,
 fit_2
 ```
 
-
 To interpret briefly: 
 
 * `(Intercept)` here is representing the `att_end` value for cases where `treatment does not equal Control`. 
@@ -929,14 +928,6 @@ An important point here is that **these models are causal**. When including the 
 
 To see how these models compare in performance, we will perform leave-one-out (LOO) cross validation again. 
 
-To interpret briefly: 
-* `(Intercept)` here is representing the `att_end` value for cases where `treatment does not equal Control`. 
-* `treamtmentControl` gives a median value which represents the *offset* in the prediction compared with the `(Intercept)`. In other words, the true intercept for cases where `treatment = Control` is represented by $(Intercept) + treatmentControl$. 
-* `att_start` represents the slope for both groups representing a unit change. 
-
-An important point here is that **these models are causal**. When including the variable `treatment`, we have a measured causal effect of a condition. This is different from our prior parallel slopes model, where we were modeling for prediction, not causation. 
-
-To see how these models compare in performance, we will perform leave-one-out (LOO) cross validation again. 
 
 ```{r}
 L1 <- loo(fit_1)
@@ -957,7 +948,6 @@ Recall that the relevant data is the data from `elpd_loo`. The estimates for `el
 loo_compare(L1, L2)
 ```
 
-
 Recall that, with `loo_compare()`, the resulting data shows the superior model first, with values of 0 for `elpd_diff` and `se_diff`, since it compares the models to the best option. The values of `elpd_diff` and `se_diff` for `fit_1` show the difference in the models. As we can see, `fit_2`, the model which looks at `treatment` + `att_start`, is better. 
 
 But how certain can we be that it is better? Note that the difference between the two models is not quite two standard errors. So, there is a reasonable possibility that the difference is due to chance.
@@ -968,7 +958,6 @@ But how certain can we be that it is better? Note that the difference between th
 
 What we really care about is data we haven't seen yet, mostly data from tomorrow. But what if the world changes, as it always does? If it doesn't change much, maybe we are OK. If it changes a lot, then what good will our model be? In general, the world changes some. That means that are forecasts are more uncertain that a naive use of our model might suggest. 
 Having created (and checked) a model, we now use the model to answer questions. Models are made for use, not for beauty. The world confronts us. Make decisions we must. Our decisions will be better ones if we use high quality models to help make them.
-
 
 Preceptor's Posterior is the posterior you would calculate if all the assumptions you made under Wisdom and Justice were correct. Sadly, they never are! So, you can never know Preceptor's Posterior. Our posterior will, we hope, be a close-ish approximation of Preceptor's Posterior.
 
