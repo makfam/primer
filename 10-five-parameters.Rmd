@@ -595,8 +595,6 @@ $$ lived\_after_i =  \beta_0 + \beta_1 male_i + \beta_2 c\_election\_age_i + \\ 
 
 * Our outcome variable is still $lived\_after_i$. We want to know how many years a candidate will live after an election. Our explanatory variables as the same as before. $male_i$ is zero for male candidates and one for female candidates. $c\_election\_age_i$ the number of years a candidate has lived before the election, relative to the average value for all candidates. In this model, we have a third predictor variable: the interaction between $male_i$ and $c\_election\_age_i$. 
 
-
-
 * $\beta_0$ is the average number of years lived after the election for women, who on the day of election, have been alive the average number of years of all candidates. In a sense, this is the same meaning as in the previous model, without an interaction term. But, always remember that the meaning of a parameter is conditional on the model in which it is embedded. Even if a parameter is called $\beta_0$ in two different regressions does necessitate that it means the same thing in both regressions. Parameter names are arbitrary, or at least simply a matter of convention.
 
 * $\beta_1$ does not have a simple interpretation as a stand-alone parameter. It is a measure of how different women are from men. However, $\beta_0 + \beta_1$ has a straightforward meaning exactly analogous to the meaning of $\beta_0$. The sum  is the average number of years lived after the election for *men*, who on the day of election, have been alive the average number of years of all candidates.
@@ -722,26 +720,25 @@ interaction_term <- tidy$estimate[4]
 ```
 
 ```{r}
-# Recall that the (Intercept) shows us the estimate for the case where liberal =
-# FALSE. We want to extract the liberal_false_intercept to indicate where the
-# intercept in our visualization should be. The slope for this case, and for the
-# liberal = TRUE case, is att_start.
+# Recall that the intercept and the estimate for c_election_age act as the
+# estimates for female candidates only. Accordingly, we have assigned those
+# values (from the previous code chunk) to more sensible names: female_intercept
+# and female_slope.
 
 female_intercept <- intercept
 female_slope <- c_election_age
 
-#  When wanting the intercept for liberal = TRUE, recall that the estimate for
-#  liberalTRUE is the offset from our (Intercept). Therefore, to know the true
-#  intercept, we must add liberal_true to our intercept.
+# To find the male intercept, we must add the intercept for the estimate for
+# sex_male. To find the male slope, we must add c_election_age to our
+# interaction term estimate.
 
 male_intercept <- intercept + sex_male
-male_slope <- c_election_age
+male_slope <- c_election_age + interaction_term
 ```
 
 ```{r}
-# From the dataset trains, use att_start for the x-axis and att_end for
-# the y-axis with color as liberal. This will split our data into two color
-# coordinates (one for liberal = TRUE and one for liberal = FALSE)
+# From the ch10 data, create a ggplot object with c_election_age as the x-axis
+# and lived_after as the y-axis. We will use color = sex.
 
 ggplot(ch10, aes(x = c_election_age, y = lived_after, color = sex)) +
   
@@ -749,20 +746,20 @@ ggplot(ch10, aes(x = c_election_age, y = lived_after, color = sex)) +
   
   geom_point() +
   
-  # Create a geom_abline object for the liberal false values. Set the intercept
-  # equal to our previously created liberal_false_intercept, while setting slope
-  # equal to our previously created liberal_false_att_slope. The color call is
-  # for coral, to match the colors used by tidyverse for geom_point().
+  # Create a geom_abline object for the female intercept and slope. Set the
+  # intercept qual to our previously created female_intercept, while setting
+  # slope equal to our previously created female_slope. The color call is for
+  # coral, to match the colors used by tidyverse for geom_point().
   
   geom_abline(intercept = female_intercept,
               slope = female_slope, 
               color = "#F8766D", 
               size = 1) +
   
-  # Create a geom_abline object for the liberal TRUE values. Set the intercept
-  # equal to our previously created liberal_true_intercept, while setting slope
-  # equal to our previously created liberal_true_att_slope. The color call is
-  # for teal, to match the colors used by tidyverse for geom_point().
+  # Create a geom_abline object for the male values. Set the intercept equal to
+  # our previously created male_intercept, while setting slope equal to our
+  # previously created male_slope. The color call is for teal, to match the
+  # colors used by tidyverse for geom_point().
 
   geom_abline(intercept = male_intercept,
               slope = male_slope,
@@ -772,9 +769,10 @@ ggplot(ch10, aes(x = c_election_age, y = lived_after, color = sex)) +
   # Add the appropriate titles and axis labels. 
   
   labs(title = "Interaction Model",
-       x = "Years Lived at Time of Election", 
+       subtitle = "Comparing post election livespan across sex",
+       x = "Years Lived (Plus or Minus Average Age) Time of Election", 
        y = "Years Lived Post-Election", 
-       color = "Gender") 
+       color = "Sex") 
 ```
 
  
