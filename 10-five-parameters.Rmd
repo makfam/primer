@@ -1,8 +1,8 @@
 # Five Parameters {#five-parameters}
 
-<!-- DK: Need a non-parallel lines plot, like the parallel lines plot in chapter 9. -->
+<!-- DK: Need a non-parallel lines plot, like the parallel lines plot in chapter 9. MF: Done. -->
 
-<!-- Too much hard coding of numbers. Need to replace with coef(whatever)[2] -->
+<!-- Too much hard coding of numbers. Need to replace with coef(whatever)[2] MF: This seemed to be done already. -->
 
 <!-- Clean up all the plots, especially the legends. Huh? -->
 
@@ -686,97 +686,6 @@ fit_4 %>%
 ```
 
 This posterior distribution shows the average slope values for men and women. You can see that men have a steeper slope, while the slope for women is practically 0! *If you are trying to forecast the number of years that a women will live after the election, you may ignore the number of years that she has already lived.* This is definitely not true for men. Why the difference?
- 
-<!-- MF: Here is where the new plot goes. -->
-
-### Interaction model
-
-Recall the parallel slopes model that we created in Chapter 9. Another visualization we can create, one that also uses slopes and intercepts for our model, is the interaction model. In this model, the slopes for our two groups **are different**, creating a non-parallel visualization. 
-
-The process for creating the interaction model is similar to creating the parallel slopes model. Let us begin the same way --- by tidying our data and inspecting it. 
-
-```{r}
-# First, we will tidy the data from our model and select the term and estimate.
-# This allows us to create our regression lines more easily.
-
-tidy <- fit_4 %>% 
-  tidy() %>% 
-  select(term, estimate)
-
-tidy
-```
-
-```{r}
-
-# Extract and name the columns of our tidy object. By calling tidy$estimate[1],
-# we are telling R to extract the first value from the estimate column in our
-# tidy object.
-
-intercept <- tidy$estimate[1]
-sex_male <- tidy$estimate[2]
-c_election_age <- tidy$estimate[3]
-interaction_term <- tidy$estimate[4]
-
-```
-
-```{r}
-# Recall that the intercept and the estimate for c_election_age act as the
-# estimates for female candidates only. Accordingly, we have assigned those
-# values (from the previous code chunk) to more sensible names: female_intercept
-# and female_slope.
-
-female_intercept <- intercept
-female_slope <- c_election_age
-
-# To find the male intercept, we must add the intercept for the estimate for
-# sex_male. To find the male slope, we must add c_election_age to our
-# interaction term estimate.
-
-male_intercept <- intercept + sex_male
-male_slope <- c_election_age + interaction_term
-```
-
-```{r}
-# From the ch10 data, create a ggplot object with c_election_age as the x-axis
-# and lived_after as the y-axis. We will use color = sex.
-
-ggplot(ch10, aes(x = c_election_age, y = lived_after, color = sex)) +
-  
-  # Use geom_point to show the datapoints. 
-  
-  geom_point() +
-  
-  # Create a geom_abline object for the female intercept and slope. Set the
-  # intercept qual to our previously created female_intercept, while setting
-  # slope equal to our previously created female_slope. The color call is for
-  # coral, to match the colors used by tidyverse for geom_point().
-  
-  geom_abline(intercept = female_intercept,
-              slope = female_slope, 
-              color = "#F8766D", 
-              size = 1) +
-  
-  # Create a geom_abline object for the male values. Set the intercept equal to
-  # our previously created male_intercept, while setting slope equal to our
-  # previously created male_slope. The color call is for teal, to match the
-  # colors used by tidyverse for geom_point().
-
-  geom_abline(intercept = male_intercept,
-              slope = male_slope,
-              color = "#00BFC4", 
-              size = 1) +
-  
-  # Add the appropriate titles and axis labels. 
-  
-  labs(title = "Interaction Model",
-       subtitle = "Comparing post election livespan across sex",
-       x = "Years Lived (Plus or Minus Average Age) Time of Election", 
-       y = "Years Lived Post-Election", 
-       color = "Sex") 
-```
-
- 
-<!-- DK: Answer this question!  -->
 
 ### What is $\beta_0$?
 
@@ -840,7 +749,111 @@ We shouldn't be surprised that different models generate different formulas for 
 
 Our advice: Spend less time thinking about what parameters *mean* and more time using `posterior_epred()` and `posterior_predict()` to examine the implications of your models. Those posteriors are the real substance of your model.
 
+ 
+<!-- MF: Here is where the new plot goes. -->
 
+### Interaction model
+
+Recall the parallel slopes model that we created in Chapter 9. Another visualization we can create, one that also uses slopes and intercepts for our model, is the interaction model. In this model, the slopes for our two groups **are different**, creating a non-parallel visualization. 
+
+The process for creating the interaction model is similar to creating the parallel slopes model. Let us begin the same way --- by tidying our data and inspecting it. 
+
+```{r}
+# First, we will tidy the data from our model and select the term and estimate.
+# This allows us to create our regression lines more easily.
+
+tidy <- fit_4 %>% 
+  tidy() %>% 
+  select(term, estimate)
+
+tidy
+```
+
+After tidying our data, we will extract values and assign sensible names for later use. Note that this is identical to the process from Chapter 9, with the addition of a fourth term (the interaction term):
+
+```{r}
+
+# Extract and name the columns of our tidy object. By calling tidy$estimate[1],
+# we are telling R to extract the first value from the estimate column in our
+# tidy object.
+
+intercept <- tidy$estimate[1]
+sex_male <- tidy$estimate[2]
+c_election_age <- tidy$estimate[3]
+interaction_term <- tidy$estimate[4]
+
+```
+
+Now that we have extracted our values, we will create the intercept and slope values for our two different groups, females and males. Recall the following details about finding slopes and intercepts in an interaction model: 
+
+* The intercept is the intercept for females. It represents the average number of years lived after the election for females.
+* Our `sexMale` coefficient refers to the value that must be added to the intercept in order to get the average years lived post-election for males. 
+* The coefficient for $c\_election\_age_i$ is the slope for females. 
+* The coefficient of `sexMale:c_election_age` is the value that must be added to the coefficient of $c\_election\_age_i$ in order to find the slope for males. 
+
+```{r}
+# Recall that the intercept and the estimate for c_election_age act as the
+# estimates for female candidates only. Accordingly, we have assigned those
+# values (from the previous code chunk) to more sensible names: female_intercept
+# and female_slope.
+
+female_intercept <- intercept
+female_slope <- c_election_age
+
+# To find the male intercept, we must add the intercept for the estimate for
+# sex_male. To find the male slope, we must add c_election_age to our
+# interaction term estimate.
+
+male_intercept <- intercept + sex_male
+male_slope <- c_election_age + interaction_term
+```
+
+After creating objects for our different intercepts and slopes, we will now create the interaction model using `geom_abline()` for a male and female line. 
+
+```{r}
+# From the ch10 data, create a ggplot object with c_election_age as the x-axis
+# and lived_after as the y-axis. We will use color = sex.
+
+ggplot(ch10, aes(x = c_election_age, y = lived_after, color = sex)) +
+  
+  # Use geom_point to show the datapoints. 
+  
+  geom_point() +
+  
+  # Create a geom_abline object for the female intercept and slope. Set the
+  # intercept qual to our previously created female_intercept, while setting
+  # slope equal to our previously created female_slope. The color call is for
+  # coral, to match the colors used by tidyverse for geom_point().
+  
+  geom_abline(intercept = female_intercept,
+              slope = female_slope, 
+              color = "#F8766D", 
+              size = 1) +
+  
+  # Create a geom_abline object for the male values. Set the intercept equal to
+  # our previously created male_intercept, while setting slope equal to our
+  # previously created male_slope. The color call is for teal, to match the
+  # colors used by tidyverse for geom_point().
+
+  geom_abline(intercept = male_intercept,
+              slope = male_slope,
+              color = "#00BFC4", 
+              size = 1) +
+  
+  # Add the appropriate titles and axis labels. 
+  
+  labs(title = "Interaction Model",
+       subtitle = "Comparing post election livespan across sex",
+       x = "Years Lived (Plus or Minus Average Age) Time of Election", 
+       y = "Years Lived Post-Election", 
+       color = "Sex") 
+```
+
+This is our final interaction model! There are some interesting takeaways. First, we may note that there are far fewer data points for female candidates --- a concern we previously mentioned. It makes sense, then, that the slope would be less dramatic when compared with male candidates. We also see that most female candidates run when they are older, as compared with male candidates. This might explain why our intercept for years lived post-election is lower for female candidates. 
+ 
+The male line seems more sensible, as we might expect with far more datapoints. For male candidates, we see a clear (sensible) pattern: the older they are at the time of election, the less years post-election they lived. This makes sense, as we are limited by the human lifespan. 
+
+<!-- DK: Answer this question!  -->
 
 
 ## Temperance
