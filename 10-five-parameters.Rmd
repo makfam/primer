@@ -40,6 +40,7 @@ library(primer.data)
 library(skimr)
 library(tidyverse)
 library(rstanarm)
+library(broom.mixed)
 ```
 
 <!-- We discuss below that we only have data for people who are already dead. That is an interesting restriction, and effects the Preceptor Table in interesting ways. Or is such a discussion too advanced? -->
@@ -689,6 +690,93 @@ fit_4 %>%
 This posterior distribution shows the average slope values for men and women. You can see that men have a steeper slope, while the slope for women is practically 0! *If you are trying to forecast the number of years that a women will live after the election, you may ignore the number of years that she has already lived.* This is definitely not true for men. Why the difference?
  
 <!-- MF: Here is where the new plot goes. -->
+
+### Interaction model
+
+Recall the parallel slopes model that we created in Chapter 9. Another visualization we can create, one that also uses slopes and intercepts for our model, is the interaction model. In this model, the slopes for our two groups **are different**, creating a non-parallel visualization. 
+
+The process for creating the interaction model is similar to creating the parallel slopes model. Let us begin the same way --- by tidying our data and inspecting it. 
+
+```{r}
+# First, we will tidy the data from our model and select the term and estimate.
+# This allows us to create our regression lines more easily.
+
+tidy <- fit_4 %>% 
+  tidy() %>% 
+  select(term, estimate)
+
+tidy
+```
+
+```{r}
+
+# Extract and name the columns of our tidy object. By calling tidy$estimate[1],
+# we are telling R to extract the first value from the estimate column in our
+# tidy object.
+
+intercept <- tidy$estimate[1]
+sex_male <- tidy$estimate[2]
+c_election_age <- tidy$estimate[3]
+interaction_term <- tidy$estimate[4]
+
+```
+
+```{r}
+# Recall that the (Intercept) shows us the estimate for the case where liberal =
+# FALSE. We want to extract the liberal_false_intercept to indicate where the
+# intercept in our visualization should be. The slope for this case, and for the
+# liberal = TRUE case, is att_start.
+
+female_intercept <- intercept
+female_slope <- c_election_age
+
+#  When wanting the intercept for liberal = TRUE, recall that the estimate for
+#  liberalTRUE is the offset from our (Intercept). Therefore, to know the true
+#  intercept, we must add liberal_true to our intercept.
+
+male_intercept <- intercept + sex_male
+male_slope <- c_election_age
+```
+
+```{r}
+# From the dataset trains, use att_start for the x-axis and att_end for
+# the y-axis with color as liberal. This will split our data into two color
+# coordinates (one for liberal = TRUE and one for liberal = FALSE)
+
+ggplot(ch10, aes(x = c_election_age, y = lived_after, color = sex)) +
+  
+  # Use geom_point to show the datapoints. 
+  
+  geom_point() +
+  
+  # Create a geom_abline object for the liberal false values. Set the intercept
+  # equal to our previously created liberal_false_intercept, while setting slope
+  # equal to our previously created liberal_false_att_slope. The color call is
+  # for coral, to match the colors used by tidyverse for geom_point().
+  
+  geom_abline(intercept = female_intercept,
+              slope = female_slope, 
+              color = "#F8766D", 
+              size = 1) +
+  
+  # Create a geom_abline object for the liberal TRUE values. Set the intercept
+  # equal to our previously created liberal_true_intercept, while setting slope
+  # equal to our previously created liberal_true_att_slope. The color call is
+  # for teal, to match the colors used by tidyverse for geom_point().
+
+  geom_abline(intercept = male_intercept,
+              slope = male_slope,
+              color = "#00BFC4", 
+              size = 1) +
+  
+  # Add the appropriate titles and axis labels. 
+  
+  labs(title = "Interaction Model",
+       x = "Years Lived at Time of Election", 
+       y = "Years Lived Post-Election", 
+       color = "Gender") 
+```
+
  
 <!-- DK: Answer this question!  -->
 
