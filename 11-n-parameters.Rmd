@@ -60,7 +60,7 @@ ch11 <- governors %>%
 
 ### state
 
-Consider a model in which years lived after the election is a function of the state in which the candidate lives. This assumption generates a model with 51 parameters, one average value for each state and the residual variance. But not using an intercept, we give the parameters an easier interpretation. With an intercept, the interpretation for each of the other $\beta$'s would be as the difference in expected age relative to the first state. 
+Consider a model in which years lived after the election is a function of the state in which the candidate lives. This assumption generates a model with 51 parameters, one average value for each state and the residual variance. By excluding an intercept, we give the parameters an easier interpretation. With an intercept, the interpretation for each of the other $\beta$'s would be as the difference in expected age relative to the first state. 
 
 Mathematics:
 
@@ -90,7 +90,7 @@ We do not need to, explicitly, tell R that there are 50 categories. It determine
 fit_1
 ```
 
-That is a lot to take in! Examining and comparing two parameters --- the average attitude toward immigration of the treated and control, for example, is easy. Doing the same for 50 parameters is hard. The **broom** and  **broom.mixed** packages were created to make this problem easier to manage, for all sorts of statistical models. For **rstanarm** models, we need the latter.
+That is a lot to take in! Examining and comparing two parameters --- the average attitude toward immigration of the treated and control, for example --- is easy. Doing the same for 50 parameters is hard. The **broom** and  **broom.mixed** packages were created to make this problem easier to manage, for all sorts of statistical models. For **rstanarm** models, we need the latter:
 
 ```{r, message = FALSE}
 library(broom.mixed)
@@ -104,7 +104,7 @@ fit_1_params <- tidy(fit_1)
 fit_1_params
 ```
 
-Putting all the parameters into a tibble makes everything much easier. For example, we can look at the states with the longest and shortest lived candidates:
+Putting all the parameters into a tibble makes everything much easier  to interpret. For example, we can look at the states with the longest and shortest lived candidates:
 
 ```{r}
 fit_1_params %>% 
@@ -135,12 +135,16 @@ fit_1_params %>%
 ```
 
 
-There are 51 parameters, an average for 50 states and $\sigma$.
+This is a lot to take in! If this looks overwhelming, don't worry. Rather than our normal maximum of five parameters, we are looking at 51 parameters here, an average for 50 states and $\sigma$. This is a big leap, and it is hard to absorb this much information at once. 
+
+As data scientists, the first question we must ask ourselves is whether or not we believe this data. Do we really expect the next candidate elected in Delaware to live significantly longer than the next candidate elected in Wyoming, or any other state? No! Of course not. We are modeling a relationship, but we cannot possibly claim that living in Delaware or Wyoming causes an increase or decrease in lifespan. 
+
+One possible explanation is that Wyoming tends to elect older candidates, which makes the years lived post-election smaller. Another possible explanation is that a few outliers --- perhaps a candidate that died shortly after the election or a young candidate that lived an exceptionally long time after the election --- are making the differences between the lowest and highest states more drastic. Yet another explanation could be that we have more observations for certain states, as compared to other states. The point we are making is: this is an interesting plot, but it is not **the truth**. 
 
 
 <!-- DK: Switch above to using ggdist. -->
 
-<!-- DK: Add a sensible discussion about whether or not we believe this.  -->
+<!-- DK: Add a sensible discussion about whether or not we believe this.  MF: Done. -->
 
 <!-- DK: In the next draft if this chapter, we ought to use a different data set which illustrates Bayesian shrinkage. Alas, does not work for this data because all the states have about the same number of observations. -->
 
