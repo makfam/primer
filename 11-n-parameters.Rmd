@@ -163,11 +163,17 @@ $$ lived\_after_i =  \beta_0 +  \beta_1 x_{AK,i} + \beta_2 x_{AR,i} + ... \beta_
 
 <!-- DK: Clean this up. Explain meaning of intercept more clearly. -->
 
-*  $lived\_after_i$ is the outcome variable. $\beta_1$, $\beta_2$, $\beta_3$... all the way to $\beta_{49}$ correspond to different parameters. These values are specific to each state. In order to find the female intercept (i.e. lived_after for females) for a specific state, you must add that state's beta value to the value of $\beta_0$ to find intercept for the `lived_after` outcome for females candidates in that specific state. For example, if you look at the model above, $\beta_1$ is the intercept value for Arkansas (note the AK subscript). You would take the appropriate value, which appears next to Arkansas in the printed model, and add it to the value for $\beta_0$.
+*  $lived\_after_i$ is the outcome variable. 
+
+* $\beta_1$, $\beta_2$, $\beta_3$... all the way to $\beta_{49}$ correspond to different parameters. These values are specific to each state. In order to find the female intercept (i.e. lived_after for females) for a specific state, you must add that state's beta value to the value of $\beta_0$. The resulting value provides you with the intercept for the `lived_after` outcome for females candidates in that specific state. For example, if you look at the model above, $\beta_1$ is the intercept value for Arkansas (note the AK subscript). You would take the appropriate value, which appears next to Arkansas in the printed model, and add it to the value for $\beta_0$.
 
 * $\beta_0$ will be the intercept for one state alone. When the model is printed, you will see that (Intercept) takes on the lived_after value for female candidates in Alabama. 
 
-* $\beta_{50}$ is the coefficient for the explanatory variable $male_i$. When we are trying to find the intercepts for female candidates, the explanatory variable will take on the value of 0. However,  $male_i$ = 1 when we are trying to find intercept values for male candidates. Therefore, you add the $\beta_{50}$ value to the female intercept value to find the value of lived_after for male candidates. $\beta_{51}$ is the coefficient for the explanatory variable $election\_age_i$. It it just the slope for women. $\beta_{52}$ is difficult to interpret. However, it gains meaning when it is added to $\beta_{51}$, which results in the slope for men.
+* $\beta_{50}$ is the coefficient for the explanatory variable $male_i$. When we are trying to find the intercepts for female candidates, the explanatory variable will take on the value of 0. However,  $male_i$ = 1 when we are trying to find intercept values for male candidates. Therefore, to find the intercept value for male candidiates, there is an additional step: we add the $\beta_{50}$ value to the female intercept value.
+
+* $\beta_{51}$ is the coefficient for the explanatory variable $election\_age_i$. It is just the slope for women. 
+
+* $\beta_{52}$ is difficult to interpret. However, it gains meaning when it is added to $\beta_{51}$, which results in the slope for men.
 
 <!-- DK: Missing stuff here! -->
  
@@ -180,7 +186,7 @@ fit_gov_1 <- stan_glm(data = ch11,
                       seed = 98)
 ```
 
-Note it takes awhile to run. We are dealing with 55 parameters here.
+Note that this takes awhile to run since we are dealing with 55 parameters here.
 
 <!-- DK: How do we not print out all the coefficients? -->
 
@@ -190,8 +196,7 @@ print(fit_gov_1, detail = FALSE)
 
 The (Intercept) refers to the average number of years lived after the election for women from Alabama, who on the day of election, have been alive the average number of years of all female candidates! That's a mouthful. It really is not different than what we have been doing all along, however. You can see here that (Intercept) value is around `r round(coef(fit_gov_1)["(Intercept)"], 0)` years. 
 
-
-However, we have only talked about women. What about for the men? Well, if you look at the bottom of the list, you will see the `sexMale` value of around `r round(coef(fit_gov_1)["sexMale"], 0)`. When you wish to estimate `lived_after` for a specific state, you must add this value to the intercept, and then also add the intercept of the desired state. 
+Thus far, we have only talked about female values. What about the male values? Well, if you look at the bottom of the list, you will see the `sexMale` value of around `r round(coef(fit_gov_1)["sexMale"], 0)`. When you wish to estimate `lived_after` for a specific state *for male candidates*, you must add this value to the intercept, and then also add the intercept of the desired state. 
 
 $\beta_{51}$, our coefficient value for $election\_age_i$, is `r round(coef(fit_gov_1)["election_age"], 2)`. When comparing female candidates who differ by one year in their current ages, there is not much of a difference in how many years we expect them to live after the election.
 
@@ -239,18 +244,16 @@ $\beta_{51} + \beta_{52}$, our coefficients for $election\_age_i$ and `sexMale:e
 
 ## Wisdom
 
-
-
 ```{r echo = FALSE, fig.cap = "Wisdom"}
 knitr::include_graphics("other/images/Wisdom.jpg")
 ```
 
-Imagine you are running for Governor and want to do a better job of getting your voters to vote. You recently read about a large-scale experiment showing the effect of sending out a voting reminder that "shames" citizens who do not vote. You are considering sending out a "shaming" voting reminder yourself. What will happen if you do? Will more voters show up to the polls? Additionally, on the day of the election a female citizen is randomly selected. What is the probability she will vote?  
+Imagine you are running for Governor and want to do a better job of getting your voters to vote. You recently read about a large-scale experiment showing the effect of sending out a voting reminder that "shames" citizens who do not vote. You are considering sending out a "shaming" voting reminder yourself. 
+
+Our questions are: **What will happen if we do send a voting reminder? Will more voters show up to the polls? Additionally, on the day of the election, a female citizen is randomly selected. What is the probability she will vote?** 
 
 
 ### EDA of `shaming`
-
-  
 
 Consider a new data set, `shaming`, corresponding to an experiment carried out by Gerber, Green, and Larimer (2008) titled "Social Pressure and Voter Turnout: Evidence from a Large-Scale Field Experiment". This experiment used several hundred thousand registered voters and a series of mailings to determine the effect of social pressure on voter turnout. 
 
@@ -263,21 +266,17 @@ library(skimr)
 glimpse(shaming)
 ```
 
-Here we see that `glimpse()` gives us a look at the raw data contained within the `shaming` data set. At the very top of the output, we can see the number of rows and columns, or observations and variables respectively. We see that there are 344,084 observations, with each row corresponding to a unique respondent. The "Columns: 10" tells us that there are 10 variables within this data set. Below this, we see a cutoff version of the entire data set that has the variables on the left as rows and the observations as a list separated by commas, as compared to the tibble output that presents with the variables as columns and the observations as rows running horizontally.
+We see that `glimpse()` gives us a look at the raw data contained within the `shaming` data set. At the very top of the output, we can see the number of rows and columns, or observations and variables respectively. We see that there are 344,084 observations, with each row corresponding to a unique respondent. This summary provides an idea of some of the variables we will be working with. 
 
-From this summary, we get an idea of some of the variables we will be working with. Variables of particular interest to us are `sex`, `hh_size`, and `primary_06`. The variable `hh_size` tells us the size of the respondent's household, `sex` tells us the sex of the respondent, and `primary_06` tells us whether or not the respondent voted in the 2006 Primary election. 
+Variables of particular interest to us are `sex`, `hh_size`, and `primary_06`. The variable `hh_size` tells us the size of the respondent's household, `sex` tells us the sex of the respondent, and `primary_06` tells us whether or not the respondent voted in the 2006 Primary election. 
+There are a few things to note while exploring this data set. You may -- or may not -- have noticed that the only response to the `general_04` variable is "Yes". In their published article, the authors note that "Only registered voters who voted in November 2004 were selected for our sample" (Gerber, Green, Larimer, 2008). After this, the authors found their history then sent out the mailings. Thus, non-registered voters are excluded from our data.
 
-There are a few things to note while exploring this data set. You may -- or may not -- have noticed that the only response to the `general_04` variable is "Yes". In their published article, the authors note that "Only registered voters who voted in November 2004 were selected for our sample" (Gerber, Green, Larimer, 2008). After this, the authors found their history then sent out the mailings.
-
-It is also important to identify the dependent variable and its meaning. In this shaming experiment, the dependent variable is `primary_06`, which is a variable coded either 0 or 1 for whether or not the respondent voted in the 2006 primary election. This is the dependent variable because the authors are trying to measure the effect that the treatments have on the proportion of people who vote in the 2006 general election.
+It is also important to identify the dependent variable and its meaning. In this shaming experiment, the dependent variable is `primary_06`, which is a variable coded either 0 or 1 for whether or not the respondent voted in the 2006 primary election. This is the dependent variable because the authors are trying to measure the **effect** that the treatments have on voting behavior in the 2006 general election.
 
 <!-- HV: Should I include discussion of the left-hand variable (treatment?) here? Or wait until we move into the regressions? -->
 
-The voting results from other years, such as 2002 and 2004, are of less interest to us and can be removed from the abbreviated data set. In addition to removing `general_04`, `primary_02`, `general_02`, or `primary_04`, we also will not be taking particular interest in `age`, or `no_of_names` within this chapter.
+We have not yet discussed the most important variable of them all: `treatment`. The `treatment` variable is a factor variable with 5 levels, including the control. Since we are curious as to how sending mailings affects voter turnout, the treatment variable will tell us about the impact each type of mailing can make. Let's start off by taking a broad look at the different treatments.
 
-<!-- HV: should I explain why we are not using any of these variables? why they are not of great use to us? -->
-
-By narrowing down the set of variables we are looking at and investigating, we will find more meaningful relationships among them. However, we have not yet discussed the most important variable of them all: `treatment`. The `treatment` variable is a factor variable with 5 levels, including the control. Since we are curious as to how sending mailings affects voter turnout, the treatment variable will tell us about the impact each type of mailing can make. Let's start off by taking a broad look at the different treatments.
 <!-- HV: Is it okay to say the first sentence of this paragraph? -->
 
 ```{r}
@@ -315,51 +314,34 @@ ch9_sham %>%
 ```
 
 
-Let's focus on a few observations that may be relevant to our analysis. First, note that each treatment has approximately 38,000 respondents. The control group, denoted by Con, has approximately 190 thousand respondents. For the logical variable `solo`, we see that approximately 47 thousand of the total respondents live alone (TRUE), while approximately 296 thousand live in households greater than 1 (FALSE). It may also be important to note that the average age of the respondents is 49.8 years with a standard deviation of 14.4 years.
+Let's focus on a few observations that may be relevant to our analysis. First, note that each treatment has approximately 38,000 respondents. The control group, denoted by `Con`, has approximately 190 thousand respondents. For the logical variable `solo`, we see that approximately 47 thousand of the total respondents live alone (TRUE), while approximately 296 thousand live in households greater than 1 (FALSE). It may also be important to note that the average age of the respondents is 49.8 years with a standard deviation of 14.4 years.
+
+### Population
+
+One of the most important components of Wisdom is the concept of the "population". Recall the questions we asked earlier:
+
+*What will happen if we do send a voting reminder today? Will more voters show up to the polls? Additionally, on the day of the election, a female citizen is randomly selected. What is the probability she will vote?*
+
+As we have discussed before, the population *is not* the set of people, or voters, for which we have data. This is the dataset. The population is the larger --- potentially much larger --- set of individuals about whom we want to make inferences. 
+
+There are many different populations, each with its own $\mu$, in which we might be interested. For instance:
+
+* The population for registered voters that voted in the 2004 election in the United States. This is the population for our dataset. 
+* The population for registered voters that voted in any election from 1970 to 2040. We are often interested in the future. We want to make predictions about what *will* happen to voter habits, not what has already happened. 
+* The population for registered **and** non-registered voters in the United States. Though it is helpful to look at registered voters, candidates also want to get non-registered voters to vote for them!
+* The population for voters --- registered or not-registered --- around the world. We might expect the habits of Americans to be similar to the habits of people in other countries. We might also believe that this is too broad a group to make inferences about.
+* Many more!
+
+In this case, we are viewing the data from the perspective of someone running for Governor this year that wants to increase voter turnout. We want to increase turnout **now**, not for people voting in 2006! We also may want to increase turnout in those citizens who are not registered to vote, a group that is excluded from our dataset. Is it reasonable to generate conclusions for this group? Most likely, no. However, we have limited data to work with and we have to determine how far we are willing to generalize to other groups. 
+
+It is a judgment call, a matter of Wisdom, as to whether or not that data we have is “close enough” to the population we are interested in to justify making a model.
+
+Even though the original question is about “voters” in general, and does not specifically refer to specific states in which we might be interested, we will assume that the data we have for random voters is, uh, representative enough of the population we are interested in. If we did not believe that, then we should stop right now. *The major part of Wisdom is deciding what questions you can’t answer because of the data you just don’t have.*
 
 <!-- DK: Add discussion of what you see here. No need to drop missing values since there aren't any. I think this next discussion can be dropped. -->
 
-To get a better sense of some respondents' information, let's use `slice_sample()` to gather a random sample of *n* observations from the data set.
-
-<!-- HV: Does this belong here? -->
-
-```{r}
-ch9_sham %>% 
-  slice_sample(n = 10)
-```
-
-Now we have a table with 5 random observations and the respondents' information in a regular table output. By taking a few random samples, we may start to see some patterns within the data. Do you notice anything in particular about the variable `treatment`?
-
-One other helpful summarizing technique we can use is `skim()`. To make the information it contains simpler, we will only be looking at three variables: `primary_06`, `treatment`, and `sex`. 
-
-```{r}
-shaming %>% 
-  select(primary_06, treatment, sex) %>% 
-  skim()
-```
-
-Running the `skim()` command gives us a summary of the data set as a whole, as well as the types of variables and individual variable summaries. At the top, we see the number of columns and rows within the selected data set. Below this we are given a list with the different types of variables, or columns, and how often they appear within the data we are skimming. The variables are then separated by their column type, and we are given individual summaries based on the type. 
-
-<!-- 2) `primary_06` as a function of `treatment` and `solo` and of their interaction. We will build up this model step-by-step, very similar to how we explored the effect of treatment in chapter 8. But we go deeper because  we are learning about interactions. Key thing is to go through all the themes.Rmd issues, at least until prediction. Note that this situation is different from Chapter 8 in that fitted values and predicted values are not the same thing! The fitted value, for a combination of values for treatment and solo, is something 0.30, meaning that 30% of the people in this bucket votes. But the predicted value must be 0 or 1. Either you voted or you didn't. This example is clearly causal and so you need a Rubin Table with 4 potential outcome columns. The key difference in this chapter is that we are using lots of right hand side variables, both continuous and discrete. -->
-
-
-
-Having created models with one parameter in Chapter \@ref(one-parameter) and two parameters in Chapter \@ref(two-parameters), you are now ready to make the jump to $N$ parameters.  The more parameters we include in our models, the more flexible they can become. But we must be careful of *overfitting*, of making models which are inaccurate because they don't have enough data to accurately estimate those parameters. The tension between overfitting and underfitting is central to the practice of data science.
-
-
 <!-- DK: Note that this situation is different from Chapter 8 in that fitted values and predicted values are not the same thing! The fitted value, for a combination of values for treatment and solo, is something 0.30, meaning that 30% of the people in this bucket votes. But the predicted value must be 0 or 1. Either you voted or you didn't. This example is clearly causal and so you need a Rubin Table with 5 potential outcome columns. The key difference in this chapter is that we are using lots of right hand side variables, both continuous and discrete. -->
 
-
-
-Let's consider one of the most important virtues of data science: wisdom. The map from our data to our question. Recall that our mission here is to increase our voter turnout while we are running for Governor. 
-
-To investigate this, we are given a dataset in which respondents were encouraged to vote under four treatments. This was accomplished by sending a letter to citizens that voted in the previous primary election with varying degrees of social pressure. The remainder of the respondents fall under a control group, which received no such mailings. The dataset offers a number of details about each respondent, including their age, sex, treatment type, and voting outcome. 
-
-What we truly want to know is *how to make citizens vote*. One immediate problem with our dataset is that, due to our study population, we are only studying people that voted in the previous primary election. In other words, if someone *did not* vote in the previous primary election, they were not included. This would be a large problem, since that means we can only figure out how to make citizens *that have already voted* vote. Though we can't be sure, it is reasonable to assume that it is easier to encourage citizens to vote in the next primary election if they have a history of recently voting in primary elections. 
-
-Does this mean our data is unhelpful? Of course not! With four treatments (and therefore four different methods of encouraging voting), we can gain quite a bit of knowledge. Mostly, we will know the most effective way to incentivize people with a history of voting to vote again. We will also know if no method of persuasion (the control) is the best option. We will further be able to tell if certain methods of persuasion work better for certain groups of people, according to factors such as age, sex, or household size. This can help tremendously in our election. 
-
-That being said, the map from our question to our data is almost never perfect. In data science, we often have to look at our data, understand its limitations, and try our best to make inferences that help our cause.
 
 ## Justice and Courage
 
