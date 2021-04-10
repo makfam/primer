@@ -134,21 +134,6 @@ fit_1_params %>%
 
 ```
 
-```{r, fig.height = 8}
-fit_1_params %>% 
-  mutate(state = str_replace(term, "state", "")) %>% 
-  ggplot(aes(x = fct_reorder(state, estimate),
-             y = estimate)) +
-    geom_pointrange(aes(ymin = estimate - 2 * std.error,
-                        ymax = estimate + 2 * std.error)) +
-    coord_flip() +
-    labs(title = "Expected Years Lived Post Election",
-         y = "Years",
-         x = NULL)
-
-
-```
-
 
 This is a lot to take in! If this looks overwhelming, don't worry. Rather than our normal maximum of five parameters, we are looking at 51 parameters here, an average for 50 states and $\sigma$. This is a big leap, and it is hard to absorb this much information at once. 
 
