@@ -356,12 +356,22 @@ Because we will be going through a series of models in this chapter, it is usefu
 
 <!-- What should the Preceptor tables look like with these models? Like chapter 3. Should each model have its own Preceptor Table? No! Just one preceptor table at the start, with 5 columns under Y, and 4 covariates, where one is treatment assigned. -->
 
-In this section, we will look at the relationship between primary voting and treatment + age. 
+In this section, we will look at the relationship between primary voting and treatment + age. Note that `treatment` is a categorical explanatory variable and `age` is a continuous explanatory variable. This is the same type of model --- parallel slopes --- as we saw in Chapter \@ref(four-parameters).
 
-```{r, message = FALSE}
-library(rstanarm)
-```
+The math:
 
+$$ primary\_06_i =  \beta_0 + \beta_1 treatment_i + \beta_2 age_i + \epsilon_i $$
+
+How do we interpret this?
+
+* The outcome variable is $primary\_06_i$, which represents whether someone voted in the 2006 primary election or not. 
+* $treatment_i$ is one of our explanatory variables. If we are predicting the voting behavior of someone under treatment, this value will be 1. When we are making this prediction for those in the control group, this value will be 0. 
+* $age_i$ is our other explanatory variable. It is the number of years a voter has lived at the time of the election.
+* * $\beta_0$ is the voting percentage for those in the control group, who on the day of election, have been alive for 0 years of age. Clearly, age is nonsensical in this paradigm. $\beta_0$ is also the intercept of the equation. In other words, $\beta_0$ is the expected value of $primary\_06_i$, if $treatment_i = 0$ and $age_i = 0$. 
+* $\beta_1$ is almost meaningless by itself. The only time it has meaning is when its value is connected to our intercept (i.e. $\beta_0 + \beta_1$). When the two are added together, you get the percentage voting for those in the treatment group, who on the day of election, have been alive for zero years of age.
+* $\beta_2$ is, for the entire population, the average difference in $primary\_06_i$ between two individuals, one of whom has an $age_i$ value of 1 greater than the other. 
+
+Let's translate the model into code. 
 
 ```{r, cache=TRUE}
 model_3 <- stan_glm(data = ch9_sham, 
@@ -373,11 +383,11 @@ model_3 <- stan_glm(data = ch9_sham,
 print(model_3, digits = 3)
 ```
 
-The (Intercept) here has two key details. First, since Control comes alphabetically before Neighbors, the Control group is our baseline for comparison. This holds similarly for age. This is the slope for age of *only* those participants in the Control group. 
+The `(Intercept)` here is the intercept for the Control group, our baseline for comparison. The `(Intercept)` does have a mathematical interpretation, but it does not have a practical interpretation. Why is this? Because the slope for age starts at zero. This is nonsensical for our purposes, as no voter can be of zero age. 
 
-Second, remember that for this data, the (Intercept) does have a mathematical interpretation, but it does not have a practical interpretation. Why is this? Because the slope for age starts at zero. This is nonsensical for our purposes, as no voter can be of zero age. 
+Therefore, this model shows that, within the control group, the percent voting is `r round(coef(model_3)["(Intercept)"], 3)` times 100. 
 
-Therefore, this model shows that, within the control group, the percent voting is 0.084 = 8.4%. How do we then calculate our percent voting in the Neighbors group? Recall that the `treatmentNeighbors` median is not giving a standalone figure for this group, but rather represents the offset between the Control and Neighbors groups. To find the Neighbors value, we must add the offset to the original value: 0.084 + 0.079 = .163 = 16.3%. This is nearly double the rate in the Control group!
+How do we calculate our percent voting in the Neighbors group? Recall that the `treatmentNeighbors` median is not giving a standalone figure for this group, but rather represents the offset between the Control and Neighbors groups. To find the Neighbors value, we must add the offset to the original value: `r round(coef(model_3)["(Intercept)"] + coef(model_3)["treatmentNeighbors"], 3)`. This is nearly double the rate in the Control group!
 
 Let's turn to our age median. Begin by grouping our observations by `age` and counting by `primary_06`, which gives us counts for 1 (yes) or 0 (no) for number voting in each age category. 
 
@@ -401,7 +411,8 @@ age %>%
     subtitle = "In the 2006 Primary Elections",
     x = "Age",
     y = "Count",
-    color = "Did they vote?"
+    color = "Did they vote?",
+    caption = "1 = yes, 0 = no"
   )
 ```
 
@@ -425,7 +436,7 @@ shaming %>%
        caption = "Data from Gerber, Green, and Larimer (2008)") 
 ```
 
-Note that the median for age is 0.004. Age is therefore positively correlated with voting in the primary election. What does that mean? It means that, for every year that a participant's age increases, their odds of voting in the primary *increases* by 0.004. Now, this might not seem like a huge difference. However, think of it like this: for every decade older that a participant is, their odds of voting increase .04 = 4%! This makes sense considering that we just learned that older citizens are more likely to vote. 
+Note that the median for age is `r round(coef(model_3)["age"], 3)`. Age is therefore positively correlated with voting in the primary election. What does that mean? It means that, for every year that a participant's age increases, their odds of voting in the primary *increases* by `r round(coef(model_3)["age"], 3)`. Now, this might not seem like a huge difference. However, think of it like this: for every decade older that a participant is, their odds of voting increase `r round((coef(model_3)["age"] * 10), 1)` %! This makes sense considering that we just learned that older citizens are more likely to vote. 
 
 Now, let's return to our voting difference between the Control and Neighbors groups. Let's model the posterior probability distribution for the rates of voting. 
 
@@ -451,6 +462,10 @@ model_3 %>%
    scale_y_continuous(labels = scales::percent_format()) + 
    theme_classic() 
 ```
+
+This is interesting. Here, we can see that the difference between the expected voting behavior between Control and Neighbors is meaningful. There is only a very small overlap where it is more likely for those in Control to vote when compared with those in the treatment group. This bodes well for our election, as we see that the treatment makes a large difference.
+
+However, there is one caveat to this plot: it is the posterior for those with voting age zero, which is nonsense!
 
 <!-- # In progress. Modify x-axis labels *10.  -->
 
