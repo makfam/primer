@@ -20,6 +20,7 @@ fit_1 %>%
   scale_fill_calc()
 
 
+MF: Couldn't figure this out. Will attempt to fix tomorrow and submit new pull request.
 -->
 
 
@@ -27,7 +28,7 @@ fit_1 %>%
 
 <!-- Where is the question that we are trying to answer? Do we answer them? Are they good questions? -->
 
-<!-- Example: No discussion of population, validity, representativeness or ethics in Wisdom discussion. -->
+<!-- Example: No discussion of population, validity, representativeness or ethics in Wisdom discussion. MF: Fixed.-->
 
 <!-- * Should start with  single variable which actually requires lots of parameters. For example, death_age as a function of state and come up with a different average death_age for each state. This is cheating in that it is too many parameters, or rather that some of the parameters need to be estimated for too little data.  But it would allow us to explain a bunch of stuff! Including Bayesian shrinkage. Saving this till the end of the model causes us to miss stuff. But the rest of the analysis used lived_after. Which is better. Yes? Should we discuss? Use both? -->
 
@@ -118,6 +119,20 @@ fit_1_params %>%
  
 A graphical display is the best way to examine numerous parameters at the same time.  
 
+```{r, fig.height = 8}
+fit_1_params %>% 
+  mutate(state = str_replace(term, "state", "")) %>% 
+  ggplot(aes(x = fct_reorder(state, estimate),
+             y = estimate)) +
+    geom_pointrange(aes(ymin = estimate - 2 * std.error,
+                        ymax = estimate + 2 * std.error)) +
+    coord_flip() +
+    labs(title = "Expected Years Lived Post Election",
+         y = "Years",
+         x = NULL)
+
+
+```
 
 ```{r, fig.height = 8}
 fit_1_params %>% 
@@ -202,9 +217,6 @@ $\beta_{51}$, our coefficient value for $election\_age_i$, is `r round(coef(fit_
 $\beta_{51} + \beta_{52}$, our coefficients for $election\_age_i$ and `sexMale:election_age`, results in the value of around `r round(coef(fit_gov_1)["election_age"] + coef(fit_gov_1)["sexMale:election_age"], 1)`. This value is our slope for men.
 
 
-<!-- DK: This is a mess! -->
-
-<!-- Posterior distribution for female candidates in Washington and South Dakota.  -->
 
 <!-- DK: Clean up math here. No hard coding numbers!-->
 
@@ -233,8 +245,6 @@ $\beta_{51} + \beta_{52}$, our coefficients for $election\_age_i$ and `sexMale:e
 
 
 <!-- The posterior above shows that female candidates in Washington live longer after the election than female candidates in South Dakota. Interesting huh? Our knowledge about averages is always more precise than our knowledge about individuals.  -->
-
-
 
 <!-- DK: Need to modify this to only show one of the more interesting state coefficients. (Although we might show all the state pdfs in the graphic.) This a good place to discuss shrinkage, which is what is happening here. And that is probably enough models. -->
 
