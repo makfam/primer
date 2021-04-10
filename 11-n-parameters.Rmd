@@ -516,19 +516,71 @@ model_4 %>%
 As we can see, this plot is quite different! This plot is showing, rather than the posterior for age 0, the posterior for the average age in the dataset, which is about `r round(mean(ch9_sham$age), 0)`. In this example, where `c_age` is more meaningful, the difference between the estimates for percent voting within `Control` and `Neighbors` is even greater. In fact, there is no overlap between the groups. According to this model, we would *never* expect for someone in the `Control` group to be more likely to vote than someone in the `Neighbors` group. 
 
 
-### primary_06 ~ age + solo + treatment + solo*treatment
+### primary_06 ~ age + treatment + solo*treatment
 
 It is time to look at interactions! Here, we will look at `primary_06` as a function of `c_age`, `solo`, `treatment`, and `solo*treatment`. What does `solo*treatment` mean for us? It means we are looking at the `solo` and `treatment` variables as they correspond to one another. 
 
+```{r}
+shaming <- shaming %>% 
+  mutate(c_age = age - mean(age))
+```
+
+
 ```{r, cache=TRUE}
-model_5 <- stan_glm(data = ch9_sham, 
-                 formula = primary_06 ~ c_age + solo + treatment + solo * treatment, 
+model_5 <- stan_glm(data = shaming, 
+                 formula = primary_06 ~ c_age +  treatment + c_age*treatment, 
                  refresh = 0)
 ```
 
 ```{r}
 print(model_5, digits = 3)
 ```
+
+Tidy the model:
+
+```{r}
+model_5 %>% 
+  tidy()
+
+model_5
+```
+Create posterior: 
+
+```{r} 
+model_5 %>%  
+  as_tibble() %>%  
+  mutate(Control = `(Intercept)`) %>%  
+  
+  # Add the intercepts to each appropriate treatment term. 
+  
+  mutate(Neighbors = `(Intercept)` + `treatmentNeighbors`) %>%
+  mutate(Civic_Duty = `(Intercept)` + `treatmentCivic Duty`) %>%
+  mutate(Hawthorne = `(Intercept)` + `treatmentHawthorne`) %>%
+  mutate(Self = `(Intercept)` + `treatmentSelf`) %>%
+  
+  # Select columns for each treatment.
+  
+  select(Control, Neighbors, Civic_Duty, Hawthorne, Self) %>% 
+  
+  # Pivot_longer and create plot. 
+  
+  pivot_longer(cols = Control:Self, 
+               names_to = "parameters", 
+               values_to = "percent_voting") %>%  
+  ggplot(aes(percent_voting, fill = parameters)) + 
+    geom_histogram(aes(y = after_stat(count/sum(count))), 
+                   alpha = 0.5,  
+                   bins = 100,  
+                   position = "identity") + 
+    labs(title = "Posterior Probability Distribution", 
+         subtitle = "Comparing voting rates for treatments", 
+        x = "% of group voting", 
+        y = "Probability") +  
+   scale_x_continuous(labels = scales::percent_format()) + 
+   scale_y_continuous(labels = scales::percent_format()) + 
+   theme_classic() 
+```
+
 
 <!-- There is lots to look at here. Let's narrow our focus a bit to highlight some important takeaways. First, our baseline is again: female participants in multi-person households under treatment Civic Duty. For this group, the (Intercept) is 0.304 = 30.4% voting. Every other variable represents an offset from that baseline value. Let's dig in!
 
