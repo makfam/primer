@@ -465,101 +465,64 @@ model_3 %>%
 
 This is interesting. Here, we can see that the difference between the expected voting behavior between Control and Neighbors is meaningful. There is only a very small overlap where it is more likely for those in Control to vote when compared with those in the treatment group. This bodes well for our election, as we see that the treatment makes a large difference.
 
-However, there is one caveat to this plot: it is the posterior for those with voting age zero, which is nonsense!
+However, there is one caveat to this plot: it is the posterior for those with voting age zero, which is nonsense! Is this helpful for *our* election? Not really, since our voters are likely to be... well, not zero years old. 
 
-<!-- # In progress. Modify x-axis labels *10.  -->
+Let's modify `age` to be the average age for the dataset. We will use the mean of election_age, which is about `r round(mean(ch9_sham$age), 0)`. Once we find this number, we will subtract it from every `age` value, creating a new variable: `c_age`, where the “c” stand for centered. `c_age` is the number of years a voter has been alive, as of Election Day, relative to the average years alive of all voters on election day.
 
-<!-- Be careful! This is messed up. It is the posterior for those with voting age zero, which is nonsense, so why look at it! -->
+```{r}
+ch9_sham <- ch9_sham %>% 
+  mutate(c_age = age - mean(age))
+```
 
-
-<!-- ```{r} -->
-<!-- model_3 %>%  -->
-<!--   as_tibble() %>%  -->
-<!--   mutate(Neighbors = `(Intercept)` + `treatmentNeighbors`) %>%  -->
-<!--   mutate(Control = `(Intercept)`) %>%  -->
-<!--   select(Neighbors, Control) %>%  -->
-<!--   pivot_longer(cols = Neighbors:Control, -->
-<!--                names_to = "parameters", -->
-<!--                values_to = "percent_voting") %>%  -->
-<!--   ggplot(aes(percent_voting, fill = parameters)) + -->
-<!--   geom_histogram(aes(y = after_stat(count/sum(count))), -->
-<!--                    alpha = 0.5,  -->
-<!--                    bins = 100,  -->
-<!--                    position = "identity") + -->
-<!--     labs(title = "Posterior Probability Distribution", -->
-<!--          subtitle = "for Control versus Neighbors voting rates", -->
-<!--          x = "% of group voting", -->
-<!--          y = "Probability") +  -->
-<!--     scale_x_continuous(labels = scales::number_format()) + -->
-<!--     scale_y_continuous(labels = scales::percent_format()) + -->
-<!--     theme_classic() -->
-
-<!-- ``` -->
-
-<!-- Add in explanations.
-Obvious difference in Neighbors as more likely to vote. 
-Very few chances that Control votes more (though possible).-->
-
-
-### primary_06 ~ age + solo + treatment
-
-
-Now that we have analyzed the impact of our various treatments on voting behavior, let's turn to three different variables together: sex, solo (living alone), and treatment.
+Create our model: 
 
 ```{r, cache=TRUE}
 model_4 <- stan_glm(data = ch9_sham, 
-                 formula = primary_06 ~ treatment + age + solo, 
+                 formula = primary_06 ~ treatment + c_age, 
                  refresh = 0)
 ```
+
+Look at results: 
 
 ```{r}
 print(model_4, digits = 3)
 ```
 
-First, let's look at which variables are included on our left hand side. Besides our (Intercept), we are given treatmentNeighbors, age, and soloTRUE. What does that mean our baseline for comparison, or (Intercept), is? Look to what we are not given: treatmentControl and soloFALSE. Therefore, our baseline for comparison are the participants in the Control group who do *not* live in single person households. As we learned before, age calculates starting at age 0 and is therefore unhelpful practially. For this group, the percentage voting is .085 = 8.5%. From this figure, we will break down what our variables and their respective medians mean. 
+Now that we have a more sensible value for age, let's create the posterior:
 
-- treatmentNeighbors, with a median of 0.078: the offset in the Neighbors treatment is 0.078 compared with the control group. The percent voting for this group is then 0.085 (Control) + 0.078 (Neighbors) = .163 = 16.3%. This illustrates that the Neighbors treatment is positively correlated with voting. 
-- age, with a median of 0.004: as before, the age represents the positively correlated increase with voting as someone ages. For every decade older a participant is, their chance of voting increases by 4%. 
-- soloTRUE, with a median of 0.015: as compared with participants in households exceeding 1 persons, participants who live alone are more likely to vote by a factor of 0.015 = 1.5%. Note that this is only true for our baseline group of Control participants and does not include an analysis for those in Neighbors. 
+```{r} 
+model_4 %>%  
+  as_tibble() %>%  
+  mutate(Neighbors = `(Intercept)` + `treatmentNeighbors`) %>%
+  mutate(Control = `(Intercept)`) %>%  
+  select(Neighbors, Control) %>% 
+  pivot_longer(cols = Neighbors:Control, 
+               names_to = "parameters", 
+               values_to = "percent_voting") %>%  
+  ggplot(aes(percent_voting, fill = parameters)) + 
+    geom_histogram(aes(y = after_stat(count/sum(count))), 
+                   alpha = 0.5,  
+                   bins = 100,  
+                   position = "identity") + 
+    labs(title = "Posterior Probability Distribution", 
+         subtitle = "for Control versus Neighbors voting rates", 
+        x = "% of group voting", 
+        y = "Probability") +  
+   scale_x_continuous(labels = scales::percent_format()) + 
+   scale_y_continuous(labels = scales::percent_format()) + 
+   theme_classic() 
+```
 
+As we can see, this plot is quite different! This plot is showing, rather than the posterior for age 0, the posterior for the average age in the dataset, which is about `r round(mean(ch9_sham$age), 0)`. In this example, where `c_age` is more meaningful, the difference between the estimates for percent voting within `Control` and `Neighbors` is even greater. In fact, there is no overlap between the groups. According to this model, we would *never* expect for someone in the `Control` group to be more likely to vote than someone in the `Neighbors` group. 
 
-<!-- ```{r} -->
-
-<!-- # Modify x scale -->
-
-<!-- model_4 %>%  -->
-<!--   as_tibble() %>%  -->
-<!--   mutate(SoloTrue = `(Intercept)` + `soloTRUE`) %>%  -->
-<!--   mutate(SoloFalse = `(Intercept)`) %>%  -->
-<!--   select(SoloTrue, SoloFalse) %>%  -->
-<!--   pivot_longer(cols = SoloTrue:SoloFalse, -->
-<!--                names_to = "parameters", -->
-<!--                values_to = "percent_voting") %>%  -->
-<!--   ggplot(aes(percent_voting, fill = parameters)) + -->
-<!--     geom_histogram(aes(y = after_stat(count/sum(count))), -->
-<!--                    alpha = 0.5,  -->
-<!--                    bins = 100,  -->
-<!--                    position = "identity") + -->
-<!--     labs(title = "Posterior Probability Distribution", -->
-<!--          subtitle = "for those who live alone versus live with other people", -->
-<!--          x = "% of group voting", -->
-<!--          y = "Probability") +  -->
-<!--     scale_x_continuous(labels = scales::number_format()) + -->
-<!--     scale_y_continuous(labels = scales::percent_format()) + -->
-<!--     theme_classic() -->
-
-<!-- ``` -->
-
-<!-- Add in explanation. -->
 
 ### primary_06 ~ age + solo + treatment + solo*treatment
 
-
-Since we've now studied a model with three different variables, it is time to look at interactions! Here, we will look at `primary_06` as a function of age, solo, treatment, and `solo*treatment`. What does `solo*treatment` mean for us? It means we are looking at the `solo` and `treatment` variables as they correspond to one another. 
+It is time to look at interactions! Here, we will look at `primary_06` as a function of `c_age`, `solo`, `treatment`, and `solo*treatment`. What does `solo*treatment` mean for us? It means we are looking at the `solo` and `treatment` variables as they correspond to one another. 
 
 ```{r, cache=TRUE}
 model_5 <- stan_glm(data = ch9_sham, 
-                 formula = primary_06 ~ age + solo + treatment + solo * treatment, 
+                 formula = primary_06 ~ c_age + solo + treatment + solo * treatment, 
                  refresh = 0)
 ```
 
