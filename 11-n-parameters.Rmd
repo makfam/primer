@@ -2,40 +2,17 @@
 
 <!-- MF: Need to replace hard coded numbers. --> 
 
+<!-- MF: Add a testing is nonsense section? --> 
+
 <!-- Two goals this week: -->
-
-<!-- First, replace geom_pointrange with appropriate functions from ggdist. https://mjskay.github.io/ggdist/ Do not use tidy(). Start with 
-
-
-fit_1 %>% 
-  as_tibble() %>% 
-  pivot_longer(cols = stateAlabama:stateWyoming,
-               names_to = "state",
-               values_to = "years") %>% 
-  mutate(state = str_replace(state, "state", "")) %>%              
-  ggplot(aes(x = vals, y = pulls)) +
-  
-  # Not these geoms. I think we just want pointinterval
-  
-  stat_halfeye(aes(fill = stat(cut_cdf_qi(cdf, .width = c(0.95, 1)))),
-               show.legend = FALSE) +
-  scale_fill_calc()
-
-
-MF: Couldn't figure this out. Will attempt to fix tomorrow and submit new pull request.
--->
-
 
 <!-- Second, make shaming part of chapter good! Population, temperance, Preceptor's Posterior, ideal Preceptor Table, testing. All the cool themes. Bring it all together. Make the students say Ahhh! -->
 
 <!-- Where is the question that we are trying to answer? Do we answer them? Are they good questions? -->
 
-<!-- Example: No discussion of population, validity, representativeness or ethics in Wisdom discussion. MF: Fixed.-->
-
 <!-- * Should start with  single variable which actually requires lots of parameters. For example, death_age as a function of state and come up with a different average death_age for each state. This is cheating in that it is too many parameters, or rather that some of the parameters need to be estimated for too little data.  But it would allow us to explain a bunch of stuff! Including Bayesian shrinkage. Saving this till the end of the model causes us to miss stuff. But the rest of the analysis used lived_after. Which is better. Yes? Should we discuss? Use both? -->
 
-
-<!-- Consider getting rid of state example, or moving it as a teaser to end of chaoter 10. Could we make a similar point with an example from shaming? -->
+<!-- Consider getting rid of state example, or moving it as a teaser to end of chapter 10. Could we make a similar point with an example from shaming? -->
 
 *This chapter is still a DRAFT.*
 
@@ -272,7 +249,7 @@ With variable names:
 $$ y_{i} = \beta_{0} + \beta_{1}civic\_duty_i + \beta_{2}hawthorne_i + \beta_{3}self_i + \beta_{4}neighbors_i + \beta_{5}male_i + \epsilon_{i} $$
 
 There are two ways to formalize the model used in `model_1`: with and without the variable names. The former is related to the concept of Justice as we acknowledge that the model is constructed via the linear sum of `n` parameters times the value for `n` variables, along  with an error term. In other words, it is a linear model. The only other model we have learned this semester is a logistic model, but there are other kinds of models, each defined by the mathematics and the assumptions about the error term. 
-The second type of formal notation, more associated with the virtue Courage, includes the actual variable names we are using. The trickest part is the transformation of character/factor variables into indicator variables, meaning variables with 0/1 values. Because `treatment` has 5 levels, we need 4 indicator variables. The fifth level --- which, by default, is the first variable alphabetically (for character variables) or the first level (for factor variables) --- is incorporated in the intercept.
+The second type of formal notation, more associated with the virtue Courage, includes the actual variable names we are using. The trickiest part is the transformation of character/factor variables into indicator variables, meaning variables with 0/1 values. Because `treatment` has 5 levels, we need 4 indicator variables. The fifth level --- which, by default, is the first variable alphabetically (for character variables) or the first level (for factor variables) --- is incorporated in the intercept.
 
 
 Let's translate the model into code. 
@@ -484,7 +461,7 @@ plot_data  %>%
 This is interesting! It shows us a few valuable bits of information:
 
 * We are interested in the average treatment effect of postcards. There are 4 different postcards, each of which can be compared to what would have happened if the voter did not receive any postcard. 
-* These four treatment effects, however, are heterogenous. They vary depending on an individual's voting history, which we organize into three categories: Rarely Vote, Sometimes Vote and Always Vote. So, we have 12 different
+* These four treatment effects, however, are heterogeneous. They vary depending on an individual's voting history, which we organize into three categories: Rarely Vote, Sometimes Vote and Always Vote. So, we have 12 different
 average treatment effects, one for each possible combination of postcard and voting history. 
 * For each of these combinations, the graphic shows our posterior distribution.
 * Consider the highest yellow distribution, which is the posterior distribution for the average treatment effect of receiving the Neighbors postcard (compared to not getting a postcard) for Always Voters. The posterior is centered around 9% with a 95% confidence interval of, roughly, 8% to 10%. 
@@ -493,7 +470,7 @@ average treatment effects, one for each possible combination of postcard and vot
 
 If we wanted to increase voter turnout, then, we would focus our efforts on the Neighbors postcard for citizens who already demonstrate a tendency to vote. 
 
-Does this mean this is guarenteed to work? Unfortunately, no matter how hard we try, *we cannot predict the future*. Though we now have conclusions about how shaming impacted voters in the 2006 primary elections, we do not have the confidence to say that what worked or didn't work then would work now. 
+Does this mean this is guaranteed to work? Unfortunately, no matter how hard we try, *we cannot predict the future*. Though we now have conclusions about how shaming impacted voters in the 2006 primary elections, we do not have the confidence to say that what worked or didn't work then would work now. 
 
 For instance, perhaps the impact of your neighbors knowing your voting history is greater in the midst of a pandemic, where you may be locked inside with few interactions outside of your immediate proximity. Perhaps the opposite is true. These *unknown unknowns* cannot be accounted for in our models. We cannot predict a pandemic, nor can we predict how this will change the way that people vote or respond to fliers. 
 
@@ -510,6 +487,6 @@ These complications are why we must make inferences with a grain of salt. That i
 * A function we are familiar with, `stan_glm()`, is used to create models with $N$ parameters. 
 
 *Remember*:
-* It is important to remember that the data does not equal the truth. For instance, in regards to our first model, we do not expect a governor elected in Delaware to live significantly longer than a governor in Wyoming.
+* It is important to remember that the data does not equal the truth. 
 * The population we would like to make inferences about *is not the population for which we have data*. It is a matter of wisdom whether the data we do have maps closely enough to the population we are studying.
 * When dealing with models with many parameters, double check that you know how to find the true slope and intercepts --- often, this requires adding numerous values to the coefficient you are studying. 
