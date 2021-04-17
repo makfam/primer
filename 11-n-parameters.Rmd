@@ -79,29 +79,6 @@ In the third treatment, Self, the mailing includes the recent voting record of e
 
 The fourth treatment, Neighbors, provides the household members' voting records, as well as the voting records of those who live nearby. This mailing also told recipients, "we intend to mail an updated chart" of who voted in the 2006 election to the entire neighborhood.
 
-For now, let's focus on a subset of the data. We will sample just 10,000 rows because otherwise `stan_glm()` takes an annoyingly large amount of time to work. Nothing substantive changes.
-
-```{r}
-set.seed(9)
-ch9_sham <- shaming %>% 
-  filter(treatment %in% c("Control", "Neighbors")) %>% 
-  droplevels() %>% 
-  mutate(solo = ifelse(hh_size == 1, TRUE, FALSE)) %>% 
-  select(primary_06, treatment, solo, sex, age) %>% 
-  slice_sample(n = 10000, replace = FALSE)
-```
-
-We create the variable `solo`, which is TRUE for voters who live alone and FALSE for those that do not. We are curious to see if the treatment effect, if any, is the same for voters who live alone as it is for those who do not. We have also focused in on only two "treatments": Control and Neighbors. This is for the sake of simplification. We want to know if social pressure impacts voting behavior, so it makes sense to look at the treatment that provides the most social pressure. 
-
-```{r}
-ch9_sham %>% 
-  skim()
-```
-
-
-Let's focus on a few observations that may be relevant to our analysis. First, note that each treatment has approximately 38,000 respondents. The control group, denoted by `Con`, has approximately 190 thousand respondents. For the logical variable `solo`, we see that approximately 47 thousand of the total respondents live alone (TRUE), while approximately 296 thousand live in households greater than 1 (FALSE). It may also be important to note that the average age of the respondents is 49.8 years with a standard deviation of 14.4 years.
-
-
 ## Population
 
 One of the most important components of Wisdom is the concept of the "population". Recall the questions we asked earlier:
