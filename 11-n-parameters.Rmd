@@ -89,11 +89,7 @@ In the third treatment, Self, the mailing includes the recent voting record of e
 
 The fourth treatment, Neighbors, provides the household members' voting records, as well as the voting records of those who live nearby. This mailing also told recipients, "we intend to mail an updated chart" of who voted in the 2006 election to the entire neighborhood.
 
-<<<<<<< HEAD
-## Population
-=======
 ### Population
->>>>>>> 2a68871eb8d2438bad556eaa5fa3b49b7d5b1c10
 
 One of the most important components of Wisdom is the concept of the "population". Recall the questions we asked earlier:
 
@@ -131,19 +127,11 @@ knitr::include_graphics("other/images/Courage.jpg")
 ```
 
 Because we will be going through a series of models in this chapter, it is useful to combine the virtues of Justice and Courage. 
-<<<<<<< HEAD
 
 ### Set-up
 
 We start by creating a function named `fcn_1()` that takes in a vector of "Yes"/"No" responses and returns a binary integer vector where 1 replaces "Yes", 0 replaces "No", and anything else becomes `NA`. The function should alert the user if they are passing in a problematic vector, i.e. one that contains lowercase "yes" and/or "no". It will also alert the user if there are not at least once observation equal to "Yes". You may find the `case_when()` function to be useful. `NA` can take on different types depending on the classification of the vector. Read more on this at `?NA`. 
 
-=======
-
-### Set-up
-
-We start by creating a function named `fcn_1()` that takes in a vector of "Yes"/"No" responses and returns a binary integer vector where 1 replaces "Yes", 0 replaces "No", and anything else becomes `NA`. The function should alert the user if they are passing in a problematic vector, i.e. one that contains lowercase "yes" and/or "no". It will also alert the user if there are not at least once observation equal to "Yes". You may find the `case_when()` function to be useful. `NA` can take on different types depending on the classification of the vector. Read more on this at `?NA`. 
-
->>>>>>> 2a68871eb8d2438bad556eaa5fa3b49b7d5b1c10
 ```{r fcn_1}
 fcn_1 <- function(x){
   
@@ -266,49 +254,6 @@ print(model_1, digits = 3)
 
 
 We will now create a table that nicely formats the results of `fit_1` using the `tbl_regression()` function from the **gtsummary** package. It will also display the associated 95% confidence interval for each coefficient.
-<<<<<<< HEAD
-
-```{r, message = FALSE}
-tbl_regression(model_1, 
-               intercept = TRUE, 
-               estimate_fun = function(x) style_sigfig(x, digits = 3)) %>%
-  
-  # Using Beta as the name of the parameter column is weird.
-  
-  as_gt() %>%
-  tab_header(title = md("**Likelihood of Voting in the Next Election**"),
-             subtitle = "How Treatment Assignment and Age Predict Likelihood of Voting") %>%
-  tab_source_note(md("Source: Gerber, Green, and Larimer (2008)")) %>% 
-  cols_label(estimate = md("**Parameter**"))
-```
-
-Interpretation: 
-* The intercept of this model is the expected value of the probability of someone voting in the 2006 primary given that they are part of the control group and are female. In this case, we estimate that women in the control group will vote ~29% of the time. 
-* The coefficient for `sexMale` indicates the difference in likelihood of voting between a male and female. In other words, when comparing men and women, the 0.012 implies that men are ~1.2%  more likely to vote than women. Note that, because this is a linear model with no interactions between sex and other variables, this 1.2% difference applies to any male, regardless of the treatment he received. We are 95% certain that this difference is between 0.9% of 1.5%. Because sex can
-not be manipulated (by assumption), we should not use a causal interpretation of the 1.2%. 
-* The coefficients of the treatments, on the other hand, do have a causal interpretation. For a single individual, of either sex, being sent the Self postcard increases your probability of voting by 4.8%. We are 95% certain that the true value for the average treatment effect of Self postcards is between 4.4% and 5.4%. It appears that the `Neighbors` treatment is the most effective at ~8.1% and `Civic Duty` is the least effective at ~1.8%. 
-
-
-### primary_06 ~ z_age + sex + treatment + voter_class + voter_class*treatment
-
-It is time to look at interactions! Create another model named `fit_2` that estimates `primary_06` as a function of `z_age`, `sex`, `treatment`, `voter_class`, and the interaction between treatment and voter classification. 
-
-The math: 
-$$y_{i} = \beta_{0} + \beta_{1}z\_age + \beta_{2}male_i + \beta_{3}civic\_duty_i + \\ \beta_{4}hawthorne_i + \beta_{5}self_i + \beta_{6}neighbors_i + \\ \beta_{7}Sometimes\ vote_i + \beta_{8}Always\ vote_i + \\ \beta_{9}civic\_duty_i Sometimes\ vote_i + \beta_{10}hawthorne_i Sometimes\ vote_i + \\ \beta_{11}self_i Sometimes\ vote_i + \beta_{11}neighbors_i Sometimes\ vote_i + \\ \beta_{12}civic\_duty_i Always\ vote_i + \beta_{13}hawthorne_i Always\ vote_i + \\ \beta_{14}self_i Always\ vote_i + \beta_{15}neighbors_i Always\ vote_i + \epsilon_{i}$$
-Translate into code: 
-
-```{r fit_2, cache = TRUE}
-
-fit_2 <- stan_glm(data = object_1,
-                  formula = primary_06 ~ z_age + sex + treatment + voter_class + 
-                            treatment*voter_class,
-                  family = gaussian,
-                  refresh = 0,
-                  seed = 789)
-
-```
-
-=======
 
 ```{r, message = FALSE}
 tbl_regression(model_1, 
@@ -357,11 +302,7 @@ print(fit_2, digits = 3)
 
 As we did with our first model, create a regression table to observe our findings: 
 
-<<<<<<< HEAD
-```{r table_2, include = ! assignment}
-=======
 ```{r table_2}
->>>>>>> 2a68871eb8d2438bad556eaa5fa3b49b7d5b1c10
 tbl_regression(fit_2, 
                intercept = TRUE, 
                estimate_fun = function(x) style_sigfig(x, digits = 3)) %>%
