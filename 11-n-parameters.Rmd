@@ -8,7 +8,7 @@
 
 <!-- Two goals this week: -->
 
-<!-- Wisdom: Begin with the ideal Preceptor Table. Depends on the question. Might be all voters in Massachusetts. Might be just the Republican voters. This determines if we are causal or predictive.  Then look for data and explore that data. What must I assume about the population, to allow me to go forward? If the data is not "close enough" to my ideal Preceptor Table, I give up. Wisdom is about knowing when to quit.
+<!-- Wisdom: Begin with the ideal Preceptor Table. Depends on the question. Might be all voters in Massachusetts. Might be just the Republican voters. This determines if we are causal or predictive.  Then look for data and explore that data. What must I assume about the population, to allow me to go forward? If the data is not "close enough" to my ideal Preceptor Table, I give up. Wisdom is about knowing when to quit. MF: Done.
 
 Justice: Actual Preceptor Table. Then, representativeness (rows), validity (columns). Only the main functional form, with no variable names. Discussion of the error term. 
 
@@ -88,6 +88,46 @@ In the second treatment, Hawthorne, households received a mailing which told the
 In the third treatment, Self, the mailing includes the recent voting record of each member of the household, placing the word "Voted" next to their name if they did in fact vote in the 2004 election or a blank space next to the name if they did not. In this mailing, the households were also told, “we intend to mail an updated chart" with the voting record of the household members after the 2006 primary. By emphasizing the public nature of voting records, this type of mailing exerts more social pressure on voting than the Hawthorne treatment.
 
 The fourth treatment, Neighbors, provides the household members' voting records, as well as the voting records of those who live nearby. This mailing also told recipients, "we intend to mail an updated chart" of who voted in the 2006 election to the entire neighborhood.
+
+### Ideal Preceptor Table
+
+Recall the ideal Preceptor Table. What rows and columns of data do you need such that, if you had them all, the calculation of the number of interest would be trivial? If you want to know the average height of an adult in India, then the ideal Preceptor Table would include a row for each adult and a column for their height. 
+
+One key aspect of this ideal Preceptor Table is whether or not we need more than one potential outcome in order to calculate our estimand. Mainly: do we need a causal model, one which estimates that attitude under both treatment and control? The Preceptor Table would require two columns for the outcome. In this case, where we are trying to see the **causal effect** of mailed voting reminders on voting. 
+
+Are we are modeling (just) for prediction or are we (also) modeling for causation? Predictive models care nothing about causation. Causal models are often also concerned with prediction, if only as a means of measuring the quality of the model. Here, we **are** looking at causation. 
+
+So, what would our ideal table look like? Assuming we are running for governor in the United States, we would ideally have data for every citizen of voting age. This means we would have approximately 200 million rows. 
+
+Because there is no missing data in an ideal Preceptor Table, we would also know the outcomes under both treatment (receiving a reminder) and control (not receiving a reminder). Here is a sample row from our table:
+
+```{r, echo = FALSE, fig.align = 'left'}
+# First, we create a tibble with the values we want for the table
+
+tibble(ID = "Citizen 1",
+       ytreat = "Did vote",
+       ycontrol = "Did not vote") %>%
+  
+  # Then, we use the gt function to make it pretty
+  
+  gt() %>%
+  cols_label(ID = md("ID"),
+                ytreat = "Behavior in Treatment",
+                ycontrol = "Behavior in Control") %>%
+  tab_style(cell_borders(sides = "right"),
+            location = cells_body(columns = vars(ID)))  %>%
+  tab_style(style = cell_text(align = "left", v_align = "middle"), 
+            locations = cells_column_labels(columns = vars(ID))) %>%
+  cols_align(align = "center", columns = TRUE) %>%
+  cols_align(align = "left", columns = vars(ID)) %>%
+  tab_spanner(label = "Outcomes", columns = vars(ytreat, ycontrol))
+```
+
+This is a good start! However, we may want even more information in our ideal Preceptor Table. Perhaps a column for sex would be informative. A column for age? Political affiliation? In a perfect world, we would know all of these pieces of information. In a perfect world, we could measure the *exact causal effect* of voting reminders for different subsets of the US population.
+
+We may also want to narrow our ideal Preceptor Table. If we are running for governor in Florida, we may only want to study citizens in Florida. If we are running as a Democrat, we may only want to study citizens who are registered Democrats. 
+
+However, the main point of this exercise is to see *what we want to know* compared with *what we actually do know*. 
 
 ### Population
 
