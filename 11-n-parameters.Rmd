@@ -2,17 +2,27 @@
 
 <!-- MF: Need to replace hard coded numbers. --> 
 
-<!-- MF: Add a testing is nonsense section? --> 
+<!-- MF: Add a testing is nonsense section. --> 
+
+<!-- Intro before Wisdom talks in generalities and asks the key question, but does not discuss data. Phrase the question as coming from a normal person. -->
 
 <!-- Two goals this week: -->
 
-<!-- Second, make shaming part of chapter good! Population, temperance, Preceptor's Posterior, ideal Preceptor Table, testing. All the cool themes. Bring it all together. Make the students say Ahhh! -->
+<!-- Wisdom: Begin with the ideal Preceptor Table. Depends on the question. Might be all voters in Massachusetts. Might be just the Republican voters. This determines if we are causal or predictive.  Then look for data and explore that data. What must I assume about the population, to allow me to go forward? If the data is not "close enough" to my ideal Preceptor Table, I give up. Wisdom is about knowing when to quit.
 
-<!-- Where is the question that we are trying to answer? Do we answer them? Are they good questions? -->
+Justice: Actual Preceptor Table. Then, representativeness (rows), validity (columns). Only the main functional form, with no variable names. Discussion of the error term. 
+
+Courage: For each model, write down the math, estimate the model, say something sensible about the regression table. 
 
 <!-- * Should start with  single variable which actually requires lots of parameters. For example, death_age as a function of state and come up with a different average death_age for each state. This is cheating in that it is too many parameters, or rather that some of the parameters need to be estimated for too little data.  But it would allow us to explain a bunch of stuff! Including Bayesian shrinkage. Saving this till the end of the model causes us to miss stuff. But the rest of the analysis used lived_after. Which is better. Yes? Should we discuss? Use both? -->
 
-<!-- Consider getting rid of state example, or moving it as a teaser to end of chapter 10. Could we make a similar point with an example from shaming? -->
+<!-- Consider getting rid of state example, or moving it as a teaser to end of chapter 10. Could we make a similar point with an example from shaming? 
+
+Temperance. Answer the question. Be aware of the limits to the accuracy of your answer. Preceptor's Posterior. Testing. All the cool themes. Bring it all together. Make the students say "Ahhh!" -->
+
+<!-- p_00 = fcn_1(primary_00), should be p_00 = primary_00 == "Yes", -->
+
+<!-- Use fit_ instead of model_. Think about other conventions you want enforce. -->
 
 *This chapter is still a DRAFT.*
 
@@ -79,7 +89,11 @@ In the third treatment, Self, the mailing includes the recent voting record of e
 
 The fourth treatment, Neighbors, provides the household members' voting records, as well as the voting records of those who live nearby. This mailing also told recipients, "we intend to mail an updated chart" of who voted in the 2006 election to the entire neighborhood.
 
+<<<<<<< HEAD
 ## Population
+=======
+### Population
+>>>>>>> 2a68871eb8d2438bad556eaa5fa3b49b7d5b1c10
 
 One of the most important components of Wisdom is the concept of the "population". Recall the questions we asked earlier:
 
@@ -117,11 +131,19 @@ knitr::include_graphics("other/images/Courage.jpg")
 ```
 
 Because we will be going through a series of models in this chapter, it is useful to combine the virtues of Justice and Courage. 
+<<<<<<< HEAD
 
 ### Set-up
 
 We start by creating a function named `fcn_1()` that takes in a vector of "Yes"/"No" responses and returns a binary integer vector where 1 replaces "Yes", 0 replaces "No", and anything else becomes `NA`. The function should alert the user if they are passing in a problematic vector, i.e. one that contains lowercase "yes" and/or "no". It will also alert the user if there are not at least once observation equal to "Yes". You may find the `case_when()` function to be useful. `NA` can take on different types depending on the classification of the vector. Read more on this at `?NA`. 
 
+=======
+
+### Set-up
+
+We start by creating a function named `fcn_1()` that takes in a vector of "Yes"/"No" responses and returns a binary integer vector where 1 replaces "Yes", 0 replaces "No", and anything else becomes `NA`. The function should alert the user if they are passing in a problematic vector, i.e. one that contains lowercase "yes" and/or "no". It will also alert the user if there are not at least once observation equal to "Yes". You may find the `case_when()` function to be useful. `NA` can take on different types depending on the classification of the vector. Read more on this at `?NA`. 
+
+>>>>>>> 2a68871eb8d2438bad556eaa5fa3b49b7d5b1c10
 ```{r fcn_1}
 fcn_1 <- function(x){
   
@@ -244,6 +266,7 @@ print(model_1, digits = 3)
 
 
 We will now create a table that nicely formats the results of `fit_1` using the `tbl_regression()` function from the **gtsummary** package. It will also display the associated 95% confidence interval for each coefficient.
+<<<<<<< HEAD
 
 ```{r, message = FALSE}
 tbl_regression(model_1, 
@@ -285,13 +308,60 @@ fit_2 <- stan_glm(data = object_1,
 
 ```
 
+=======
+
+```{r, message = FALSE}
+tbl_regression(model_1, 
+               intercept = TRUE, 
+               estimate_fun = function(x) style_sigfig(x, digits = 3)) %>%
+  
+  # Using Beta as the name of the parameter column is weird.
+  
+  as_gt() %>%
+  tab_header(title = md("**Likelihood of Voting in the Next Election**"),
+             subtitle = "How Treatment Assignment and Age Predict Likelihood of Voting") %>%
+  tab_source_note(md("Source: Gerber, Green, and Larimer (2008)")) %>% 
+  cols_label(estimate = md("**Parameter**"))
+```
+
+Interpretation: 
+* The intercept of this model is the expected value of the probability of someone voting in the 2006 primary given that they are part of the control group and are female. In this case, we estimate that women in the control group will vote ~29% of the time. 
+* The coefficient for `sexMale` indicates the difference in likelihood of voting between a male and female. In other words, when comparing men and women, the 0.012 implies that men are ~1.2%  more likely to vote than women. Note that, because this is a linear model with no interactions between sex and other variables, this 1.2% difference applies to any male, regardless of the treatment he received. We are 95% certain that this difference is between 0.9% of 1.5%. Because sex can
+not be manipulated (by assumption), we should not use a causal interpretation of the 1.2%. 
+* The coefficients of the treatments, on the other hand, do have a causal interpretation. For a single individual, of either sex, being sent the Self postcard increases your probability of voting by 4.8%. We are 95% certain that the true value for the average treatment effect of Self postcards is between 4.4% and 5.4%. It appears that the `Neighbors` treatment is the most effective at ~8.1% and `Civic Duty` is the least effective at ~1.8%. 
+
+
+### primary_06 ~ z_age + sex + treatment + voter_class + voter_class*treatment
+
+It is time to look at interactions! Create another model named `fit_2` that estimates `primary_06` as a function of `z_age`, `sex`, `treatment`, `voter_class`, and the interaction between treatment and voter classification. 
+
+The math: 
+$$y_{i} = \beta_{0} + \beta_{1}z\_age + \beta_{2}male_i + \beta_{3}civic\_duty_i + \\ \beta_{4}hawthorne_i + \beta_{5}self_i + \beta_{6}neighbors_i + \\ \beta_{7}Sometimes\ vote_i + \beta_{8}Always\ vote_i + \\ \beta_{9}civic\_duty_i Sometimes\ vote_i + \beta_{10}hawthorne_i Sometimes\ vote_i + \\ \beta_{11}self_i Sometimes\ vote_i + \beta_{11}neighbors_i Sometimes\ vote_i + \\ \beta_{12}civic\_duty_i Always\ vote_i + \beta_{13}hawthorne_i Always\ vote_i + \\ \beta_{14}self_i Always\ vote_i + \beta_{15}neighbors_i Always\ vote_i + \epsilon_{i}$$
+Translate into code: 
+
+```{r fit_2, cache = TRUE}
+
+fit_2 <- stan_glm(data = object_1,
+                  formula = primary_06 ~ z_age + sex + treatment + voter_class + 
+                            treatment*voter_class,
+                  family = gaussian,
+                  refresh = 0,
+                  seed = 789)
+
+```
+
+>>>>>>> 2a68871eb8d2438bad556eaa5fa3b49b7d5b1c10
 ```{r}
 print(fit_2, digits = 3)
 ```
 
 As we did with our first model, create a regression table to observe our findings: 
 
+<<<<<<< HEAD
 ```{r table_2, include = ! assignment}
+=======
+```{r table_2}
+>>>>>>> 2a68871eb8d2438bad556eaa5fa3b49b7d5b1c10
 tbl_regression(fit_2, 
                intercept = TRUE, 
                estimate_fun = function(x) style_sigfig(x, digits = 3)) %>%
