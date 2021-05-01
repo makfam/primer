@@ -1,6 +1,6 @@
 # N Parameters {#n-parameters}
 
-<!-- Intro before Wisdom talks in generalities and asks the key question, but does not discuss data. Phrase the question as coming from a normal person. -->
+<!-- Intro before Wisdom talks in generalities and asks the key question, but does not discuss data. Phrase the question as coming from a normal person. MF: Done. -->
 
 <!-- Two goals this week: -->
 
@@ -10,9 +10,9 @@ Justice: Actual Preceptor Table. Then, representativeness (rows), validity (colu
 
 Courage: For each model, write down the math, estimate the model, say something sensible about the regression table. MF: done.
 
-<!-- MF: Need to replace hard coded numbers. --> 
+<!-- Replace hard coded numbers. --> 
 
-<!-- MF: Add a testing is nonsense section. --> 
+<!-- Add a testing is nonsense section. --> 
 
 <!-- * Should start with  single variable which actually requires lots of parameters. For example, death_age as a function of state and come up with a different average death_age for each state. This is cheating in that it is too many parameters, or rather that some of the parameters need to be estimated for too little data.  But it would allow us to explain a bunch of stuff! Including Bayesian shrinkage. Saving this till the end of the model causes us to miss stuff. But the rest of the analysis used lived_after. Which is better. Yes? Should we discuss? Use both? -->
 
@@ -41,7 +41,11 @@ knitr::include_graphics("other/images/Wisdom.jpg")
 
 As you research ways to increase voting, you come across a large-scale experiment showing the effect of sending out a voting reminder that "shames" citizens who do not vote. You are considering sending out a "shaming" voting reminder yourself. 
 
-We will be looking at the `shaming` dataset from the **primer.data** package. This is dataset is from "Social Pressure and Voter Turnout: Evidence from a Large-Scale Field Experiment" by Gerber, Green, and Larimer (2008). [Check out the paper here](https://github.com/PPBDS/primer.data/blob/master/inst/papers/shaming.pdf). You can, and should, familiarize yourself with the data by typing `?shaming`. Our question:
+We will be looking at the `shaming` dataset from the **primer.data** package. This is dataset is from "Social Pressure and Voter Turnout: Evidence from a Large-Scale Field Experiment" by Gerber, Green, and Larimer (2008). [Check out the paper here](https://github.com/PPBDS/primer.data/blob/master/inst/papers/shaming.pdf). You can, and should, familiarize yourself with the data by typing `?shaming`. 
+
+Recall our initial question: how can we encourage voters to go out to the polls on election day? We now need to translate this into a "data science" question. 
+
+Our question:
 
 *What is the causal effect, on the likelihood of voting, of different postcards on voters of different levels of political engagement?*
 
@@ -388,7 +392,6 @@ fit_2 <- stan_glm(data = object_1,
 
 ```
 
->>>>>>> 2a68871eb8d2438bad556eaa5fa3b49b7d5b1c10
 ```{r}
 print(fit_2, digits = 3)
 ```
