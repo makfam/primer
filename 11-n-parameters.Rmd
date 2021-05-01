@@ -367,10 +367,9 @@ tbl_regression(model_1,
 ```
 
 Interpretation: 
-* The intercept of this model is the expected value of the probability of someone voting in the 2006 primary given that they are part of the control group and are female. In this case, we estimate that women in the control group will vote ~29% of the time. 
-* The coefficient for `sexMale` indicates the difference in likelihood of voting between a male and female. In other words, when comparing men and women, the 0.012 implies that men are ~1.2%  more likely to vote than women. Note that, because this is a linear model with no interactions between sex and other variables, this 1.2% difference applies to any male, regardless of the treatment he received. We are 95% certain that this difference is between 0.9% of 1.5%. Because sex can
-not be manipulated (by assumption), we should not use a causal interpretation of the 1.2%. 
-* The coefficients of the treatments, on the other hand, do have a causal interpretation. For a single individual, of either sex, being sent the Self postcard increases your probability of voting by 4.8%. We are 95% certain that the true value for the average treatment effect of Self postcards is between 4.4% and 5.4%. It appears that the `Neighbors` treatment is the most effective at ~8.1% and `Civic Duty` is the least effective at ~1.8%. 
+* The intercept of this model is the expected value of the probability of someone voting in the 2006 primary given that they are part of the control group and are female. In this case, we estimate that women in the control group will vote ~`r round((coef(model_1)["(Intercept)"] * 100), 1)`% of the time. 
+* The coefficient for `sexMale` indicates the difference in likelihood of voting between a male and female. In other words, when comparing men and women, the `r round(coef(model_1)["sexMale"], 3)` implies that men are ~`r round((coef(model_1)["sexMale"] * 100), 1)`%  more likely to vote than women. Note that, because this is a linear model with no interactions between sex and other variables, this difference applies to any male, regardless of the treatment he received. Because sex can not be manipulated (by assumption), we should not use a causal interpretation of the coefficient. 
+* The coefficients of the treatments, on the other hand, do have a causal interpretation. For a single individual, of either sex, being sent the Self postcard increases your probability of voting by `r round((coef(model_1)["treatmentSelf"] * 100), 1)`%. It appears that the `Neighbors` treatment is the most effective at ~`r round((coef(model_1)["treatmentNeighbors"] * 100), 1)`% and `Civic Duty` is the least effective at ~`r round((coef(model_1)["treatmentCivic Duty"] * 100), 1)`%. 
 
 
 ### primary_06 ~ z_age + sex + treatment + voter_class + voter_class*treatment
@@ -411,12 +410,11 @@ tbl_regression(fit_2,
 
 Now that we have a summarized visual for our data, let's interpret the findings: 
 * The intercept of `fit_2` is the expected probability of voting in the upcoming election for a woman of average age  (~ 50 years old in this data), who is assigned to the Control group, and is a Rarely Voter. The
-estimate is 15.3% with a 95% confidence interval of 14.7% to 15.9%. 
-* The coefficient of z_age, 0.035, implies a change of ~ 3.5% in likelihood of voting for each increment of one standard deviation (~ 14.45
-years). For example: when comparing someone 50 years old with someone 65, the latter is about 3.5% more likely to vote.
-* Exposure to the Neighbors treatment shows a ~4.4% increase in voting likelihood for someone in the Rarely Vote category. Because of random assignment of treatment, we can interpret that coefficient as an estimate
+estimate is `r round((coef(fit_2)["(Intercept)"] * 100), 1)`%. 
+* The coefficient of z_age, `r round(coef(fit_2)["z_age"], 1)`, implies a change of ~`r round((coef(fit_2)["z_age"] * 100), 1)`% in likelihood of voting for each increment of one standard deviation (~ 14.45 years). For example: when comparing someone 50 years old with someone 65, the latter is about `r round((coef(fit_2)["z_age"] * 100), 1)`% more likely to vote.
+* Exposure to the Neighbors treatment shows a ~`r round((coef(fit_2)["treatmentNeighbors"] * 100), 1)`% increase in voting likelihood for someone in the Rarely Vote category. Because of random assignment of treatment, we can interpret that coefficient as an estimate
 of the average treatment effect. 
-* If someone were from a different voter classification, the calculation is more complex because we need to account for the interaction term. For example, for individuals who Sometimes Vote, the treatment effect of Neighbors is 8.6%. For Always Vote Neighbors, it is 9.0%. 
+* If someone were from a different voter classification, the calculation is more complex because we need to account for the interaction term. For example, for individuals who Sometimes Vote, the treatment effect of Neighbors is `r round(coef(fit_2)["treatmentNeighbors"] + coef(fit_2)["treatmentNeighbors:voter_classSometimes Vote"], 1)`%. For Always Vote Neighbors, it is `r round(coef(fit_2)["treatmentNeighbors"] + coef(fit_2)["treatmentNeighbors:voter_classAlways Vote"], 1)`%. 
 
 ## Temperance
 
