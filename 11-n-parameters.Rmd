@@ -1,18 +1,18 @@
 # N Parameters {#n-parameters}
 
-<!-- MF: Need to replace hard coded numbers. --> 
-
-<!-- MF: Add a testing is nonsense section. --> 
-
 <!-- Intro before Wisdom talks in generalities and asks the key question, but does not discuss data. Phrase the question as coming from a normal person. -->
 
 <!-- Two goals this week: -->
 
 <!-- Wisdom: Begin with the ideal Preceptor Table. Depends on the question. Might be all voters in Massachusetts. Might be just the Republican voters. This determines if we are causal or predictive.  Then look for data and explore that data. What must I assume about the population, to allow me to go forward? If the data is not "close enough" to my ideal Preceptor Table, I give up. Wisdom is about knowing when to quit. MF: Done.
 
-Justice: Actual Preceptor Table. Then, representativeness (rows), validity (columns). Only the main functional form, with no variable names. Discussion of the error term. 
+Justice: Actual Preceptor Table. Then, representativeness (rows), validity (columns). Only the main functional form, with no variable names. Discussion of the error term. MF: Done. 
 
-Courage: For each model, write down the math, estimate the model, say something sensible about the regression table. 
+Courage: For each model, write down the math, estimate the model, say something sensible about the regression table. MF: done.
+
+<!-- MF: Need to replace hard coded numbers. --> 
+
+<!-- MF: Add a testing is nonsense section. --> 
 
 <!-- * Should start with  single variable which actually requires lots of parameters. For example, death_age as a function of state and come up with a different average death_age for each state. This is cheating in that it is too many parameters, or rather that some of the parameters need to be estimated for too little data.  But it would allow us to explain a bunch of stuff! Including Bayesian shrinkage. Saving this till the end of the model causes us to miss stuff. But the rest of the analysis used lived_after. Which is better. Yes? Should we discuss? Use both? -->
 
@@ -28,7 +28,9 @@ Temperance. Answer the question. Be aware of the limits to the accuracy of your 
 
 Having created models with one parameter in Chapter \@ref(one-parameter), two parameters in Chapter \@ref(two-parameters), three parameters in Chapter \@ref(three-parameters), four parameters in Chapter \@ref(four-parameters) and five parameters in Chapter \@ref(five-parameters), you are now ready to make the jump to $N$ parameters. 
 
-In this chapter, we will consider models with many parameters and the complexities that arise therefrom. 
+In this chapter, we will consider models with many parameters and the complexities that arise therefrom. As our models grow in complexity, we need to pay extra attention to basic considerations like validity, population, and representativeness. It is easy to jump right in and start interpreting! It is harder, but necessary, to ensure that our models are really answering our questions. 
+
+Imagine you are running for Governor and want to do a better job of getting your voters to vote. How can you encourage voters to go out to the polls on election day? 
 
 
 ## Wisdom
@@ -37,7 +39,7 @@ In this chapter, we will consider models with many parameters and the complexiti
 knitr::include_graphics("other/images/Wisdom.jpg")
 ```
 
-Imagine you are running for Governor and want to do a better job of getting your voters to vote. You recently read about a large-scale experiment showing the effect of sending out a voting reminder that "shames" citizens who do not vote. You are considering sending out a "shaming" voting reminder yourself. 
+As you research ways to increase voting, you come across a large-scale experiment showing the effect of sending out a voting reminder that "shames" citizens who do not vote. You are considering sending out a "shaming" voting reminder yourself. 
 
 We will be looking at the `shaming` dataset from the **primer.data** package. This is dataset is from "Social Pressure and Voter Turnout: Evidence from a Large-Scale Field Experiment" by Gerber, Green, and Larimer (2008). [Check out the paper here](https://github.com/PPBDS/primer.data/blob/master/inst/papers/shaming.pdf). You can, and should, familiarize yourself with the data by typing `?shaming`. Our question:
 
@@ -156,17 +158,68 @@ Even though the original question is about “voters” in general, and does not
 <!-- DK: Note that this situation is different from Chapter 8 in that fitted values and predicted values are not the same thing! The fitted value, for a combination of values for treatment and solo, is something 0.30, meaning that 30% of the people in this bucket votes. But the predicted value must be 0 or 1. Either you voted or you didn't. This example is clearly causal and so you need a Rubin Table with 5 potential outcome columns. The key difference in this chapter is that we are using lots of right hand side variables, both continuous and discrete. -->
 
 
-## Justice and Courage
+## Justice 
 
 ```{r echo = FALSE, out.width="60%", fig.align='center', fig.cap = "Justice"}
 knitr::include_graphics("other/images/Justice.jpg")
 ```
 
+Justice emphasizes a few key concepts: 
+* 1) The actual Preceptor Table, a structure which includes a row for every unit in the population – the data we want to have and the data which we actually have. 
+2) Is our data representative of the population? 
+3) Is the meaning of the columns consistent, i.e., can we assume validity? 
+
+We then make an assumption about the data generating mechanism. 
+
+### Actual Preceptor Table
+
+Recall that in an actual Preceptor Table, we will have a bunch of missing data! We can not use simple arithmetic to calculate the causal effect of voting reminders on voting behavior. Instead, we will be required to estimate it. This is our estimand, a variable in the real world that we are trying to measure.An estimand is not the value you calculated, but is rather the unknown variable you want to estimate.
+
+Let's build a basic visualization for the actual Preceptor Table for this scenario:
+
+```{r, echo = FALSE}
+# First, we create a tibble with the values we want for the table
+
+tibble(subject = c("Citizen 1", "Citizen 23", "Citizen 40", "Citizen 53", "Citizen 80"),
+       ytreat = c("Voted", "Did not vote", "?", "?", "Voted"),
+       ycontrol = c("?", "?", "Voted", "Did not vote", "?"),
+       ydiff = c("?", "?", "?", "?", "?")) %>%
+  
+  # Then, we use the gt function to make it pretty
+  
+  gt() %>%
+  cols_label(subject = md("ID"),
+                ytreat = md("Treatment"),
+                ycontrol = md("Control"),
+                ydiff = md("Treatment - Control")) %>%
+  cols_move(columns = vars(ytreat, ycontrol), after = vars(subject)) %>%
+  tab_style(cell_borders(sides = "right"),
+            location = cells_body(columns = vars(subject))) %>%
+  tab_style(style = cell_text(align = "left", v_align = "middle", size = "large"), 
+            locations = cells_column_labels(columns = vars(subject))) %>%
+  cols_align(align = "center", columns = TRUE) %>%
+  cols_align(align = "left", columns = vars(subject)) %>%
+  fmt_markdown(columns = TRUE)  %>%
+  tab_spanner(label = "$$\\text{Outcomes}$$", vars(ytreat, ycontrol))  %>%
+  tab_spanner(label = "$$\\text{Estimand}$$", vars(ydiff))
+```
+
+
+Here, there are two possible outcomes: did vote or did not vote. What we really want to know is the Average Treatment Effect (ATE) of the treatment, the voting reminder. We want to estimate how much the voting reminder impacts the odds of someone voting. 
+
+Note that this is a simplified version of the actual Preceptor Table. In this dataset, we have a number of other columns that we know about each of our subjects: age, sex, past voting history. In an expanded actual Preceptor Table, these columns would be included. 
+
+Now, how can we fill in the question marks? Because of the Fundamental Problem of Causal Inference, we can never know the missing values. Because we can never know the missing values, we must make assumptions. “Assumption” just means that we need a “model,” and all models have parameters.
+
+To fill in these blanks, we need to perform some datascience. This part of the process is included in courage. Let's take a look!
+
+<!-- Justice: Actual Preceptor Table. Then, representativeness (rows), validity (columns). Only the main functional form, with no variable names. Discussion of the error term. --> 
+
+## Courage
 ```{r echo = FALSE, out.width="60%", fig.align='center', fig.cap = "Courage"}
 knitr::include_graphics("other/images/Courage.jpg")
 ```
 
-Because we will be going through a series of models in this chapter, it is useful to combine the virtues of Justice and Courage. 
 
 ### Set-up
 
