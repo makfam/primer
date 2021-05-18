@@ -2,21 +2,22 @@
 
 <!-- Put ideal Preceptor table ahead of EDA. MF: Done. -->
 
-<!-- End of Wisdom, slap ideal and data together. Call it the population table. Add variable for year. -->
+<!-- Replace hard coded numbers. MF: Done --> 
 
-<!-- Replace hard coded numbers. --> 
+<!-- Consider getting rid of state example, or moving it as a teaser to end of chapter 10. Could we make a similar point with an example from shaming? MF: Done.
+
+<!-- p_00 = fcn_1(primary_00), should be p_00 = primary_00 == "Yes", MF: Done-->
+
+<!-- Use fit_ instead of model_. Think about other conventions you want enforce. MF: Done.-->
+
+<!-- Temperance. Answer the question. Be aware of the limits to the accuracy of your answer. Preceptor's Posterior. Testing. All the cool themes. Bring it all together. Make the students say "Ahhh!" -->
 
 <!-- Add a testing is nonsense section. --> 
 
 <!-- * Should start with  single variable which actually requires lots of parameters. For example, death_age as a function of state and come up with a different average death_age for each state. This is cheating in that it is too many parameters, or rather that some of the parameters need to be estimated for too little data.  But it would allow us to explain a bunch of stuff! Including Bayesian shrinkage. Saving this till the end of the model causes us to miss stuff. But the rest of the analysis used lived_after. Which is better. Yes? Should we discuss? Use both? -->
 
-<!-- Consider getting rid of state example, or moving it as a teaser to end of chapter 10. Could we make a similar point with an example from shaming? 
+<!-- End of Wisdom, slap ideal and data together. Call it the population table. Add variable for year. -->
 
-Temperance. Answer the question. Be aware of the limits to the accuracy of your answer. Preceptor's Posterior. Testing. All the cool themes. Bring it all together. Make the students say "Ahhh!" -->
-
-<!-- p_00 = fcn_1(primary_00), should be p_00 = primary_00 == "Yes", -->
-
-<!-- Use fit_ instead of model_. Think about other conventions you want enforce. -->
 
 *This chapter is still a DRAFT.*
 
@@ -175,7 +176,9 @@ These are not small issues. These are big, in-our-face issues. If we say that da
 
 It can be helpful in cases like these to make data exchangeable conditional on another assumption. For instance, if there was a trend of less voting behavior in 2021 compared with 2006, we may need to account for that in order for our predictions to be helpful. Alternatively, if we were studying a state that has historically more voting participation than Michigan, we may want to make our predictions based on the assumption that "people, on average, vote more in State X."
 
-The purpose of this section is to make us think critically about the assumptions we are making and whether those assumptions can be reasonably made. Though we will continue using this dataset in the remainder of the chapter, it is clear that we must make our predictions with caution.   
+The purpose of this section is to make us think critically about the assumptions we are making and whether those assumptions can be reasonably made. Though we will continue using this dataset in the remainder of the chapter, it is clear that we must make our predictions with caution.  
+
+
 
 <!-- DK: Add discussion of what you see here. No need to drop missing values since there aren't any. I think this next discussion can be dropped. -->
 
@@ -247,46 +250,15 @@ knitr::include_graphics("other/images/Courage.jpg")
 
 ### Set-up
 
-We start by creating a function named `fcn_1()` that takes in a vector of "Yes"/"No" responses and returns a binary integer vector where 1 replaces "Yes", 0 replaces "No", and anything else becomes `NA`. The function should alert the user if they are passing in a problematic vector, i.e. one that contains lowercase "yes" and/or "no". It will also alert the user if there are not at least once observation equal to "Yes". You may find the `case_when()` function to be useful. `NA` can take on different types depending on the classification of the vector. Read more on this at `?NA`. 
-
-```{r fcn_1}
-fcn_1 <- function(x){
-  
-  # In effort to prevent people from mis-applying this function, we want to 
-  # force users to confront the precise state of their data. This function will
-  # properly encode capitalized "Yes", capitalized "No" as 0, and will code 
-  # anything else as NA. We check that there are no lowercase "yes" or "no" 
-  # instances and that the column provided has at least 1 instance of the
-  # properly formatted "Yes" so that there are no missed y/n values and to
-  # ensure that the function is being usefully applied.
-  
-  # We can't check for at least 1 "No" due to the fact that the group was
-  # selected such that everyone voted in the 04 general election, so checking
-  # for at least 1 "Yes" will have to suffice.
-  
-  stopifnot((sum(x == "yes") == 0),
-            (sum(x == "Yes")  > 0),
-            (sum(x == "no")  == 0))
-  
-  # You can use an orphaned case_when here or you can assign to an object and 
-  # return. It works both ways.
-  
-  case_when(x == "Yes" ~ as.integer(1),
-            x == "No" ~ as.integer(0),
-            TRUE ~ NA_integer_)}
-
-```
-
 Now, we will create an object named `object_1` that includes a 3-level factor classifying voters by level of civic engagement. 
 
-* Using the function we just created, convert all primary and general election variables *that are not already 1/0 binary* to binary format. 
+* Convert all primary and general election variables *that are not already 1/0 binary* to binary format. 
 
 * Create a new column named `civ_engage` that sums up each person's voting behavior up to, but not including, the 2006 primary. 
 
 * Create a column named `voter_class` that classifies voters into 3 bins: "Always Vote" for those who voted at least 5 times, "Sometimes Vote" for those who voted between 3 or 4 times, and "Rarely Vote" for those who voted 2 or fewer times. This variable should be classified as a factor.  
 
 * Create a column called `z_age` which is the z-score for `age`. 
-
 
 ```{r object_1}
 object_1 <- shaming %>% 
@@ -295,12 +267,12 @@ object_1 <- shaming %>%
   # primary_06 is already binary and also that we don't need it to predict
   # construct previous voter behavior status variable.
   
-  mutate(p_00 = fcn_1(primary_00),
-         p_02 = fcn_1(primary_02),
-         p_04 = fcn_1(primary_04),
-         g_00 = fcn_1(general_00),
-         g_02 = fcn_1(general_02),
-         g_04 = fcn_1(general_04)) %>% 
+  mutate(p_00 = (primary_00 == "Yes"),
+         p_02 = (primary_02 == "Yes"),
+         p_04 = (primary_04 == "Yes"),
+         g_00 = (general_00 == "Yes"),
+         g_02 = (general_02 == "Yes"),
+         g_04 = (general_04 == "Yes")) %>% 
   
   # A sum of the voting action records across the election cycle columns gives
   # us an idea (though not weighted for when across the elections) of the voters
@@ -352,28 +324,28 @@ With variable names:
 
 $$ y_{i} = \beta_{0} + \beta_{1}civic\_duty_i + \beta_{2}hawthorne_i + \beta_{3}self_i + \beta_{4}neighbors_i + \beta_{5}male_i + \epsilon_{i} $$
 
-There are two ways to formalize the model used in `model_1`: with and without the variable names. The former is related to the concept of Justice as we acknowledge that the model is constructed via the linear sum of `n` parameters times the value for `n` variables, along  with an error term. In other words, it is a linear model. The only other model we have learned this semester is a logistic model, but there are other kinds of models, each defined by the mathematics and the assumptions about the error term. 
+There are two ways to formalize the model used in `fit_1`: with and without the variable names. The former is related to the concept of Justice as we acknowledge that the model is constructed via the linear sum of `n` parameters times the value for `n` variables, along  with an error term. In other words, it is a linear model. The only other model we have learned this semester is a logistic model, but there are other kinds of models, each defined by the mathematics and the assumptions about the error term. 
 The second type of formal notation, more associated with the virtue Courage, includes the actual variable names we are using. The trickiest part is the transformation of character/factor variables into indicator variables, meaning variables with 0/1 values. Because `treatment` has 5 levels, we need 4 indicator variables. The fifth level --- which, by default, is the first variable alphabetically (for character variables) or the first level (for factor variables) --- is incorporated in the intercept.
 
 
 Let's translate the model into code. 
 
 ```{r, cache=TRUE}
-model_1 <- stan_glm(data = object_1,
+fit_1 <- stan_glm(data = object_1,
                   formula = primary_06 ~ treatment + sex,
                   refresh = 0,
                   seed = 987)
 ```
 
 ```{r}
-print(model_1, digits = 3)
+print(fit_1, digits = 3)
 ```
 
 
 We will now create a table that nicely formats the results of `fit_1` using the `tbl_regression()` function from the **gtsummary** package. It will also display the associated 95% confidence interval for each coefficient.
 
 ```{r, message = FALSE}
-tbl_regression(model_1, 
+tbl_regression(fit_1, 
                intercept = TRUE, 
                estimate_fun = function(x) style_sigfig(x, digits = 3)) %>%
   
@@ -387,9 +359,9 @@ tbl_regression(model_1,
 ```
 
 Interpretation: 
-* The intercept of this model is the expected value of the probability of someone voting in the 2006 primary given that they are part of the control group and are female. In this case, we estimate that women in the control group will vote ~`r round((coef(model_1)["(Intercept)"] * 100), 1)`% of the time. 
-* The coefficient for `sexMale` indicates the difference in likelihood of voting between a male and female. In other words, when comparing men and women, the `r round(coef(model_1)["sexMale"], 3)` implies that men are ~`r round((coef(model_1)["sexMale"] * 100), 1)`%  more likely to vote than women. Note that, because this is a linear model with no interactions between sex and other variables, this difference applies to any male, regardless of the treatment he received. Because sex can not be manipulated (by assumption), we should not use a causal interpretation of the coefficient. 
-* The coefficients of the treatments, on the other hand, do have a causal interpretation. For a single individual, of either sex, being sent the Self postcard increases your probability of voting by `r round((coef(model_1)["treatmentSelf"] * 100), 1)`%. It appears that the `Neighbors` treatment is the most effective at ~`r round((coef(model_1)["treatmentNeighbors"] * 100), 1)`% and `Civic Duty` is the least effective at ~`r round((coef(model_1)["treatmentCivic Duty"] * 100), 1)`%. 
+* The intercept of this model is the expected value of the probability of someone voting in the 2006 primary given that they are part of the control group and are female. In this case, we estimate that women in the control group will vote ~`r round((coef(fit_1)["(Intercept)"] * 100), 1)`% of the time. 
+* The coefficient for `sexMale` indicates the difference in likelihood of voting between a male and female. In other words, when comparing men and women, the `r round(coef(fit_1)["sexMale"], 3)` implies that men are ~`r round((coef(fit_1)["sexMale"] * 100), 1)`%  more likely to vote than women. Note that, because this is a linear model with no interactions between sex and other variables, this difference applies to any male, regardless of the treatment he received. Because sex can not be manipulated (by assumption), we should not use a causal interpretation of the coefficient. 
+* The coefficients of the treatments, on the other hand, do have a causal interpretation. For a single individual, of either sex, being sent the Self postcard increases your probability of voting by `r round((coef(fit_1)["treatmentSelf"] * 100), 1)`%. It appears that the `Neighbors` treatment is the most effective at ~`r round((coef(fit_1)["treatmentNeighbors"] * 100), 1)`% and `Civic Duty` is the least effective at ~`r round((coef(fit_1)["treatmentCivic Duty"] * 100), 1)`%. 
 
 
 ### primary_06 ~ z_age + sex + treatment + voter_class + voter_class*treatment
