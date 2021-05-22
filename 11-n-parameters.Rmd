@@ -202,7 +202,7 @@ Now, let's examine the validity of our model.
 
 ### Validity: can we answer this question?
 
-<!-- DK: Shouldn't the key points here be moved into Justice? Delete the rest? We end Wisdom by making our population assumption, and stating that population cleanly. "The population of interest" is all registered voters for Gubernatorial elections in US states from 2000 through 2030. -->
+<!-- DK: Shouldn't the key points here be moved into Justice? Delete the rest? We end Wisdom by making our population assumption, and stating that population cleanly. "The population of interest" is all registered voters for Gubernatorial elections in US states from 2000 through 2030.-->
 
 <!-- Answering questions about representativeness and validity is only possible if you have specified your population precisely. The more narrow the population you choose, the easier it is to make assumptions about representativeness and validity. The more broad your population, the more useful your model. -->
 
