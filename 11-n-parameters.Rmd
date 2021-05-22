@@ -135,7 +135,7 @@ The fourth treatment, Neighbors, provides the household members' voting records,
 
 One of the most important components of Wisdom is the concept of the "population". Recall the questions we asked earlier:
 
-As we have discussed before, the population *is not* the set of people, or voters, for which we have data. This is the dataset. Nor is it the set of voters about whol we would like to have data. Those are the rows in the ideal Preceptor Table. The population is the larger --- potentially much larger --- set of individuals which include both the data we have and the data we want. Generally, the population will be much larger than either the data we have and the data we want.  
+As we have discussed before, the population *is not* the set of people, or voters, for which we have data. This is the dataset. Nor is it the set of voters about whom we would like to have data. Those are the rows in the ideal Preceptor Table. The population is the larger --- potentially much larger --- set of individuals which include both the data we have and the data we want. Generally, the population will be much larger than either the data we have and the data we want.  
 
 In this case, we are viewing the data from the perspective of someone running for Governor this year that wants to increase voter turnout. We want to increase turnout **now**, not for people voting in 2006! We also may want to increase turnout in those citizens who are not registered to vote, a group that is excluded from our dataset. Is it reasonable to generate conclusions for this group? Most likely, no. However, we have limited data to work with and we have to determine how far we are willing to generalize to other groups. 
 
@@ -581,6 +581,7 @@ When we go to our boss, we tell them that this is our *best guess*. It is an inf
 Does this mean we are certain that the treatment effect of Neighbors is between these values? Of course not! As we would tell our boss, it would not be shocking to find out that the actual treatment effect was less or more than our estimate. 
 
 The truth is: our boss will never know if we were right, because in the real world — you’d send it to all the people. There would be no baseline for comparison. Would we be shocked if we got 7%? 12%? No, of course not! But, because the real world won't be designed as an experiment, that doesn't matter. What matters is that, based on the best information available to us, we believe that we have found a way to increase voter turnout. 
+
 
 <!-- What we need to add: Preceptor table, causal explanation, math before models, posterior_epred. -->
 
