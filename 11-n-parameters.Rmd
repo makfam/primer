@@ -438,16 +438,20 @@ Finally, let's remember the virtue of Temperance. The gist of temperance is: be 
 
 Recall our initial question: *What is the causal effect, on the likelihood of voting, of different postcards on voters of different levels of political engagement?*
 
-To answer the question, we want to look at different average treatment effects. In the real world, the treatment effect for person A is almost always different than the treatment effect for person B.
+To answer the question, we want to look at different average treatment effects for each treatment and type of voting behavior. In the real world, the treatment effect for person A is almost always different than the treatment effect for person B.
 
-Regardless, let's create a plot that displays the posterior probability distributions of the average treatment effects for men of average age across all combinations of 4 treatments and 3 voter classifications:
+In this section, we will create a plot that displays the posterior probability distributions of the average treatment effects for men of average age across all combinations of 4 treatments and 3 voter classifications. This means that we are making a total of *12* inferences. 
+
+*Important note*: We could look at lots of ages and both Male and Female subjects. However, that would not change our estimates of the treatment effects. The model is linear, so terms associated with `z_age` and `sex` disappear when we do the subtraction. This is one of the great advantages of linear models. 
+
+To begin, we will need to create our `newobs` object. 
 
 ```{r plot_2}
-# Recall that the z-scored age of 0 is ~50 yrs. old in this case. We could look
-# at lots of ages and both Male and Female. But that would not change our
-# estimates of the treatment effects. The model is linear, so terms associated
-# with z_age and sex disappear when we do the subtraction. This is one of the
-# great advantages of linear models.
+# Because our model is linear, the terms associated with z_age and sex disappear
+# when we perform subtraction. The treatment effects calculated thereafter will
+# not only apply to males of the z-scored age of ~ 50 years. The treatment
+# effects apply to all participants, despite calling these inputs.
+
 
 sex <- "Male"
 z_age <- 0
@@ -485,7 +489,16 @@ pe <- posterior_epred(fit_2,
   # unfortunately named posterior_epred() output. 
   
   set_names(newobs$names)
+```
 
+Now that we have our `newobs` to work with, we will need to create an object named `plot_data` that collects the treatment effect calculations. 
+
+Recall that, when calculating a treatment effect, we need to subtract the estimate for each category from the control group for that category. For example, if we wanted to find the treatment effect for the Always Vote Neighbors group, we would need: Always Vote Neighbors - Always Vote Control. 
+
+Therefore, we will use `mutate()` twelve times, for each of the treatments and voting frequencies. After, we will `pivot_longer` in order for the treatment effects to be sensibly categorized for plotting. If any of this sounds confusing, read the code comments carefully. 
+
+
+```{r}
 plot_data <- pe %>% 
   
   # Using our cleaned naming system, ATE calculations are simple enough. Note
@@ -523,6 +536,12 @@ plot_data <- pe %>%
                                        "Sometimes",
                                        "Always")))
 
+```
+
+
+Finally, we will plot our data! Read the code comments for explanations on aesthetic choices, as well as a helpful discussion on `fct_reorder()`.
+
+```{r}
 plot_data  %>% 
   
   # Reordering the y axis values allows a smoother visual interpretation - 
@@ -558,19 +577,37 @@ This is interesting! It shows us a few valuable bits of information:
 * These four treatment effects, however, are heterogeneous. They vary depending on an individual's voting history, which we organize into three categories: Rarely Vote, Sometimes Vote and Always Vote. So, we have 12 different
 average treatment effects, one for each possible combination of postcard and voting history. 
 * For each of these combinations, the graphic shows our posterior distribution.
+
+What does this mean for us, as we consider which postcards to send? 
 * Consider the highest yellow distribution, which is the posterior distribution for the average treatment effect of receiving the Neighbors postcard (compared to not getting a postcard) for Always Voters. The posterior is centered around 9% with a 95% confidence interval of, roughly, 8% to 10%. 
 * Overall, the Civic Duty and Hawthorne postcards had small average treatment effects, across all three categories of voter.  The causal effect on Rarely Voters was much smaller, regardless of treatment. It was also much less precisely estimated because there were many fewer Rarely Voters in the data. 
 *The best way to increase turnover, assuming there are limits to how many postcards you can send, is to focus on Sometimes/Always voters and to use the Neighbors postcard. 
 
-If we wanted to increase voter turnout, then, we would focus our efforts on the Neighbors postcard for citizens who already demonstrate a tendency to vote. 
+*Conclusion*: If we had a limited number of postcards, we would send the Neighbors postcard to citizens who already demonstrate a tendency to vote. 
 
-Does this mean this is guaranteed to work? Unfortunately, no matter how hard we try, *we cannot predict the future*. Though we now have conclusions about how shaming impacted voters in the 2006 primary elections, we do not have the confidence to say that what worked or didn't work then would work now. 
+How confident are we in these findings? If we needed to convince our boss that this is the right strategy, we need to explain how confident we are in our assumptions. To do that, we must understand the three levels of knowledge in the world of posteriors. 
 
-For instance, perhaps the impact of your neighbors knowing your voting history is greater in the midst of a pandemic, where you may be locked inside with few interactions outside of your immediate proximity. Perhaps the opposite is true. These *unknown unknowns* cannot be accounted for in our models. We cannot predict a pandemic, nor can we predict how this will change the way that people vote or respond to fliers. 
+### The Three Levels of Knowledge 
 
-There is also the issue of representativeness. Do the voters of the 2006 primary election (who have already demonstrated a willingness to vote in the 2004 primary election) truly represent the people voting in **our** gubernatorial election? 
+There exist three primary levels of knowledge possible knowledge in our scenario: God's Posterior (the ideal Preceptor Table), the DGM Posterior, and Our Posterior. 
 
-These complications are why we must make inferences with a grain of salt. That is not to say that all data science is unhelpful! On the contrary, acknowledging our deficits will only make our inferences (and the actions we take because of them) stronger. 
+#### God's Posterior
+
+God's Posterior is the posterior if we had all the knowledge we need to *directly* answer our question. In short, God's posterior is built with the ideal Preceptor Table. God, equipped with the ideal Preceptor Table, can calculate each individual's treatment effect, and any summary measure we might be interested in, like the average treatment effect. 
+
+This posterior represents the highest level of knowledge one can have --- with it, our questions merely require math. No estimation. 
+
+#### DGM Posterior
+
+The DGM Posterior is the posterior we would calculate if we had perfect knowledge of the data generating mechanism, meaning you have the correct model structure and exact beta values. 
+
+With that, you could not be certain about any individual's causal effect, because of the Fundamental Problem of Causal Inference. As a brief reminder: we can never measure any one person's causal effect because we are unable to see a person's resulting behavior under treatment *and* control; we only have data on one of the two conditions. 
+Regardless, we can still calculate posterior's for unknown numbers, and those posteriors would be perfect. 
+
+#### Our posterior
+
+
+
 
 <!-- What we need to add: Preceptor table, causal explanation, math before models, posterior_epred. -->
 
