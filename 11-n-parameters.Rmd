@@ -583,20 +583,23 @@ The Truth represents the highest level of knowledge one can have --- with it, ou
 
 #### DGM posterior
 
-The DGM posterior is the posterior we would calculate if we had perfect knowledge of the data generating mechanism, meaning we have the correct model structure and exact parameter values. 
+The DGM posterior is the next level of knowledge, which lacks the omniscient quality of The Truth. This posterior is the posterior we would calculate if we had perfect knowledge of the data generating mechanism, meaning we have the correct model structure and exact parameter values. This is often falsely conflated with "Our posterior", which is subject to error in model structure and parameter value estimations.  
 
-With that, we could not be certain about any individual's causal effect, because of the Fundamental Problem of Causal Inference. We can never measure any one person's causal effect because we are unable to see a person's resulting behavior under treatment *and* control; we only have data on one of the two conditions. 
-Regardless, we can still calculate posterior's for unknown numbers, and those posteriors would be perfect. If we went to our boss with our estimates from this posterior, we would expect our 95% confidence interval to be perfectly calibrated. That is, we would expect the true value to lie within the 95% confidence interval 95% of the time. 
+With the DGM posterior, we could not be certain about any individual's causal effect, because of the Fundamental Problem of Causal Inference. In other words, we can never measure any one person's causal effect because we are unable to see a person's resulting behavior under treatment *and* control; we only have data on one of the two conditions. 
+
+What we do with the DGM posterior is the same as Our posterior --- we estimate parameters based on data and predict the future with the latest and most relevant information possible. The difference is that, when we calculate posteriors for an unknown value in the DGM posterior, we expect those posteriors to be perfect. 
+
+If we go to our boss with our estimates from this posterior, we would expect our 95% confidence interval to be perfectly calibrated. That is, we would expect the true value to lie within the 95% confidence interval 95% of the time. In this world, we would be surprised to see values outside of the confidence interval more than 5% of the time.
 
 #### Our posterior
 
-Unfortunately, our posterior possesses even less certainty! In the real world, we *don't* have perfect knowledge of the DGM: the model structure and the exact parameter values. What does this mean? 
+Unfortunately, Our posterior possesses even less certainty! In the real world, we *don't* have perfect knowledge of the DGM: the model structure and the exact parameter values. What does this mean? 
 
 When we go to our boss, we tell them that this is our *best guess*. It is an informed estimate based on the most relevant data possible. From that data, we have created a 95% confidence interval for the treatment effect of various postcards. We estimate that the treatment effect of the Neighbors postcard to be between 8% to 10%. 
 
 Does this mean we are certain that the treatment effect of Neighbors is between these values? Of course not! As we would tell our boss, it would not be shocking to find out that the actual treatment effect was less or more than our estimate. 
 
-The truth is: our boss will never know if we were right, because in the real world — you’d send it to all the people. There would be no baseline for comparison. Would we be shocked if we got 7%? 12%? No, of course not! But, because the real world won't be designed as an experiment, that doesn't matter. What matters is that, based on the best information available to us, we believe that we have found a way to increase voter turnout. 
+Would we be shocked if we got 7%? 12%? No, of course not! But, because the real world won't be designed as an experiment, that doesn't matter. What matters is that, based on the best information available to us, we believe that we have found a way to increase voter turnout. **This is the information that is valuable to our employer, and the information that makes our job important.**
 
 
 <!-- What we need to add: Preceptor table, causal explanation, math before models, posterior_epred. -->
