@@ -22,7 +22,7 @@
 
 <!-- Expand ideal Preceptor Table for extra rows. -->
 
-<!-- Make warning "The `.dots` argument of `group_by()` is deprecated a" go away if you can. -->
+<!-- Make warning "The `.dots` argument of `group_by()` is deprecated a" go away if you can. MF: Added message = false. -->
 
 *This chapter is still a DRAFT.*
 
@@ -177,7 +177,7 @@ Recall that in an actual Preceptor Table, we will have a bunch of missing data! 
 
 Let's build a basic visualization for the actual Preceptor Table for this scenario:
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE}
 # First, we create a tibble with the values we want for the table
 
 tibble(subject = c("Citizen 1", "Citizen 23", "Citizen 40", "Citizen 53", "Citizen 80"),
@@ -248,7 +248,6 @@ The purpose of this section is to make us think critically about the assumptions
 ```{r echo = FALSE, out.width="60%", fig.align='center', fig.cap = "Courage"}
 knitr::include_graphics("other/images/Courage.jpg")
 ```
-
 
 ### Set-up
 
@@ -576,9 +575,11 @@ There exist three primary levels of knowledge possible knowledge in our scenario
 
 #### The Truth
 
-If we know the Truth (with a captial "T"), then we know the ideal Preceptor Table. With that tknowledge, we can *directly* answer our question precisely. We can calculate each individual's treatment effect, and any summary measure we might be interested in, like the average treatment effect. 
+If we know the Truth (with a capital "T"), then we know the ideal Preceptor Table. With that knowledge, we can *directly* answer our question precisely. We can calculate each individual's treatment effect, and any summary measure we might be interested in, like the average treatment effect. 
 
-The Truth represents the highest level of knowledge one can have --- with it, our questions merely require algebra. No estimation needed. 
+This level of knowledge is possible only under an omniscient power, one who can see every outcome in every individual under every treatment. The Truth would show, for any given individual, their actions under control, their actions under treatment, and each little factor that impacted those decisions. 
+
+The Truth represents the highest level of knowledge one can have --- with it, our questions merely require algebra. There is no need to estimate a treatment effect, or the different treatment effects for different groups of people. We would not need to predict at all --- we would **know**. 
 
 #### DGM posterior
 
