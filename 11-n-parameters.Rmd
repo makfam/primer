@@ -4,7 +4,7 @@
 
 MF: Is the Population Table replacing the actual Preceptor Table? -->
 
-<!-- In Justice, discuss representativeness and validity. And then, what assumption do we make about the form of the model. (Meaning linear, logistic and so on.) Also, discuss the fact that we have assuming that the unknown joint distribution is consistent for the whole population. That is, there is a formula which works for all the rows in the Population Table. -->
+<!-- In Justice, discuss representativeness and validity. MF: Done.-->
 
 <!-- In any *one* problem, it is hard to know if we were "right," if our posterior was similar to the DGM posterior. After all, 5% of the time the answer is outside the 95% confidence interval. But, first, if the truth ends up very, very far away from the median of our posterior, our boss will be rightly suspicious. How many MAD SDs away do you have to be before you are obviously a fool? Or standard erros? Maybe 3? Certainly 4? Second, if we answer many questions (by creating many posteriors for different problems) then, over time, our boss will get a sense of our actual skill, both because our median should be above and below the truth about the same proportion and because our confidence intervals should be correctly calibrated. MF: Done. -->
 
@@ -14,8 +14,9 @@ MF: Is the Population Table replacing the actual Preceptor Table? -->
 
 <!-- And then discuss how we know, from experience, that our posteriors are too narrow. They assume that we have the DGM when, in fact, we know that we do not. What to do? One, warn your boss (and yourself) about this fact. Be humble. That is Temperance. Second, estimate dozens of different models and combine their posteriors. The result might very well have the same median as your correct posterior, but the confidence intervals would be much wider. Doing this is beyond the scope of this Primer. MF: Done. -->
 
-<!-- Temperance. Answer the question. Be aware of the limits to the accuracy of your answer. Testing. All the cool themes. Bring it all together. Make the students say "Ahhh!" Revisit the three levels of possible knowledge: -->
+<!-- And then, what assumption do we make about the form of the model. (Meaning linear, logistic and so on.) Also, discuss the fact that we have assuming that the unknown joint distribution is consistent for the whole population. That is, there is a formula which works for all the rows in the Population Table. -->
 
+<!-- Temperance. Answer the question. Be aware of the limits to the accuracy of your answer. Testing. All the cool themes. Bring it all together. Make the students say "Ahhh!" Revisit the three levels of possible knowledge: -->
 
 <!-- Once you assume there is a single population, are you making any other assumptions? Especially with regard to the relationships among the columns? Yes! But in Justice? Connected to validity because, if the joint distribution is the same, it must be the case that the variables mean the same things across the whole population. Key: the joint distribution is the same throughout the population. -->
 
@@ -33,7 +34,7 @@ Having created models with one parameter in Chapter \@ref(one-parameter), two pa
 
 In this chapter, we will consider models with many parameters and the complexities that arise therefrom. As our models grow in complexity, we need to pay extra attention to basic considerations like validity, population, and representativeness. It is easy to jump right in and start interpreting! It is harder, but necessary, to ensure that our models are really answering our questions. 
 
-Imagine you are running for Governor and want to do a better job of getting your voters to vote. How can you encourage voters to go out to the polls on election day? 
+Imagine you are running for Governor in Texas and want to do a better job of getting your voters to vote. How can you encourage voters to go out to the polls on election day? 
 
 
 ## Wisdom
@@ -155,7 +156,7 @@ In this case, we are viewing the data from the perspective of someone running fo
 
 It is a judgment call, a matter of Wisdom, as to whether or not we may *assume* that the data we have and the data we want to have (i.e., the ideal Preceptor Table) are drawn from the same population.
 
-<!-- DK: Add table with both our data and ideal Preceptor table and other data (other states, other years). That is our population. In this case, our population is all voters in all states in Gubernatorial elections from 2000 through 2030. Or whatever? Not the only possible population! Could do different years. Could do only a subset of states (big states, competitive states, continental states). Could do other election types.  -->
+<!-- DK: Add table with both our data and ideal Preceptor table and other data (other states, other years). That is our population. In this case, our population is all voters in all states in Gubernatorial elections from 2000 through 2030. Or whatever? Not the only possible population! Could do different years. Could do only a subset of states (big states, competitive states, continental states). Could do other election types. MF: Done, in justice. -->
 
 Even though the original question is about “voters” in general, and does not specifically refer to specific states in which we might be interested, we will assume that the data we have for random voters is, uh, representative enough of the population we are interested in. If we did not believe that, then we should stop right now. *The major part of Wisdom is deciding what questions you can’t answer because of the data you just don’t have.*
 
@@ -270,11 +271,11 @@ tibble(source = c("ideal Preceptor Table", "ideal Preceptor Table", "...",
   tab_spanner(label = "$$\\text{Estimand}$$", vars(ydiff))
 ```
 
-### Validity
+### Representativeness/validity
 
 <!-- Answering questions about representativeness and validity is only possible if you have specified your population precisely. The more narrow the population you choose, the easier it is to make assumptions about representativeness and validity. The more broad your population, the more useful your model. -->
 
-This is a good time to consider what it really means to accept that our data is relevant to our question. With that in mind, let's break down our real, current question: 
+This is a good time to consider what it really means to accept that our data is representative of our population. With that in mind, let's break down our real, current question: 
 
 * We are running for governor in Texas in the year 2021. In this year and in the United States, we consider sending out a voting reminder postcard to citizens of voting age. Will this reminder encourage voting, and by how much?
 
