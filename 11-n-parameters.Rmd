@@ -6,17 +6,18 @@ MF: Is the Population Table replacing the actual Preceptor Table? -->
 
 <!-- In Justice, discuss representativeness and validity. And then, what assumption do we make about the form of the model. (Meaning linear, logistic and so on.) Also, discuss the fact that we have assuming that the unknown joint distribution is consistent for the whole population. That is, there is a formula which works for all the rows in the Population Table. -->
 
-<!-- Once you assume there is a single population, are you making any other assumptions? Especially with regard to the relationships among the columns? Yes! But in Justice? Connected to validity because, if the joint distribution is the same, it must be the case that the variables mean the same things across the whole population. Key: the joint distribution is the same throughout the population. -->
+<!-- In any *one* problem, it is hard to know if we were "right," if our posterior was similar to the DGM posterior. After all, 5% of the time the answer is outside the 95% confidence interval. But, first, if the truth ends up very, very far away from the median of our posterior, our boss will be rightly suspicious. How many MAD SDs away do you have to be before you are obviously a fool? Or standard erros? Maybe 3? Certainly 4? Second, if we answer many questions (by creating many posteriors for different problems) then, over time, our boss will get a sense of our actual skill, both because our median should be above and below the truth about the same proportion and because our confidence intervals should be correctly calibrated. MF: Done. -->
+
+<!-- Walk through the details of MAD SD and standard error in answering the question: How wrong do we have to be in a one-off for our boss to be suspicious? When is "bad luck" as sign of stupidity? Equivalent of how many heads in a row? If the truth is 4 standard errors away from your best estimate, that is the equivalent and you flipping heads 10 times in a row. MF: Done. -->
+
+<!-- Add three paragraphs about this: https://projects.fivethirtyeight.com/checking-our-work/. MF: Done. -->
+
+<!-- And then discuss how we know, from experience, that our posteriors are too narrow. They assume that we have the DGM when, in fact, we know that we do not. What to do? One, warn your boss (and yourself) about this fact. Be humble. That is Temperance. Second, estimate dozens of different models and combine their posteriors. The result might very well have the same median as your correct posterior, but the confidence intervals would be much wider. Doing this is beyond the scope of this Primer. MF: Done. -->
 
 <!-- Temperance. Answer the question. Be aware of the limits to the accuracy of your answer. Testing. All the cool themes. Bring it all together. Make the students say "Ahhh!" Revisit the three levels of possible knowledge: -->
 
-<!-- In any *one* problem, it is hard to know if we were "right," if our posterior was similar to the DGM posterior. After all, 5% of the time the answer is outside the 95% confidence interval. But, first, if the truth ends up very, very far away from the median of our posterior, our boss will be rightly suspicious. How many MAD SDs away do you have to be before you are obviously a fool? Or standard erros? Maybe 3? Certainly 4? Second, if we answer many questions (by creating many posteriors for different problems) then, over time, our boss will get a sense of our actual skill, both because our median should be above and below the truth about the same proportion and because our confidence intervals should be correctly calibrated. MF: Done. -->
 
-<!-- Walk through the details of MAD SD and standard error in answering the question: How wrong do we have to be in a one-off for our boss to be suspicious? When is "bad luck" as sign of stupidity? Equivalent of how many heads in a row? If the truth is 4 standard errors away from your best estimate, that is the equivalent and you flipping heads 10 times in a row. -->
-
-<!-- Add three paragraphs about this: https://projects.fivethirtyeight.com/checking-our-work/. -->
-
-<!-- And then discuss how we know, from experience, that our posteriors are too narrow. They assume that we have the DGM when, in fact, we know that we do not. What to do? One, warn your boss (and yourself) about this fact. Be humble. That is Temperance. Second, estimate dozens of different models and combine their posteriors. The result might very well have the same median as your correct posterior, but the confidence intervals would be much wider. Doing this is beyond the scope of this Primer. -->
+<!-- Once you assume there is a single population, are you making any other assumptions? Especially with regard to the relationships among the columns? Yes! But in Justice? Connected to validity because, if the joint distribution is the same, it must be the case that the variables mean the same things across the whole population. Key: the joint distribution is the same throughout the population. -->
 
 <!-- Fix DK comment. -->
 
@@ -223,8 +224,6 @@ The rows from our data have everything: the covariates and the outcomes. The cov
 
 The rows from the population have no data. These are subjects which fall under our desired population, but for which we have no data. As such, all rows are missing. 
 
-<!-- Start the Justice section with The Population Table, which consists of rows from three sources: the ideal Preceptor Table, the data, and other rows from the population (rows which exist but for which we have no data). The Population Table only includes data that we actually have. For the rows from the ideal Preceptor Table, it will generally include the covariate data, but no outcome data. For the rows from the data, it will include all the data, which is generally everything except counter-factual outcomes. For the rows from the larger population, everything is missing. There should be year and  state columns. -->
-
 ```{r, echo = FALSE, message = FALSE}
 # First, we create a tibble with the values we want for the table
 
@@ -271,15 +270,13 @@ tibble(source = c("ideal Preceptor Table", "ideal Preceptor Table", "...",
   tab_spanner(label = "$$\\text{Estimand}$$", vars(ydiff))
 ```
 
-### Validity: can we answer this question?
-
-<!-- DK: Shouldn't the key points here be moved into Justice? Delete the rest? We end Wisdom by making our population assumption, and stating that population cleanly. "The population of interest" is all registered voters for Gubernatorial elections in US states from 2000 through 2030.-->
+### Validity
 
 <!-- Answering questions about representativeness and validity is only possible if you have specified your population precisely. The more narrow the population you choose, the easier it is to make assumptions about representativeness and validity. The more broad your population, the more useful your model. -->
 
 This is a good time to consider what it really means to accept that our data is relevant to our question. With that in mind, let's break down our real, current question: 
 
-* We are running for governor in the year 2021. In this year and in the United States, we consider sending out a voting reminder postcard to citizens of voting age. Will this reminder encourage voting, and by how much?
+* We are running for governor in Texas in the year 2021. In this year and in the United States, we consider sending out a voting reminder postcard to citizens of voting age. Will this reminder encourage voting, and by how much?
 
 Now, let's break down our data from the `shaming` dataset:
 
@@ -288,7 +285,7 @@ Now, let's break down our data from the `shaming` dataset:
 So, how similar are these groups? Let's start with some differences.
 * The data is from 2006. Our question is asking for answers from 2021. This is not a small gap in time. A lot changes in a decade and a half!
 * The data excludes all non-voters in the last election. Our question, which seeks to increase voting turnout *in all citizens*, would want for non-voters to be included. So, can we make any claims about those citizens? Probably not.
-* The data only includes voters from Michigan. We may want to make inferences about other states, or the United States as a whole. Is it within reason to do that?
+* The data only includes voters from Michigan. We want to make inferences about Texas, or perhaps the United States as a whole. Is it within reason to do that?
 * The voting reminders in the data were sent by mail. Is this the most practical option in 2021, where it may be easier to send an electronic notice? 
 * The contents of voting reminders in 2006 are going to differ from voting reminders sent in 2021. Thus, our "treatments" are fundamentally different.
 
@@ -665,9 +662,19 @@ But, what amounts to a large enough difference to be a cause for concern? In oth
 
 #### Bad luck or bad work? 
 
+In any *one* problem, it is hard to know if we were "right," if our posterior was similar to the DGM posterior. After all, 5% of the time the answer is outside the 95% confidence interval. But if the truth ends up very, very far away from the median of our posterior, our boss will be rightly suspicious. How many MAD SDs or standard errors away do we have to be from the truth before we are obviously a fool?  
 
+There are many ways to judge a forecast. Here, we’re looking at two main things: the calibration of a forecast — that is, whether events that we said would happen 30 percent of the time actually happened about 30 percent of the time — and how our forecast compared with an unskilled estimate that relies solely on historical averages. We can answer those questions using calibration plots and skill scores, respectively. These concepts are a bit too advanced for this course, but their foundations are important to understand. 
 
-<!-- What we need to add: Preceptor table, causal explanation, math before models, posterior_epred. -->
+Calibration plots compare what we predicted with what actually happened. Single predictions can be difficult to judge on their own, so we often want to group many predictions together in bins and plot the averages of each bin's forecasted increase in voting against the actual increase in voting. If our forecasts are well-calibrated, then all of the bins on the calibration plot will be close to the 45 degree line; if our forecast was poorly calibrated, the bins will be further away. Our second tool, skill scores, lets us evaluate our forecasts even further, combining accuracy and an appetite for risk into a single number. 
+
+Brier skill scores tell us how much more valuable our forecasts are than an unskilled estimate, one that is informed by historical averages — e.g., a guess that a postcard will increase voting by 5%. 
+
+These are the *technical* ways that we can judge our own work's accuracy. Our boss will likely judge using other methods. 
+
+For instance, if we answer many questions (by creating many posteriors for different problems) then, over time, our boss will get a sense of our actual skill, both because our median should be above and below the truth about the same proportion and because our confidence intervals should be correctly calibrated.
+
+We know, from experience, that our posteriors are often too narrow. They assume that we know the DGM when, in fact, we know that we do not. What do we do with that knowledge? First, we prepare our boss for this fact. This is the humility in Temperance. Second, we estimate *dozens* of different models and combine their posteriors. The result might very well have the same median as your correct posterior, but the confidence intervals would be much wider. These concepts are more advanced than the Primer, but they are important to consider when making predictions. 
 
 ## Summary
 
