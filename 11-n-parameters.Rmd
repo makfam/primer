@@ -599,8 +599,11 @@ When we go to our boss, we tell them that this is our *best guess*. It is an inf
 
 Does this mean we are certain that the treatment effect of Neighbors is between these values? Of course not! As we would tell our boss, it would not be shocking to find out that the actual treatment effect was less or more than our estimate. 
 
-Would we be shocked if we got 7%? 12%? No, of course not! But, because the real world won't be designed as an experiment, that doesn't matter. What matters is that, based on the best information available to us, we believe that we have found a way to increase voter turnout. **This is the information that is valuable to our employer, and the information that makes our job important.**
+This is because a lot of the assumptions we make during the process of building a model, the processes in Wisdom, are subject to error. Perhaps our data did not match the future as well as we had hoped. Ultimately, we try to account for our uncertainty in our estimates. Even with this safeguard, we aren't surprised if we are a bit off. 
 
+For instance, would we be shocked if the treatment effect of the Neighbors postcard to be 7%? 12%? Of course not! That is only slightly off, and we know that Our posterior is subject to error. Would we be surprised if the treatment effect was found to be 20%? Yes. That is a large enough difference to suggest a real problem with our model, or some real world change that we forgot to factor into our predictions.  
+
+But, what amounts to a large enough difference to be a cause for concern? In other words, how wrong do we have to be in a one-off for our boss to be suspicious? When is "bad luck" a sign of stupidity? We will delve into this question in the next section of our chapter. 
 
 <!-- What we need to add: Preceptor table, causal explanation, math before models, posterior_epred. -->
 
