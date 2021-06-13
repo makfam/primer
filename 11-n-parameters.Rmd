@@ -10,7 +10,6 @@
 
 <!-- Add a testing is nonsense section. --> 
 
-
 *This chapter is still a DRAFT.*
 
 Having created models with one parameter in Chapter \@ref(one-parameter), two parameters in Chapter \@ref(two-parameters), three parameters in Chapter \@ref(three-parameters), four parameters in Chapter \@ref(four-parameters) and five parameters in Chapter \@ref(five-parameters), you are now ready to make the jump to $N$ parameters. 
@@ -643,7 +642,6 @@ When we go to our boss, we tell them that this is our *best guess*. It is an inf
 Does this mean we are certain that the treatment effect of Neighbors is between these values? Of course not! As we would tell our boss, it would not be shocking to find out that the actual treatment effect was less or more than our estimate. 
 
 This is because a lot of the assumptions we make during the process of building a model, the processes in Wisdom, are subject to error. Perhaps our data did not match the future as well as we had hoped. Ultimately, we try to account for our uncertainty in our estimates. Even with this safeguard, we aren't surprised if we are a bit off. 
-<<<<<<< HEAD
 
 For instance, would we be shocked if the treatment effect of the Neighbors postcard to be 7%? 12%? Of course not! That is only slightly off, and we know that Our posterior is subject to error. Would we be surprised if the treatment effect was found to be 20%? Yes. That is a large enough difference to suggest a real problem with our model, or some real world change that we forgot to factor into our predictions.  
 
