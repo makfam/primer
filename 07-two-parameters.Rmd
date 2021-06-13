@@ -2,6 +2,8 @@
 
 <!-- MF: In wisdom, added ideal Preceptor Table and population sections. -->
 
+<!-- MF: In justice, added Population Table. We need to add representativeness and validity. --> 
+
 <!-- Get axis labels and titles to use \sigma and \mu -->
 
 <!-- Show posterior_interval() -->
@@ -202,10 +204,61 @@ For now, we will accept that our data works.
 knitr::include_graphics("other/images/Justice.jpg")
 ```
 
-Having looked at our data and decided that it is "close enough" to our questions that creating a model will help us come up with better answers, we move on to Justice. A mathematical model and a Preceptor Table are the two components of Justice. 
+<!-- MF: If we are building to the version of Justice in CH11, should this section not include all of the new elements (population table, representativeness, validity)? Or should it include them, but in a more limited capacity? --> 
 
-Mathematical knowledge is the least important skill for a data scientist. 
+Having looked at our data and decided that it is "close enough" to our questions that creating a model will help us come up with better answers, we move on to Justice. 
 
+Justice emphasizes a few key concepts:
+
+* The Population Table, a structure which includes a row for every unit in the population. We generally break the rows in the Population Table into three categories: the data for units we want to have, the data for units which we actually have, and the data for units we do not care about.
+* Is our data representative of the population?
+* Is the meaning of the columns consistent, i.e., can we assume validity?
+We then make an assumption about the data generating mechanism.
+
+### The Population Table
+
+The Population Table shows the data that we actually have in our desired population. It shows rows from three sources: the ideal Preceptor Table, the data, and the population outside of the data (rows which exist but for which we have no data).
+
+In our ideal Preceptor rows, we have information for our covariates of sex and year. However, because those rows are not included in our data, we do not have any outcome results (height). Since our scenario pertains to a prediction for average height in 2021, the year column will read "2021" and the sex column will read "male."
+
+The rows from our data have everything: the covariates and the outcomes. The covariates here will be 2009-2011 for year and male for sex, since these are the pieces of information that are included in our data. We *will* have outcome results in these rows. 
+
+The rows from the population have no data. These are subjects which fall under our desired population, but for which we have no data. As such, all rows are missing.
+
+```{r, echo = FALSE}
+tibble(source = c("ideal Preceptor Table", "ideal Preceptor Table", "...",
+                  "Data", "Data", "Data", "...", 
+                  "Population", "Population", "Population"),
+       gender = c("Male", "Male", "...",
+                  "Male", "Male", "Male", "...",
+                  "?", "?", "?"),
+       year = c("2021", "2021", "...",
+                "2009", "2010", "2009", "...",
+                "?", "?", "?"),
+       height = c("?", "?", "...",
+                 "180", "160", "168", "...",
+                 "?", "?", "?")) %>%
+  
+  # Then, we use the gt function to make it pretty
+  
+  gt() %>%
+  cols_label(source = md("Source"),
+             gender = md("Sex"),
+             year = md("Year"),
+             height = md("Height")) %>%
+  tab_style(cell_borders(sides = "right"),
+            location = cells_body(columns = vars(source))) %>%
+  tab_style(style = cell_text(align = "left", v_align = "middle", size = "large"), 
+            locations = cells_column_labels(columns = vars(source))) %>%
+  cols_align(align = "center", columns = TRUE) %>%
+  cols_align(align = "left", columns = vars(source)) %>%
+  fmt_markdown(columns = TRUE)  
+```
+
+
+
+ <!-- MF: Is math staying in Justice? How should it be incorporated? --> 
+ 
 However, a little mathematical notation will make our modeling assumptions clear, will bring some precision to our approach. In this case:
 
 $$ y_i =  \mu + \epsilon_i $$
