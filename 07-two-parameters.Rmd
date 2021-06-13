@@ -2,7 +2,9 @@
 
 <!-- MF: In wisdom, added ideal Preceptor Table and population sections. -->
 
-<!-- MF: In justice, added Population Table. We need to add representativeness and validity. --> 
+<!-- MF: In justice, added Population Table. We need to add representativeness and validity. -->
+
+<!-- MF: In Temperance, added Three Levels of Knowledge. --> 
 
 <!-- Get axis labels and titles to use \sigma and \mu -->
 
@@ -542,7 +544,6 @@ outcome + fitted + res +
 
 ## Temperance
 
-<!-- MF: Should this chapter's Temperance section include the Three Levels of Knowledge? --> 
 
 ```{r echo = FALSE}
 knitr::include_graphics("other/images/Temperance.jpg")
@@ -768,6 +769,34 @@ pp %>%
     
 ```
 
+### Three Levels of Knowledge
+
+When answering questions as we have been, it can be easy to falsely believe that we are delivering *the truth*. This is not the case. In fact, there are three primary levels of knowledge which we need to understand in order to account for our uncertainty. 
+
+The three primary levels of knowledge possible knowledge in our scenario include: the Truth (the ideal Preceptor Table), the DGM Posterior, and Our Posterior.
+
+#### The Truth
+If we know the Truth (with a capital “T”), then we know the ideal Preceptor Table. With that knowledge, we can directly answer our question precisely. We can calculate each individual’s height, and any summary measure we might be interested in, like the average height for different ages or countries. 
+
+This level of knowledge is possible only under an omniscient power, one who can see every outcome in every individual under every treatment. The Truth would show, for any given individual, their actions under control, their actions under treatment, and each little factor that impacted those decisions.
+
+The Truth represents the highest level of knowledge one can have — with it, our questions merely require algebra. There is no need to estimate a treatment effect, or the different treatment effects for different groups of people. We would not need to predict at all — we would know.
+
+#### DGM posterior
+
+The DGM posterior is the next level of knowledge, which lacks the omniscient quality of The Truth. This posterior is the posterior we would calculate if we had perfect knowledge of the data generating mechanism, meaning we have the correct model structure and exact parameter values. This is often falsely conflated with “our posterior,” which is subject to error in model structure and parameter value estimations.
+
+What we do with the DGM posterior is the same as our posterior — we estimate parameters based on data and predict the future with the latest and most relevant information possible. The difference is that, when we calculate posteriors for an unknown value in the DGM posterior, we expect those posteriors to be perfect.
+
+#### Our posterior
+
+Unfortunately, our posterior possesses even less certainty! In the real world, we don’t have perfect knowledge of the DGM: the model structure and the exact parameter values. What does this mean?
+
+When we go to our boss, we tell them that this is our best guess. It is an informed estimate based on the most relevant data possible. From that data, we have created a posterior for the average height of males. 
+
+Does this mean we are certain that the average height lies is the most probable outcome in our posterior? Of course not! As we would tell our boss, it would not be shocking to find out that the actual average height was less or more than our estimate.
+
+This is because a lot of the assumptions we make during the process of building a model, the processes in Wisdom, are subject to error. Perhaps our data did not match the future as well as we had hoped. Ultimately, we try to account for our uncertainty in our estimates. Even with this safeguard, we aren’t surprised if we are a bit off.
 
 <!-- DK: Need more text. Explain all the things that could be wrong with the model. Explain what is going on in different columns. Explain all the cool R code tricks. Discuss difference between predict and epred.  -->
 
