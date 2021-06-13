@@ -8,15 +8,14 @@ In Chapter \@ref(one-parameter), we learned how to do inference. We created a jo
 
 <!-- DK: Need a gif here. -->
 
-*But what a pain in the ass that whole process was!* Do professionals actually go through all those steps every time they work on a data science problem? No! Don't be absurd. Instead, professionals use standard tools which, in an automated fashion, take care of those steps, taking us directly from assumptions and data to the posterior:
+*But what a pain in the ass that whole process was!* Do professionals actually go through all those steps every time they work on a data science problem? No! That would be absurd. Instead, professionals use standard tools which, in an automated fashion, take care of those steps, taking us directly from assumptions and data to the posterior:
 
 $$\text{Prob}(\text{models} | \text{data} = \text{data we observed})$$
 
-Even then, however, the relative likelihood of different models is not that important. Models are invisible, mental entities with no more physical presence than unicorns or leprechauns. In the world itself, we make and test predictions. How many red beads will come from the urn the next time we use our shovel? People with better models make better predictions. That is what matters.
+Even then, however, the relative likelihood of different models is not that important. Models are invisible, mental entities with no more physical presence than unicorns or leprechauns. In the world itself, we make and test predictions. *People with better models make better predictions. That is what matters.*
 
 
-In addition to a change in tools, there are two more differences in this chapter. First, Chapter \@ref(one-parameter) used models with just one parameter: the number of red beads, which we can also transform into a parameter, $p$, the number of red beads divided by 1,000.  The  model in Chapter \@ref(one-parameter) was binomial, and there is only one unknown parameter $p$ in such models. In this chapter, we have two unknown parameters: the mean $\mu$ height in the US and the standard deviation, $\sigma$, of the normally distributed error term.
-
+In addition to a change in tools, there are two key differences in this chapter. First, Chapter \@ref(one-parameter) used models with just one parameter: the number of red beads, which we can also transform into a parameter, $p$, the number of red beads divided by 1,000. The  model in Chapter \@ref(one-parameter) was binomial, and there is only one unknown parameter $p$ in such models. In this chapter, we have two unknown parameters: the mean $\mu$ height in the US and the standard deviation, $\sigma$, of the normally distributed error term.
 
 Second, Chapter \@ref(one-parameter) dealt with a limited set of specific models: 1,001 of them, to be precise. The procedure used was just what we saw in Chapter \@ref(probability).  In this chapter, on the other hand, we have continuous parameters.   
 
@@ -34,11 +33,11 @@ Data science is ultimately a moral act, so we will use the four [Cardinal Virtue
 knitr::include_graphics("other/images/Wisdom.jpg")
 ```
 
-What decision do we face? The reason for making models is not, primarily that making models is fun, although it is! The reason is that we face a decision. We must decide between X or Y. We must choose from A, B and C. We must set D to a specific numeric value. Confronted by a decision, we should make a model of the world to help us.
+The reason for making models is not, primarily, that making models is fun (although it is)! The reason is that, when confronted with a question, we face decisions. We must decide between variables X or Y. We must choose from datasets A, B and C. Confronted by a decision, we need to make a model of the world to help us. 
 
 <!-- DK: Add back reference to ch 12 when it shows up again. -->
 
-In any textbook, it will be tough to avoid the "toy problem" trap. The real world is complex. Any substantive decision problem includes a great deal of complexity and requires even more context. We do not have the time to get into that level of detail now. So, we simplify. We are going to create a model of height for adult men. We will then use that model to answer four questions:
+The real world is complex. Any substantive decision problem includes a great deal of complexity and requires even more context. We do not have the time to get into that level of detail now. So, we simplify. We are going to create a model of height for adult men. We will then use that model to answer four questions:
 
 * What is the average height of men?
 
@@ -51,6 +50,36 @@ In any textbook, it will be tough to avoid the "toy problem" trap. The real worl
 <!-- DK: This is awkward. Why not just ppd everywhere? -->
 
 The first and fourth questions require a full scale posterior probability distribution as an answer. The middle two questions have a single number as their answer, but we first create a posterior probability distribution in order to derive that number.
+
+### Ideal Preceptor Table
+
+What rows and columns of data do you need such that, if you had them all, the calculation of the number of interest would be trivial? If you want to know the average height of an adult in India, then the ideal Preceptor Table would include a row for each adult in India and a column for their height. In this scenario, we want to know the average height for men, where "men" includes all males on Earth that are over the age of 18. 
+
+One key aspect of this ideal Preceptor Table is whether or not we need more than one potential outcome in order to calculate our estimand. Mainly: are we are modeling (just) for prediction or are we (also) modeling for causation? Do we need a causal model, one which estimates that attitude under both treatment and control? In a causal model, the Preceptor Table would require two columns for the outcome. In this case, we are not modeling for causation; thus, we do not need two outcome columns. 
+
+Predictive models care nothing about causation. Causal models are often also concerned with prediction, if only as a means of measuring the quality of the model. Here, we are looking at *prediction*. 
+
+So, what would our ideal table look like? Assuming we are predicting height for every male on planet Earth at this moment in time, we would have height data for every male person above 18 years of age. This means that we would have almost 4 billion rows, one for each male person, which includes a column for height.
+
+Here is a sample from our ideal Preceptor Table: 
+
+```{r, echo = FALSE, fig.align = 'left'}
+# First, we create a tibble with the values we want for the table
+library(tidyverse)
+library(gt)
+
+tibble(ID = c("Person 1", "Person 2", "...", "Person 45000", "Person 45001", "..."),
+       sex = c("Male", "Male", "...", "Male", "Male", "..."),
+       height = c("150", "172", "...", "160", "142", "...")) %>%
+  
+  # Then, we use the gt function to make it pretty
+  
+  gt() %>%
+  cols_label(ID = md("ID"),
+                sex = "Sex",
+                height = "Height (cm)") 
+```
+
 
 Before starting that process, however, we need to look at the data we have.
 
@@ -126,8 +155,7 @@ ch7 %>%
        title = "Height by Gender in NHANES Dataset")
 ```
 
-We can see the the most probable heights for both genders and that men are generally taller than women. 
-
+We see the most probable heights for both genders and that men are generally taller than women. 
 
 Let's focus on a subset of the `nhanes` data, designed to answer our questions. And, instead of using all the data, let's just use 50 randomly selected observations. (The `set.seed()` function ensures that the same 50 observations are selected every time this code is run.) 
 
