@@ -542,6 +542,8 @@ outcome + fitted + res +
 
 ## Temperance
 
+<!-- MF: Should this chapter's Temperance section include the Three Levels of Knowledge? --> 
+
 ```{r echo = FALSE}
 knitr::include_graphics("other/images/Temperance.jpg")
 ```
