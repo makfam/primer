@@ -174,24 +174,27 @@ ch7 <- ch7_all %>%
   slice_sample(n = 50)
 ```
 
-
-Will the data we have --- which is only for a sample of adult American men more than a decade ago --- allow us to answer our questions, however roughly? This is where the notion of Population comes into play. 
+Will the data we have --- which is only for a sample of adult American men more than a decade ago --- allow us to answer our questions, however roughly? This is where the notion of **population** comes into play. 
 
 ### Population
 
+One of the most important components of Wisdom is the concept of the “population.” 
 
+The population is not the set of people for which we have data --- the participants in the CDC's Health and Nutrition Examination Survey conducted from 2009 to 2011. This is the dataset. Nor is it the set of voters about whom we would like to have data. Those are the rows in the ideal Preceptor Table. The population is the larger — potentially much larger — set of individuals which include both the data we have and the data we want. Generally, the population will be much larger than either the data we have and the data we want.
 
-That is where Wisdom comes in. In the social sciences, *there is never a perfect relationship between the data you have and the question you are trying to answer.* Data for American males in the past is not the same thing as data for American males today. Nor is it the same as the data for men in France or Mexico. Moreover, the problem hasn't specified where on Earth we are, nor who we are near. Walking by a basketball tournament will generate different answers than walking around Times Square. 
+In this case, we want to predict average height for males *today*, not for people in 2009-2011! We also want to predict height for males outside the United States, a group that is excluded from our dataset. Is it reasonable to generate conclusions for the world from this group? Most likely, no. However, we have limited data to work with and we have to determine how far we are willing to generalize to other groups.
 
-Yet, this data is relevant. Right? It is certainly better than nothing. *Using not-perfect data is generally better than using no data at all.*
+It is a judgment call, a matter of Wisdom, as to whether or not we may assume that the data we have and the data we want to have (i.e., the ideal Preceptor Table) are drawn from the same population.
+
+Even though the original question is about “males” in general, and does not specifically refer to those males in the United States, we will assume that the data we have for United States citizens is, uh, representative enough of the population we are interested in. If we did not believe that, then we should stop right now. The major part of Wisdom is deciding what questions you can’t answer because of the data you just don’t have.
+
+In the social sciences, *there is never a perfect relationship between the data you have and the question you are trying to answer.* Data for American males in the past is not the same thing as data for American males today. Nor is it the same as the data for men in France or Mexico.Yet, this data is relevant. Right? It is certainly better than nothing. 
+
+*Using not-perfect data is generally better than using no data at all.*
 
 Is not-perfect data *always* better? No! If your problem is estimating the median height of 5th grade girls in Tokyo, we doubt that our data is at all relevant. Wisdom recognizes the danger of using non-relevant data to build a model and then mistakenly using that model in a way which will only make the situation worse. If the data won't help, don't use the data, don't build a model. Better to just use your common sense and experience. Or find better data.
 
-<!-- DK: More on population. -->
-
-The statistical term "population" is often relevant here. Recall from Chapter \@ref(one-parameter) that the "population" is the set of units which we are interested in. *To perform inference, there must be a population which includes both the data that we have and the data that we want to have.* The population is all the rows in the ideal Preceptor Table.
-
-Wisdom asks: *Is there really a single population which includes both the data that we have and the data we need to answer our questions?* If there is, then we can proceed. If not, we must find another approach. 
+For now, we will accept that our data works. 
 
 ## Justice
 
