@@ -4,11 +4,13 @@
 
 <!-- Clean up the plots. (Labels and such.) MF: Done. -->
 
+<!-- Two plots which start Courage section should be redone so as to just refer to mu and sigma. Yes, there is an interpretation we can give to the values of those parameters. And that is sort of cool. But, most times parameters have no useful interpretation. So, don't spend time on them! Spend time on what matters: the results of (interesting!) calls to posterior_epred and posterior_predict. MF: Done.-->
+
 <!-- Put Population Table at the end of Wisdom. It is always how Wisdom ends. Then Justice starts with the Population Table and asks abiout validity, representativeness and assumes a functional relationship. MF: Done. -->
 
-<!-- Courage section should end with a summary of the model which we have accepted as true. This is our data generating mechanism. -->
-
 <!-- Get axis labels and titles to use \sigma and \mu MF: Done.-->
+
+<!-- Courage section should end with a summary of the model which we have accepted as true. This is our data generating mechanism. -->
 
 <!-- Show posterior_interval() -->
 
@@ -329,8 +331,6 @@ In this case, the *outcome* is the height of an individual male. This variable, 
 What is the difference between the *outcome* and the *model*? By definition, it is *what is not in the model*, all the blooming and buzzing complexity of the real world. The model will always be incomplete in that it won't capture everything. Whatever the model misses is thrown into the error term. 
 
 ## Courage
-
-<!-- Two plots which start Courage section should be redone so as to just refer to mu and sigma. Yes, there is an interpretation we can give to the values of those parameters. And that is sort of cool. But, most times parameters have no useful interpretation. So, don't spend time on them! Spend time on what matters: the results of (interesting!) calls to posterior_epred and posterior_predict. -->
 
 ```{r echo = FALSE}
 knitr::include_graphics("other/images/Courage.jpg")
