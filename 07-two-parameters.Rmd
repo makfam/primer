@@ -1,6 +1,6 @@
 # Two Parameters {#two-parameters}
 
-<!-- Remove ideal from ideal Preceptor Table. -->
+<!-- Remove ideal from ideal Preceptor Table. MF: I think we were thinking of actual Preceptor Table. I can't find a chapter where we  use "Preceptor Table" instead of "ideal Preceptor Table". Do you still want to change this? -->
 
 <!-- Clean up the plots. (Labels and such.) -->
 
@@ -165,7 +165,8 @@ ch7 %>%
   ggplot(aes(x = height, color = gender)) + 
   geom_density() + 
   labs(x = "Height (cm)",
-       title = "Height by Gender in NHANES Dataset") +
+       title = "Height in NHANES Dataset",
+       color = "Sex") +
   theme_classic()
 ```
 
@@ -209,23 +210,6 @@ Is not-perfect data *always* better? No! If your problem is estimating the media
 
 For now, we will accept that our data works. 
 
-## Justice
-
-```{r, echo = FALSE}
-knitr::include_graphics("other/images/Justice.jpg")
-```
-
-<!-- Should include all of the new elements (population table, representativeness, validity), but in the simplest possible way.  --> 
-
-Having looked at our data and decided that it is "close enough" to our questions that creating a model will help us come up with better answers, we move on to Justice. 
-
-Justice emphasizes a few key concepts:
-
-* The Population Table, a structure which includes a row for every unit in the population. We generally break the rows in the Population Table into three categories: the data for units we want to have, the data for units which we actually have, and the data for units we do not care about.
-* Is our data representative of the population?
-* Is the meaning of the columns consistent, i.e., can we assume validity?
-We then make an assumption about the data generating mechanism.
-
 ### The Population Table
 
 The Population Table shows the data that we actually have in our desired population. It shows rows from three sources: the ideal Preceptor Table, the data, and the population outside of the data (rows which exist but for which we have no data).
@@ -268,8 +252,60 @@ tibble(source = c("ideal Preceptor Table", "ideal Preceptor Table", "...",
 
 
 
+## Justice
+
+```{r, echo = FALSE}
+knitr::include_graphics("other/images/Justice.jpg")
+```
+
+<!-- Should include all of the new elements (population table, representativeness, validity), but in the simplest possible way.  --> 
+
+Having looked at our data and decided that it is "close enough" to our questions that creating a model will help us come up with better answers, we move on to Justice. 
+
+Justice emphasizes a few key concepts:
+
+* The Population Table, a structure which includes a row for every unit in the population. We generally break the rows in the Population Table into three categories: the data for units we want to have, the data for units which we actually have, and the data for units we do not care about.
+* Is our data representative of the population?
+* Is the meaning of the columns consistent, i.e., can we assume validity?
+We then make an assumption about the data generating mechanism.
+
+We inspect both representativeness and validity through our Population Table. Representativeness focuses on the rows of the table, while validity focuses on the columns. Let's explore what that means in more depth. 
+
+
+### Representativeness
+
+As we've stated above, representativeness involves our rows. More specifically, whether the rows that we *do* have data for are the same as the rows for which we *do not* have data. This is a somewhat convoluted way of saying: do all pieces of desired data have an equal chance of being included in our dataset? 
+
+Ideally, data is a random selection from our population. For our `nhanes` data, is this the case? It is time to investigate. 
+
+According to the CDC, individuals are invited to participate in NHANES based on a randomized process. This process is outlined below. 
+
+> All the counties in the United States are divided into 15 groups based on their characteristics. One is selected from each group and together they form the 15 counties in the NHANES survey for the year. 
+
+> Within each of the 15 NHANES counties, smaller groups (such as neighborhoods) are formed, and between 20 and 24 of these small groups are selected. All the houses or apartments within those selected small groups are identified, and a sample of about 30 households are chosen within each group. 
+
+> NHANES will contact the selected household and ask a short set of questions (age, race, and gender) about everyone in the household. A computer process randomly selects some, all, or none of the household members.
+
+It is clear that this process goes through several layers of randomization. That being said, many counties are excluded by the end of the process. It is also possible for certain groups or communities to be less representative of the greater population, though we cannot know that for certain. 
+
+Regardless, we can assume that this process ensures that all people in the United States have a somewhat equal chance of being surveyed. Thus, our data is representative of our population.
+
+### Validity
+
+Validity involves our columns. More specifically, whether our columns mean the same thing. Consider the following example: we are predicting housing price for 2021. Our dataset is from housing prices in 2006. When we create a column for housing price, are the housing prices in 2006 the same as the housing prices for 2021? No! Think of inflation. Because of inflation, there will be a huge disparity between our precictions using the 2006 data and the truth in 2021. 
+
+Therefore, to ensure validity, we would need to adjust the housing price according to that inflation. After adjusting our column, we would consider our estimates to be valid. 
+
+How does this apply to our height example? We might assume that height is a constant, and thus requires no adjustment. However, over the past few hundred years, it has been found that humans have slowly been getting taller on average in the U.S. and in many European nations.  
+
+In this example, the change in height is so minimal overtime that we do not need to adjust. Because our data is only fifteen years old, and because we do not expect a drastic change in average height within such a small timeframe, we can assume validity. 
+
+
  <!-- Math is in Justice, but just the functional form, not the exact variables. Leave it to you to write about this sensibly. Focus on the functional form. We are choosing linear, not logistic. Why? --> 
  
+ 
+### Functional form
+
 However, a little mathematical notation will make our modeling assumptions clear, will bring some precision to our approach. In this case:
 
 $$ y_i =  \mu + \epsilon_i $$
