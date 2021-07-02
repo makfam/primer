@@ -28,7 +28,7 @@ Last chapter, we studied four parameters: models in which we studied multiple ri
 
 Consider the following questions:
 
-*How many years would we expect two political candidates --- one male and one female, both 10 years older than the average candidate --- to live after the election? How different will their lifespans be? More broadly, how long do candidates, in general, live after the election? Does winning the election affect their longevity?*
+*How many years would we expect two gubernatorial candidates --- one male and one female, both 10 years older than the average candidate --- to live after the election? How different will their lifespans be? More broadly, how long do candidates, in general, live after the election? Does winning the election affect their longevity?*
 
 
 Note how far we have come in the *Primer*. These are difficult questions, involving issues of both prediction and causation. Yet, if we follow the Cardinal Virtues, we can provide sophisticated answers.
@@ -36,11 +36,47 @@ Note how far we have come in the *Primer*. These are difficult questions, involv
 
 ## Wisdom
 
-Always start by looking at the data.
-
 ```{r echo = FALSE, fig.cap = "Wisdom"}
 knitr::include_graphics("other/images/Wisdom.jpg")
 ```
+
+Recall the most important aspects of wisdom: the Preceptor Table, the EDA (exploratory data analysis), the population, and the Population Table. As always, we start with the Preceptor Table --- the table of data that would make all of our questions answerable with mere arithmetic (no inferences). 
+
+### The Preceptor Table
+
+To create our Preceptor Table, we must first revisit our questions:
+
+*How many years would we expect two gubernatorial candidates --- one male and one female, both 10 years older than the average candidate --- to live after the election? How different will their lifespans be? More broadly, how long do candidates, in general, live after the election? Does winning the election affect their longevity?*
+
+What (imagined) dataset would make all of these questions easy to solve with a little bit of math? Well, we obviously need data on all gubernatorial candidate elections in the United States. We also need to know their dates of birth, age at time of election, age at time of death, and data for age at time of death minus age at time of election. With these pieces of information, we could answer all of our questions with simple math. 
+
+Also, because this is an idealized table, we would know age at time of death assuming victory and age at time of death assuming loss. This would not be possible in the real world due to the Fundamental Problem of Causal Inference --- we cannot observe a unit under two different conditions (both victory and loss).
+
+Here is a sample:
+
+```{r, echo = FALSE, fig.align = 'left'}
+# First, we create a tibble with the values we want for the table
+
+tibble(ID = c("Candidate 1", "Candidate 2"),
+       sex = c("F", "M"),
+       before = c("56", "72"),
+       ytreat = c("12", "7"),
+       ycontrol = c("9", "5"),
+       yeffect = c("+3", "+2")) %>%
+  
+  # Then, we use the gt function to make it pretty
+  
+  gt() %>%
+  cols_label(ID = md("ID"),
+             sex = md("Sex"),
+             before = md("Age at Election"),
+             ytreat = md("Years Lived (Win)"),
+             ycontrol = md("Years Lived (Loss)"),
+             yeffect = md("Treatment Effect of Winning")) 
+```
+
+
+We would have rows for *every* gubernatorial election candidate in U.S. history. We may want further details, such as election year. This is merely a sketch of our ideal dataset. Now that we know our "perfect" reality, what data do we actually have to work with? 
 
 ### EDA of `governors`
 
@@ -48,6 +84,8 @@ Packages:
 
 ```{r, message=FALSE}
 library(primer.data)
+library(gt)
+library(gtsummary)
 library(skimr)
 library(tidyverse)
 library(rstanarm)
@@ -56,7 +94,7 @@ library(broom.mixed)
 
 <!-- We discuss below that we only have data for people who are already dead. That is an interesting restriction, and effects the Preceptor Table in interesting ways. Or is such a discussion too advanced? -->
 
-The **primer.data** package includes the  `governors` data set which features the demographic information about the candidates for governor in the United States. @barfort2020 gathered this data and concluded that winning a gubernatorial election increases a candidate's lifespan.
+The **primer.data** package includes the  `governors` data set which features demographic information about candidates for governor in the United States. @barfort2020 gathered this data and concluded that winning a gubernatorial election increases a candidate's lifespan.
 
 
 ```{r}
@@ -149,11 +187,10 @@ ch10 %>%
 ```
 
 
-This plot shows that men live much longer, on average, than women after the election. Does that make sense to you? Is there an intuitive explanation for why this might be? 
+This plot shows that men live much longer, on average, than women after the election. Is there an intuitive explanation for why this might be? 
 
 
 ### Population
-
 
 The concept of the "population" is subtle and important. *The population is not the set of candidates for which we have data.* That is the dataset. The population is the larger --- potentially much larger --- set of individuals about whom we want to make inferences. *The parameters in our models refer to the population, not to the dataset.*
 
