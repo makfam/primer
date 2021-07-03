@@ -2,11 +2,13 @@
 
 <!-- MF: In some chapters, the Population Table is at the end of Wisdom. In others, it's at the start of Justice. Which should we use? -->
 
-<!-- All our cool new way of doing Cardinal Virtues needs to be added. -->
+<!-- MF: Cardinal virtues of Wisdom and Justice fixed. Courage and Temperance fixes are priority for next week. -->
+
+<!-- All our cool new way of doing Cardinal Virtues needs to be added.-->
 
 <!-- Testing section makes no sense. MF: Fixed.  -->
 
-<!-- Do we need the centering nonsense anymore, given that we explain it in chapter 9? No. So, don't center age. But, at some point (when showing simople model with just age) mention that the intercept for the line is at age = 0. -->
+<!-- Do we need the centering nonsense anymore, given that we explain it in chapter 9? No. So, don't center age. But, at some point (when showing simople model with just age) mention that the intercept for the line is at age = 0. MF: Done. -->
 
 <!-- At end of Justice section, review with math and plots what we have learned so far. No fitted models. No stan_glm(). No code for ho you made the plots. Do sex first and then age then parallel lines (like chapter 9) and then non-parallel lines.  Maybe we don't fit the first three of these. We just show the plots (and we don't even show the code which generates the plots). -->
 
@@ -247,8 +249,6 @@ When we want to know if our data is representative of our population, the primar
 knitr::include_graphics("other/images/Courage.jpg")
 ```
 
-Because we will be going through a series of models in this chapter, it is useful to combine the virtues of Justice and Courage. 
-
 
 ### election_age
 
@@ -398,41 +398,9 @@ fit_1 %>%
 
 <!-- DK: Priority is to add a graphic which shows the "cloud" of possible regression lines, consistent with the posterior for beta_1.  -->
 
-<!-- DK: Need a smoother transition back to centering. Or get rid of centering all together? -->
-
 <!-- DK: Would using 50-year-old be better? -->
 
 <!-- DK: Fix. -->
-
-As discussed in Chapter \@ref(four-parameters), we center variables when the model's intercept does not make substantive sense. To center a model, we pick a constant value, usually the mean of the independent variable, and subtract that constant from every value of the independent variable. Another option would be to pick a reasonable reference value, like 50 years-old. Either way, the meaning of `election_age` changes from the raw number of years a candidate has been alive to the number of years relative to that reference value. 
-
-
-In this example, we want to center the value for `election_age`, the independent variable. First, we must pick the value that we will center by. Here, we will use the mean of `election_age`, which is about `r round(mean(ch10$election_age), 0)` years old.  Once we find this number, we will subtract it from every `election_age` value, creating a new variable: `c_election_age`, where the "c" stand for **c**entered.  `c_election_age` is the number of years a candidate has been alive, as of Election Day, relative to the average years alive of all candidates on their respective election days.
-
-```{r}
-ch10 <- ch10 %>% 
-  mutate(c_election_age = election_age - mean(election_age))
-```
-
-
-
-```{r, cache = TRUE}
-fit_1_centered <- stan_glm(data = ch10,
-                      formula = lived_after ~ c_election_age,
-                      refresh = 0,
-                      seed = 11)
-
-print(fit_1_centered, detail = FALSE)
-```
-
-<!-- DK: If we are doing centering, then we ought to do it correctly, by showing side-by-side scatterplots with fitted lines, the better to show that we have just slid things over. -->
-
-
-We can see that the intercept has decreased while the slope has stayed the same. When we interpret this model, we only have to change the definition of the intercept. Rather than the intercept representing the remaining years of a candidate who was alive for zero years before running for governor, it now represents the post-election lifespan of a gubernatorial candidate who was alive for the mean number of years before running. If a candidate was alive for about `r round(mean(ch10$election_age), 0)` years before running for governor, they are expected to live for about `r round(coef(fit_1_centered)["(Intercept)"], 0)` years after the election, on average. 
-
-<!-- DK: Really need the ideal and actual Preceptor Table for this example. And should probably present it earlier. -->
-
-Think hard about your parameters. What do they mean? Which population do they represent? What ideal Preceptor Table would make their calculation easy? In this case, $\beta_0$ is the average number of years which gubernatorial candidates live after election day, but just for the subset of candidates who are the average age on Election Day. If we had the ideal Preceptor Table, this would be trivial to calculate. Just take the average for that subset! No estimation required. But, our actual Preceptor Table has lots of missing values. In particular, many gubernatorial candidates have not . . . uh . . . died. (How inconsiderate!) So, we can't know how many years they will live. All we can do is, first, define  $\beta_0$ and, second, estimate a posterior probability distribution for it. 
 
 ### sex
 
