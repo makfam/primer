@@ -244,6 +244,20 @@ This data is, then, *highly* representative of gubernatorial candidates, as it i
 
 ### Validity
 
+Validity, on the other hand, involves our columns. To put it simply, does the column for lifespan in our Preceptor Table equate to the column for lifespan from our dataset. Again, we look to the source of our data: @barfort2020. 
+
+The collection of birth and death dates for *winning* candidates is well documented. The birth and death dates for losing candidates, however, is not as easily gathered. In fact, @barfort2020 had to perform independent research for this information:
+
+> "For losing candidates, we use information gathered from several online sources, including Wikipedia, The Political Graveyard..., Find a Grave... and Our Campaigns." 
+
+This is not nearly as reliable as the data collection for candidates who won their election. And, there was a further complication:
+
+> "In a few cases, we are only able to identify the year of birth or death, not the exact date of the event. For these candidates, we impute the date as July 1 of the given year."
+
+For these candidates, then, our estimate for longevity will be inaccurate. We also have to *hope* that the birth and death dates listed on unreliable internet sources are accurate. It is possible that they are not, especially for older candidates.
+
+The mission of this exploration is to ensure validity as much as possible --- that is, to equate our columns when they are not equated themseleves. In this case, because we cannot fix the issues with data collection, we accept that our estimates may be slightly skewed. 
+
 ### Functional form 
 
 ## Courage
