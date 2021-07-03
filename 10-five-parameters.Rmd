@@ -2,7 +2,7 @@
 
 <!-- MF: In some chapters, the Population Table is at the end of Wisdom. In others, it's at the start of Justice. Which should we use? -->
 
-<!-- MF: Cardinal virtues of Wisdom and Justice fixed. Courage and Temperance fixes are priority for next week. -->
+<!-- MF: Cardinal virtues of Wisdom and Justice are mostly fixed. Courage and Temperance fixes are priority for next week. -->
 
 <!-- All our cool new way of doing Cardinal Virtues needs to be added.-->
 
@@ -259,6 +259,8 @@ For these candidates, then, our estimate for longevity will be inaccurate. We al
 The mission of this exploration is to ensure validity as much as possible --- that is, to equate our columns when they are not equated themseleves. In this case, because we cannot fix the issues with data collection, we accept that our estimates may be slightly skewed. 
 
 ### Functional form 
+
+
 
 ## Courage
 
