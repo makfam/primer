@@ -230,6 +230,12 @@ We inspect both representativeness and validity through our Population Table. Re
 
 ### Representativeness
 
+Recall that representativeness involves our rows; specifically, do the rows from our dataset match the rows from our desired population. 
+
+When we want to know if our data is representative of our population, the primary question we ask is: did everyone in our desired population have an equal chance of being sampled? For a more simple example, think back to our urn example in Chapter 6. We were able to determine that, barring any issue with our sampling mechanism (the shovel), every bead had an equal chance of being sampled. Is that the case here?
+
+
+
 ### Validity
 
 ### Functional form 
