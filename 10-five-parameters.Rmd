@@ -236,7 +236,11 @@ Recall that representativeness involves our rows; specifically, do the rows from
 
 When we want to know if our data is representative of our population, the primary question we ask is: did everyone in our desired population have an equal chance of being sampled? For a more simple example, think back to our urn example in Chapter 6. We were able to determine that, barring any issue with our sampling mechanism (the shovel), every bead had an equal chance of being sampled. Is that the case here?
 
+After looking at @barfort2020, the source for our dataset, we see that:
 
+"We collect data... for all candidates running in a gubernatorial election from 1945 to 2012. We limit attention to the two candidates who received the highest number of votes."
+
+This data is, then, *highly* representative of gubernatorial candidates, as it includes every candidate from 1945 to 2012. However, there is one large caveat: only the two candidates with the most votes are included in the dataset. This is unfortunate, as we would ideally look at all gubernatorial candidates (regardless of votes). Regardless, we still deem the dataset to be somewhat representative of our larger population. 
 
 ### Validity
 
